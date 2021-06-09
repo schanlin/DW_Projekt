@@ -1,4 +1,4 @@
-package db.test;
+package backend;
 
 import java.sql.*;
 
