@@ -2,7 +2,7 @@ package backend;
 
 import java.util.List;
 
-public class Teacher {
+public class Teacher extends User{
 	private final int userID;
 	private String username;
 	private String vorname;
