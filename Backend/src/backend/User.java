@@ -18,8 +18,6 @@ public class User {
 		this.firstname = firstname;
 		this.lastname = lastname;
 	}
-	
-	public User() {}
 
 	@JsonGetter
 	public int getUserID() {
@@ -41,10 +39,31 @@ public class User {
 		return lastname;
 	}
 	
+	public static boolean createTable() {
+		String query = "CREATE TABLE user("
+					 + "userID int AUTO_INCREMENT NOT NULL,"
+					 + "username varchar(50) NOT NULL,"
+					 + "passwort varchar(256) NOT NULL,"
+					 + "vorname varchar(256) NOT NULL,"
+					 + "nachname varchar(256) NOT NULL,"
+					 + "rolle varchar(10) NOT NULL,"
+					 + "klassenID int,"
+					 + "PRIMARY KEY(userID),"
+					 + "UNIQUE(username),"
+					 + "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID))";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
+	
 	public static List<User> findAllUsers(){
 		List<User> users = new LinkedList<>();
-		try (Connection con = 
-			 DriverManager.getConnection("jdbc:mysql://localhost:3306/dw", "root", "Feuersturm11")){
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			String query = "SELECT userID, username, vorname, nachname FROM users";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);

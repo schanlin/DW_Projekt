@@ -29,6 +29,21 @@ public class Klasse {
 		return klassenID;
 	}
 	
+	public static boolean createTable() {
+		String query = "CREATE TABLE klasse("
+					 + "klassenID int AUTO_INCREMENT NOT NULL,"
+					 + "name varchar(256) NOT NULL,"
+					 + "PRIMARY KEY(klassenID))";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
+	
 	public static List<Klasse> findAllKlassen(){
 		List<Klasse> klassen = new LinkedList<>();
 		try(Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){

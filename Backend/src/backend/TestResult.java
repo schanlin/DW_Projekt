@@ -31,6 +31,24 @@ public class TestResult {
 		return mark;
 	}
 	
+	public static boolean createTable() {
+		String query = "CREATE TABLE ergebnis("
+					 + "testID int NOT NULL,"
+					 + "studentID int NOT NULL,"
+					 + "note int NOT NULL,"
+					 + "PRIMARY KEY(testID, studentID),"
+					 + "FOREIGN KEY(testID) REFERENCES test(testID),"
+					 + "FOREIGN KEY(studentID) REFERENCES user(userID))";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
+	
 	public static List<TestResult> findAllResults(){
 		List<TestResult> testResults = new LinkedList<>();
 		try(Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){

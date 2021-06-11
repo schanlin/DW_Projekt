@@ -11,7 +11,6 @@ public class Subject {
 	private String subjectName;
 	private int klasseID;
 	private int teacherID;
-	private List<Test> tests;
 	
 	@JsonGetter
 	public String getSubjectName() {
@@ -28,9 +27,9 @@ public class Subject {
 		return teacherID;
 	}
 
-	public List<Test> getTests() {
-		return tests;
-	}
+//	public List<Test> getTests() {
+//		return tests;
+//	}
 
 	@JsonGetter
 	public int getSubjectID() {
@@ -42,7 +41,25 @@ public class Subject {
 		this.subjectName = subjectName;
 		this.klasseID = klasse;
 		this.teacherID = teacher;
-		this.tests = null;
+	}
+	
+	public static boolean createTable() {
+		String query = "CREATE TABLE fach("
+					 + "fachID int AUTO_INCREMENT NOT NULL,"
+					 + "name varchar(256) NOT NULL,"
+					 + "klassenID int"
+					 + "lehrID int,"
+					 + "PRIMARY KEY(fachID),"
+					 + "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID),"
+					 + "FOREIGN KEY(lehrID) REFERENCES user(userID))";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
 	}
 	
 	public static List<Subject> findAllSubjects(){

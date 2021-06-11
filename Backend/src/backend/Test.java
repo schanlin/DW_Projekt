@@ -27,6 +27,22 @@ public class Test {
 		return testID;
 	}
 	
+	public static boolean createTable() {
+		String query = "CREATE TABLE test("
+					 + "testID int AUTO_INCREMENT NOT NULL,"
+					 + "name varchar(256) NOT NULL,"
+					 + "datum date NOT NULL,"
+					 + "PRIMARY KEY(testID))";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
+	
 	public static List<Test> findAllTests(){
 		List<Test> tests = new LinkedList<>();
 		try(Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
