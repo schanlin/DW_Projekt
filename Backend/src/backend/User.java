@@ -1,9 +1,11 @@
 package backend;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
-@JsonPropertyOrder ({"userID", "username", "firstname", "lastname"})
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 public class User {
 	private int userID;
 	private String username;
@@ -39,6 +41,21 @@ public class User {
 		return lastname;
 	}
 	
-	
+	public static List<User> findAllUsers(){
+		List<User> users = new LinkedList<>();
+		try (Connection con = 
+			 DriverManager.getConnection("jdbc:mysql://localhost:3306/dw", "root", "Feuersturm11")){
+			String query = "SELECT userID, username, vorname, nachname FROM users";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				users.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+			}
+			
+		} catch (SQLException e){
+			System.err.println(e.getMessage());
+		}
+		return users;
+	}
 
 }

@@ -1,56 +1,33 @@
 package backend;
 
+import java.sql.*;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Teacher extends User{
-	private final int userID;
-	private String username;
-	private String vorname;
-	private String nachname;
-	private List<Subject> subjects;
 	
-	public Teacher(int userID, String username, String vorname, String nachname, List<Subject> subjects) {
-		this.userID = userID;
-		this.username = username;
-		this.vorname = vorname;
-		this.nachname = nachname;
-		this.subjects = subjects;
+	public Teacher(int userID, String username, String vorname, String nachname) {
+		super(userID, username, vorname, nachname);
 	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getVorname() {
-		return vorname;
-	}
-
-	public void setVorname(String vorname) {
-		this.vorname = vorname;
-	}
-
-	public String getNachname() {
-		return nachname;
-	}
-
-	public void setNachname(String nachname) {
-		this.nachname = nachname;
-	}
-
+	
 	public List<Subject> getSubjects() {
+		List<Subject> subjects = Subject.findSubjectsByTeacher(this.getUserID());
 		return subjects;
 	}
-
-	public void setSubjects(List<Subject> subjects) {
-		this.subjects = subjects;
-	}
-
-	public int getUserID() {
-		return userID;
+	
+	public static List<Teacher> findAllTeachers(){
+		List<Teacher> teachers = new LinkedList<>();
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT userID, username, vorname, nachname FROM users WHERE rolle='Lehrende'";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				teachers.add(new Teacher(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return teachers;
 	}
 
 }

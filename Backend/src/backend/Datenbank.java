@@ -3,11 +3,11 @@ package backend;
 import java.sql.*;
 
 public class Datenbank {
+	public static final String url = "jdbc:mysql://localhost:3306/test_db";
+	public static final String user = "root";
+	public static final String password = "Feuersturm11";
 	
 	public static void main(String[] args) {
-		String url = "jdbc:mysql://localhost:3306/test_db";
-		String user = "root";
-		String password = "Feuersturm11";
 		
 		try (Connection con = DriverManager.getConnection(url, user, password)){
 			System.out.println("Erfolgreich mit Datenbank verbunden.");
