@@ -1,0 +1,9 @@
+:host{
+  background-color: white;
+  width: 15em;
+  box-shadow: 5px 5px 5px #DFD52A;
+  diplay:flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
