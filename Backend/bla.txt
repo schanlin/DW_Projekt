@@ -1,0 +1,3 @@
+dw.database.url=jdbc:mysql://localhost:3306/dw
+dw.database.user=root
+dw.database.password=Feuersturm11

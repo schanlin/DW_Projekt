@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 public class Test {
 	private int testID;
 	private String testName;
@@ -15,14 +17,17 @@ public class Test {
 		this.testDatum = testDatum;
 	}
 	
+	@JsonGetter
 	public String getTestName() {
 		return testName;
 	}
 	
+	@JsonGetter
 	public Date getTestDatum() {
 		return testDatum;
 	}
 	
+	@JsonGetter
 	public int getTestID() {
 		return testID;
 	}
