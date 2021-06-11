@@ -1,9 +1,11 @@
 package backend;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
-@JsonPropertyOrder ({"userID", "username", "firstname", "lastname"})
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 public class User {
 	private int userID;
 	private String username;
@@ -16,8 +18,6 @@ public class User {
 		this.firstname = firstname;
 		this.lastname = lastname;
 	}
-	
-	public User() {}
 
 	@JsonGetter
 	public int getUserID() {
@@ -39,6 +39,42 @@ public class User {
 		return lastname;
 	}
 	
+	public static boolean createTable() {
+		String query = "CREATE TABLE user("
+					 + "userID int AUTO_INCREMENT NOT NULL,"
+					 + "username varchar(50) NOT NULL,"
+					 + "passwort varchar(256) NOT NULL,"
+					 + "vorname varchar(256) NOT NULL,"
+					 + "nachname varchar(256) NOT NULL,"
+					 + "rolle varchar(10) NOT NULL,"
+					 + "klassenID int,"
+					 + "PRIMARY KEY(userID),"
+					 + "UNIQUE(username),"
+					 + "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID))";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
 	
+	public static List<User> findAllUsers(){
+		List<User> users = new LinkedList<>();
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT userID, username, vorname, nachname FROM users";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				users.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
+			}
+			
+		} catch (SQLException e){
+			System.err.println(e.getMessage());
+		}
+		return users;
+	}
 
 }

@@ -1,13 +1,13 @@
 package backend;
 
-import java.sql.Date;
+import java.sql.*;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Test {
-	private final int testID;
+	private int testID;
 	private String testName;
 	private Date testDatum;
-	private List<TestResult> results;
 	
 	public Test(int testID, String testName, Date testDatum) {
 		this.testID = testID;
@@ -19,19 +19,42 @@ public class Test {
 		return testName;
 	}
 	
-	public void setTestName(String testName) {
-		this.testName = testName;
-	}
-	
 	public Date getTestDatum() {
 		return testDatum;
 	}
 	
-	public void setTestDatum(Date testDatum) {
-		this.testDatum = testDatum;
-	}
-	
 	public int getTestID() {
 		return testID;
+	}
+	
+	public static boolean createTable() {
+		String query = "CREATE TABLE test("
+					 + "testID int AUTO_INCREMENT NOT NULL,"
+					 + "name varchar(256) NOT NULL,"
+					 + "datum date NOT NULL,"
+					 + "PRIMARY KEY(testID))";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
+	
+	public static List<Test> findAllTests(){
+		List<Test> tests = new LinkedList<>();
+		try(Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT * FROM test";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				tests.add(new Test(rs.getInt(1), rs.getString(2), rs.getDate(3)));
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return tests;
 	}
 }
