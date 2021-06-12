@@ -47,7 +47,7 @@ public class Subject {
 		String query = "CREATE TABLE fach("
 					 + "fachID int AUTO_INCREMENT NOT NULL,"
 					 + "name varchar(256) NOT NULL,"
-					 + "klassenID int"
+					 + "klassenID int,"
 					 + "lehrID int,"
 					 + "PRIMARY KEY(fachID),"
 					 + "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID),"
