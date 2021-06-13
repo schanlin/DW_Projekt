@@ -8,6 +8,7 @@ public class BackendApplication {
 
 	public static void main(String[] args) {
 		Datenbank.loadProperties();
+		Datenbank.initializeDatabase();
 		SpringApplication.run(BackendApplication.class, args);
 
 	}

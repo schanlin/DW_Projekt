@@ -30,10 +30,11 @@ public class Klasse {
 	}
 	
 	public static boolean createTable() {
-		String query = "CREATE TABLE klasse("
+		String query = "CREATE TABLE IF NOT EXISTS klasse("
 					 + "klassenID int AUTO_INCREMENT NOT NULL,"
 					 + "name varchar(256) NOT NULL,"
-					 + "PRIMARY KEY(klassenID))";
+					 + "PRIMARY KEY(klassenID),"
+					 + "UNIQUE(name))";
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(query);
@@ -42,6 +43,21 @@ public class Klasse {
 			System.err.println(e.getMessage());
 		}
 		return false;
+	}
+	
+	public static void insertData() {
+		List<Klasse> current = findAllKlassen();
+		if (current.isEmpty()) {
+			String klasse1 = "INSERT INTO dw.klasse (name) VALUES ('2016a')";
+			String klasse2 = "INSERT INTO dw.klasse (name) VALUES ('2016b')";
+			try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+				Statement stmt = con.createStatement();
+				stmt.executeUpdate(klasse1);
+				stmt.executeUpdate(klasse2);
+			} catch (SQLException e) {
+				System.err.println(e.getMessage());
+			}
+		}
 	}
 	
 	public static List<Klasse> findAllKlassen(){

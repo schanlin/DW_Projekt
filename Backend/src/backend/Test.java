@@ -33,11 +33,13 @@ public class Test {
 	}
 	
 	public static boolean createTable() {
-		String query = "CREATE TABLE test("
+		String query = "CREATE TABLE IF NOT EXISTS test("
 					 + "testID int AUTO_INCREMENT NOT NULL,"
 					 + "name varchar(256) NOT NULL,"
 					 + "datum date NOT NULL,"
-					 + "PRIMARY KEY(testID))";
+					 + "fachID int,"
+					 + "PRIMARY KEY(testID),"
+					 + "FOREIGN KEY(fachID) REFERENCES fach(fachID))";
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(query);

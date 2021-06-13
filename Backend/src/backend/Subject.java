@@ -44,7 +44,7 @@ public class Subject {
 	}
 	
 	public static boolean createTable() {
-		String query = "CREATE TABLE fach("
+		String query = "CREATE TABLE IF NOT EXISTS fach("
 					 + "fachID int AUTO_INCREMENT NOT NULL,"
 					 + "name varchar(256) NOT NULL,"
 					 + "klassenID int,"
