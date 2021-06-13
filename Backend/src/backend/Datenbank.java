@@ -19,7 +19,13 @@ public class Datenbank {
 		} 
 		url = properties.getProperty("dw.database.url");
 		user = properties.getProperty("dw.database.user");
-		password = properties.getProperty("dw.database.password");
-		
+		password = properties.getProperty("dw.database.password");		
+	}
+	
+	public static void initializeDatabase() {
+		Klasse.createTable();
+		Klasse.insertData();
+		User.createTable();
+		User.insertData();
 	}
 }

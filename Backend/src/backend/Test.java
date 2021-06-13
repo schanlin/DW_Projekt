@@ -33,11 +33,13 @@ public class Test {
 	}
 	
 	public static boolean createTable() {
-		String query = "CREATE TABLE test("
+		String query = "CREATE TABLE IF NOT EXISTS test("
 					 + "testID int AUTO_INCREMENT NOT NULL,"
 					 + "name varchar(256) NOT NULL,"
 					 + "datum date NOT NULL,"
-					 + "PRIMARY KEY(testID))";
+					 + "fachID int,"
+					 + "PRIMARY KEY(testID),"
+					 + "FOREIGN KEY(fachID) REFERENCES fach(fachID))";
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(query);
@@ -61,5 +63,21 @@ public class Test {
 			System.err.println(e.getMessage());
 		}
 		return tests;
+	}
+
+	public static Test findById(int id) {
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT * FROM test WHERE testID=" + id;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				return new Test(rs.getInt(1), rs.getString(2), rs.getDate(3));
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return null;
 	}
 }

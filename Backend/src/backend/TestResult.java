@@ -37,7 +37,7 @@ public class TestResult {
 	}
 	
 	public static boolean createTable() {
-		String query = "CREATE TABLE ergebnis("
+		String query = "CREATE TABLE IF NOT EXISTS ergebnis("
 					 + "testID int NOT NULL,"
 					 + "studentID int NOT NULL,"
 					 + "note int NOT NULL,"
