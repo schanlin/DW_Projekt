@@ -1,19 +1,25 @@
 package backend;
 
-import java.sql.*;
+import java.io.FileInputStream;
+import java.util.Properties;
 
 public class Datenbank {
-	public static final String url = "jdbc:mysql://localhost:3306/test_db";
-	public static final String user = "root";
-	public static final String password = "Feuersturm11";
+	public static String url;
+	public static String user;
+	public static String password;
 	
-	public static void main(String[] args) {
+	public static void loadProperties() {
+		Properties properties = new Properties();
+		try {
+			FileInputStream in = new FileInputStream("application.properties");
+			properties.load(in);
+			in.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} 
+		url = properties.getProperty("dw.database.url");
+		user = properties.getProperty("dw.database.user");
+		password = properties.getProperty("dw.database.password");
 		
-		try (Connection con = DriverManager.getConnection(url, user, password)){
-			System.out.println("Erfolgreich mit Datenbank verbunden.");
-		} catch(SQLException e) {
-			System.err.println(e.getMessage());
-		}
 	}
-
 }

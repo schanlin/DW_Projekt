@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 public class TestResult {
 	private int testID;
 	private int studentID;
@@ -19,14 +21,17 @@ public class TestResult {
 		this.mark = mark;
 	}
 
+	@JsonGetter
 	public int getTestID() {
 		return testID;
 	}
 
+	@JsonGetter
 	public int getStudentID() {
 		return studentID;
 	}
 
+	@JsonGetter
 	public int getMark() {
 		return mark;
 	}
