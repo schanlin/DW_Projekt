@@ -7,4 +7,5 @@ export class UserService {
   constructor() { }
   getName() { return 'Armin Meister';}
   getRole() { return 'Administrator';}
+  getEmailAdress(){return 'admin@emxample.com'}
 }
