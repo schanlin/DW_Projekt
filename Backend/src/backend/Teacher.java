@@ -18,7 +18,7 @@ public class Teacher extends User{
 	public static List<Teacher> findAllTeachers(){
 		List<Teacher> teachers = new LinkedList<>();
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
-			String query = "SELECT userID, username, vorname, nachname FROM users WHERE rolle='Lehrende'";
+			String query = "SELECT userID, username, vorname, nachname FROM user WHERE rolle='Lehrende'";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while(rs.next()) {
@@ -28,6 +28,23 @@ public class Teacher extends User{
 			System.err.println(e.getMessage());
 		}
 		return teachers;
+	}
+	
+	public static Teacher findById(int id) {
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT userID, username, vorname, nachname "
+						 + "FROM user WHERE rolle='Lehrende' AND userID=" + id;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				return new Teacher(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return null;
 	}
 
 }

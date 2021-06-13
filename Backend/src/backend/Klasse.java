@@ -83,7 +83,7 @@ public class Klasse {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			if (rs.next()) {
-				return result = Klasse.getKlasseById(rs.getInt(1));
+				return result = Klasse.findKlasseById(rs.getInt(1));
 			}
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
@@ -91,9 +91,20 @@ public class Klasse {
 		return result;
 	}
 	
-	public static Klasse getKlasseById(int id) {
-		Klasse result = null;
-		return result;
+	public static Klasse findKlasseById(int id) {
+		try(Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT * FROM klasse WHERE klassenID=" + id;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				return new Klasse(rs.getInt(1), rs.getString(2));
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return null;
 	}
 	
 }

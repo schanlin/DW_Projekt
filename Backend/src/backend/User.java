@@ -63,10 +63,14 @@ public class User {
 	}
 	
 	public static void insertData() {
+		List<User> current = findAllUsers();
+		if (!current.isEmpty()) {
+			return;
+		}
 		String teacher1 = "INSERT INTO user(username, passwort, vorname, nachname, rolle) "
 						+ "VALUES('storm', 'PASSWORT', 'Zoya', 'Nazyalenski', 'Lehrende')";
 		String teacher2 = "INSERT INTO user(username, passwort, vorname, nachname, rolle) "
-						+ "VALUES('witchhunter', 'PASSWORT', 'Jarl', 'Brum', 'Lehrende')";
+						+ "VALUES('hunter', 'PASSWORT', 'Jarl', 'Brum', 'Lehrende')";
 		String teacher3 = "INSERT INTO user(username, passwort, vorname, nachname, rolle) "
 						+ "VALUES('tailor', 'PASSWORT', 'Genya', 'Safin', 'Lehrende')";
 		
@@ -138,6 +142,22 @@ public class User {
 			System.err.println(e.getMessage());
 		}
 		return users;
+	}
+	
+	public static User findById(int id) {
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT userID, username, vorname, nachname FROM user WHERE userID=" + id;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+			} else {
+				return null;
+			}
+		} catch (SQLException e){
+			System.err.println(e.getMessage());
+		}
+		return null;
 	}
 	
 	public static List<User> findAllAdmins(){

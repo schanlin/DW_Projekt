@@ -64,4 +64,20 @@ public class Test {
 		}
 		return tests;
 	}
+
+	public static Test findById(int id) {
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT * FROM test WHERE testID=" + id;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				return new Test(rs.getInt(1), rs.getString(2), rs.getDate(3));
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return null;
+	}
 }
