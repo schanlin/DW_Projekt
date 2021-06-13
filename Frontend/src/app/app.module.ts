@@ -6,6 +6,10 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { NavigationProfileComponent } from './navigation-profile/navigation-profile.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NavigationLinkComponent } from './navigation-link/navigation-link.component';
+import { AppRoutingModule } from './app-routing.module';
+import { UserComponent } from './user/user.component';
+import { ClassesComponent } from './classes/classes.component';
+import { SubjectsComponent } from './subjects/subjects.component';
 
 
 @NgModule({
@@ -13,11 +17,15 @@ import { NavigationLinkComponent } from './navigation-link/navigation-link.compo
     AppComponent,
     NavigationComponent,
     NavigationProfileComponent,
-    NavigationLinkComponent
+    NavigationLinkComponent,
+    UserComponent,
+    ClassesComponent,
+    SubjectsComponent
   ],
   imports: [
     BrowserModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
