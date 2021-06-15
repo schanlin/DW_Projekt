@@ -36,7 +36,7 @@ public class TestResult {
 		return mark;
 	}
 	
-	public static boolean createTable() {
+	public static void createTable() throws SQLException {
 		String query = "CREATE TABLE IF NOT EXISTS ergebnis("
 					 + "testID int NOT NULL,"
 					 + "studentID int NOT NULL,"
@@ -44,27 +44,20 @@ public class TestResult {
 					 + "PRIMARY KEY(testID, studentID),"
 					 + "FOREIGN KEY(testID) REFERENCES test(testID),"
 					 + "FOREIGN KEY(studentID) REFERENCES user(userID))";
-		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(query);
-			return true;
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		}
-		return false;
+		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(query);
 	}
 	
-	public static List<TestResult> findAllResults(){
+	public static List<TestResult> findAllResults() throws SQLException {
 		List<TestResult> testResults = new LinkedList<>();
-		try(Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
-			String query = "SELECT * FROM ergebnis";
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			while(rs.next()) {
-				testResults.add(new TestResult(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
-			}
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+		String query = "SELECT * FROM ergebnis";
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		
+		while(rs.next()) {
+			testResults.add(new TestResult(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 		}
 		return testResults;
 	}

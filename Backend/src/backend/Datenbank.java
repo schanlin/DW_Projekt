@@ -1,6 +1,7 @@
 package backend;
 
 import java.io.FileInputStream;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class Datenbank {
@@ -22,10 +23,14 @@ public class Datenbank {
 		password = properties.getProperty("dw.database.password");		
 	}
 	
-	public static void initializeDatabase() {
-		Klasse.createTable();
-		Klasse.insertData();
-		User.createTable();
-		User.insertData();
+	public static void initializeDatabase(){
+		try {
+			Klasse.createTable();
+			Klasse.insertData();
+			User.createTable();
+			User.insertData();
+		} catch (SQLException e) {
+			System.err.println("Tabellen konnten nicht angelegt werden: " + e.getMessage());
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package backend;
 
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class SubjectController {
 	
 	@GetMapping("/subject")
-	public List<Subject> getAllSubjects(){
+	public List<Subject> getAllSubjects() throws SQLException {
 		List<Subject> subjects = new LinkedList<>();
-		subjects = Subject.findAllSubjects();
+		subjects = Subject.findAll();
 		return subjects;
 	}
 	
 	@GetMapping("/subject/{id}")
-	public Subject getSubjectById(@PathVariable int id) {
+	public Subject getSubjectById(@PathVariable int id) throws SQLException {
 		Subject subject = Subject.findById(id);
 		return subject;
 	}
