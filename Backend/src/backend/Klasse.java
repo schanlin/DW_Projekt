@@ -46,8 +46,8 @@ public class Klasse {
 	public static void insertData() throws SQLException {
 		List<Klasse> current = findAll();
 		if (current.isEmpty()) {
-			String klasse1 = "INSERT INTO dw.klasse (name) VALUES ('2016a')";
-			String klasse2 = "INSERT INTO dw.klasse (name) VALUES ('2016b')";
+			String klasse1 = "INSERT INTO klasse (name) VALUES ('2016a')";
+			String klasse2 = "INSERT INTO klasse (name) VALUES ('2016b')";
 			Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(klasse1);
