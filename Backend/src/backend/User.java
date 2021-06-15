@@ -144,7 +144,7 @@ public class User {
 		List<User> admins = findAllAdmins();
 		if (admins.isEmpty()) {
 			Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-			String query = "INSERT INTO dw.user (username, passwort, vorname, nachname, rolle)"
+			String query = "INSERT INTO user (username, passwort, vorname, nachname, rolle)"
 		 				+ "VALUES ('admin', 'PASSWORT', 'leer', 'leer', 'Admin')";
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(query);
