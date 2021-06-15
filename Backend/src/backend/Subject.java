@@ -77,6 +77,21 @@ public class Subject {
 		stmt.executeUpdate(query);
 	}
 	
+	public static void insertData() throws SQLException {
+		String fach1klasse1 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
+							+ "VALUES ('Deutsch', 1, 2, FALSE)";
+		String fach2klasse1 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
+							+ "VALUES ('Mathematik', 1, 3, FALSE)";
+		String fach3klasse1 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
+							+ "VALUES ('Biologie', 1, 2, FALSE)";
+		String fach1klasse2 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
+							+ "VALUES ('Deutsch', 2, 2, FALSE)";
+		String fach2klasse2 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
+							+ "VALUES ('Mathematik', 2, 3, FALSE)";
+		String fach3klasse2 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
+							+ "VALUES ('Biologie', 2, , FALSE)";
+	}
+	
 	public static List<Subject> findAll() throws SQLException {
 		List<Subject> subjects = new LinkedList<>();
 		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);

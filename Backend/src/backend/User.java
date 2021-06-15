@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 public class User {
 	private int userID;
 	private String username;
+	private String password;
 	private String firstname;
 	private String lastname;
 	private String rolle;
@@ -19,6 +20,16 @@ public class User {
 	public User(int userID, String username, String firstname, String lastname, String rolle) {
 		this.userID = userID;
 		this.username = username;
+		this.password = null;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.rolle = rolle;
+	}
+	
+	public User(int userID, String username, String password, String firstname, String lastname, String rolle) {
+		this.userID = userID;
+		this.username = username;
+		this.password = password;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.rolle = rolle;
@@ -27,6 +38,7 @@ public class User {
 	public User(int userID, String username, String firstname, String lastname) {
 		this.userID = userID;
 		this.username = username;
+		this.password = null;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.rolle = null;
@@ -52,6 +64,7 @@ public class User {
 		return lastname;
 	}
 
+	@JsonGetter
 	public String getRolle() {
 		return rolle;
 	}
@@ -122,6 +135,10 @@ public class User {
 		stmt.executeUpdate(student8);
 		stmt.executeUpdate(student9);
 	}
+	
+	public static void insert(String username, String password, String firstname, String lastname, String rolle) throws SQLException {
+		
+	}
 
 	public static void createAdmin() throws SQLException {
 		List<User> admins = findAllAdmins();
@@ -182,7 +199,7 @@ public class User {
 
 		if (toDelete.getRolle().equals("Lehrende")) {
 			if (Subject.findByTeacher(id) != null) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lehrperson ist noch aktiven Fächern zugeteilt.");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lehrperson ist noch aktiven FÃ¤chern zugeteilt.");
 			}
 		}
 
