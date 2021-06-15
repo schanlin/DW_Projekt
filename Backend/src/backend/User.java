@@ -56,24 +56,25 @@ public class User {
 		return rolle;
 	}
 
-	public static boolean createTable() {
-		String query = "CREATE TABLE IF NOT EXISTS user(" + "userID int AUTO_INCREMENT NOT NULL,"
-				+ "username varchar(50) NOT NULL," + "passwort varchar(256) NOT NULL,"
-				+ "vorname varchar(256) NOT NULL," + "nachname varchar(256) NOT NULL," + "rolle varchar(10) NOT NULL,"
-				+ "klassenID int," + "PRIMARY KEY(userID)," + "UNIQUE(username),"
+	public static void createTable() throws SQLException {
+		String query = "CREATE TABLE IF NOT EXISTS user(" 
+				+ "userID int AUTO_INCREMENT NOT NULL,"
+				+ "username varchar(50) NOT NULL," 
+				+ "passwort varchar(256) NOT NULL,"
+				+ "vorname varchar(256) NOT NULL," 
+				+ "nachname varchar(256) NOT NULL," 
+				+ "rolle varchar(10) NOT NULL,"
+				+ "klassenID int," 
+				+ "PRIMARY KEY(userID)," 
+				+ "UNIQUE(username),"
 				+ "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID))";
-		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(query);
-			createAdmin();
-			return true;
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		}
-		return false;
+		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(query);
+		createAdmin();
 	}
 
-	public static void insertData() {
+	public static void insertData() throws SQLException {
 		List<User> current = findAllUsers();
 		if (!current.isEmpty()) {
 			return;
@@ -106,51 +107,42 @@ public class User {
 		String student9 = "INSERT INTO user(username, passwort, vorname, nachname, rolle) "
 				+ "VALUES('phoenix', 'PASSWORT', 'Kuwei', 'Yul-Bo', 'Lernende')";
 
-		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(teacher1);
-			stmt.executeUpdate(teacher2);
-			stmt.executeUpdate(teacher3);
-			stmt.executeUpdate(student1);
-			stmt.executeUpdate(student2);
-			stmt.executeUpdate(student3);
-			stmt.executeUpdate(student4);
-			stmt.executeUpdate(student5);
-			stmt.executeUpdate(student6);
-			stmt.executeUpdate(student7);
-			stmt.executeUpdate(student8);
-			stmt.executeUpdate(student9);
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		}
+		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+		Statement stmt = con.createStatement();
+		stmt.executeUpdate(teacher1);
+		stmt.executeUpdate(teacher2);
+		stmt.executeUpdate(teacher3);
+		stmt.executeUpdate(student1);
+		stmt.executeUpdate(student2);
+		stmt.executeUpdate(student3);
+		stmt.executeUpdate(student4);
+		stmt.executeUpdate(student5);
+		stmt.executeUpdate(student6);
+		stmt.executeUpdate(student7);
+		stmt.executeUpdate(student8);
+		stmt.executeUpdate(student9);
 	}
 
-	public static void createAdmin() {
+	public static void createAdmin() throws SQLException {
 		List<User> admins = findAllAdmins();
 		if (admins.isEmpty()) {
-			try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
-				String query = "INSERT INTO dw.user (username, passwort, vorname, nachname, rolle)"
-						+ "VALUES ('admin', 'PASSWORT', 'leer', 'leer', 'Admin')";
-				Statement stmt = con.createStatement();
-				stmt.executeUpdate(query);
-			} catch (SQLException e) {
-				System.err.println(e.getMessage());
-			}
+			Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+			String query = "INSERT INTO dw.user (username, passwort, vorname, nachname, rolle)"
+		 				+ "VALUES ('admin', 'PASSWORT', 'leer', 'leer', 'Admin')";
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
 		}
 	}
 
-	public static List<User> findAllUsers() {
+	public static List<User> findAllUsers() throws SQLException {
 		List<User> users = new LinkedList<>();
-		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
-			String query = "SELECT userID, username, vorname, nachname, rolle FROM user";
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			while (rs.next()) {
-				users.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
-			}
-
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+		String query = "SELECT userID, username, vorname, nachname, rolle FROM user";
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+	
+		while (rs.next()) {
+			users.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
 		}
 		return users;
 	}
@@ -167,19 +159,15 @@ public class User {
 		}
 	}
 
-	public static List<User> findAllAdmins() {
+	public static List<User> findAllAdmins() throws SQLException {
 		List<User> admins = new LinkedList<>();
-		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
-			String query = "SELECT userID, username FROM user WHERE rolle='Admin'";
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+		String query = "SELECT userID, username FROM user WHERE rolle='Admin'";
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
 
-			while (rs.next()) {
-				admins.add(new User(rs.getInt(1), rs.getString(2), null, null, "Admin"));
-			}
-
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+		while (rs.next()) {
+			admins.add(new User(rs.getInt(1), rs.getString(2), null, null, "Admin"));
 		}
 		return admins;
 	}

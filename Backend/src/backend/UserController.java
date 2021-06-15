@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 	
 	@GetMapping("/user")
-	public List<User> getAllUsers(){
+	public List<User> getAllUsers() throws SQLException {
 		List<User> users = User.findAllUsers();
 		return users;
 	}
