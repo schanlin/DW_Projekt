@@ -53,4 +53,33 @@ public class Student extends User{
 		return null;
 	}
 	
+	public static boolean deassign(int id) {
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "UPDATE user SET klassenID=null WHERE userID=" + id;
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
+	
+	public static boolean deassignAll(int klassenID) {
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "UPDATE user SET klassenID=null WHERE klassenID=" + klassenID;
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
+	}
+	
+	public static void delete() {
+//		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+		String query = "DELETE FROM user, ergebnis USING ergebnis JOIN user ON";
+	}
+	
 }

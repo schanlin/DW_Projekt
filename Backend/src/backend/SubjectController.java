@@ -22,5 +22,10 @@ public class SubjectController {
 		Subject subject = Subject.findById(id);
 		return subject;
 	}
+	
+//	@DeleteMapping("/subject/{id}")
+//	public boolean deleteSubject(int id) {
+//		
+//	}
 
 }

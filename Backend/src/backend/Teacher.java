@@ -11,7 +11,7 @@ public class Teacher extends User{
 	}
 	
 	public List<Subject> getSubjects() {
-		List<Subject> subjects = Subject.findSubjectsByTeacher(this.getUserID());
+		List<Subject> subjects = Subject.findByTeacher(this.getUserID());
 		return subjects;
 	}
 	

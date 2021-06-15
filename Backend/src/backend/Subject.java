@@ -109,7 +109,7 @@ public class Subject {
 			return null;
 	}
 	
-	public static List<Subject> findSubjectsByTeacher(int teacherID){
+	public static List<Subject> findByTeacher(int teacherID){
 		List<Subject> subjects = new LinkedList<>();
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			String query = "SELECT * FROM fach WHERE teacher=" + teacherID;
@@ -122,5 +122,19 @@ public class Subject {
 			System.err.println(e.getMessage());
 		}
 		return subjects;
+	}
+	
+	public static boolean archiveSubjects(List<Subject> toArchive) {
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			for (Subject subject: toArchive) {
+				String query = "UPDATE fach SET archived=TRUE WHERE fachID=" + subject.subjectID;
+				Statement stmt = con.createStatement();
+				stmt.executeUpdate(query);
+			}
+			return true;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return false;
 	}
 }
