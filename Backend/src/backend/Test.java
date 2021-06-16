@@ -43,34 +43,45 @@ public class Test {
 					 + "fachID int,"
 					 + "PRIMARY KEY(testID),"
 					 + "FOREIGN KEY(fachID) REFERENCES fach(fachID))";
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		Statement stmt = con.createStatement();
-		stmt.executeUpdate(query);
+		
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 	
 	public static List<Test> findAllTests() throws SQLException {
 		List<Test> tests = new LinkedList<>();
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT * FROM test";
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
 		
-		while(rs.next()) {
-			tests.add(new Test(rs.getInt(1), rs.getString(2), rs.getDate(3)));
-		}
-		return tests;
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			String query = "SELECT * FROM test";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				tests.add(new Test(rs.getInt(1), rs.getString(2), rs.getDate(3)));
+			}
+			return tests;
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 
 	public static Test findById(int id) throws SQLException {
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT * FROM test WHERE testID=" + id;
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
-		
-		if (rs.next()) {
-			return new Test(rs.getInt(1), rs.getString(2), rs.getDate(3));
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		}
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			String query = "SELECT * FROM test WHERE testID=" + id;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			if (rs.next()) {
+				return new Test(rs.getInt(1), rs.getString(2), rs.getDate(3));
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			}
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 }

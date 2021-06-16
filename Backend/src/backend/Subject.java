@@ -72,9 +72,12 @@ public class Subject {
 					 + "PRIMARY KEY(fachID),"
 					 + "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID),"
 					 + "FOREIGN KEY(lehrID) REFERENCES user(userID))";
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		Statement stmt = con.createStatement();
-		stmt.executeUpdate(query);
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 	
 	public static void insertData() throws SQLException {
@@ -94,50 +97,64 @@ public class Subject {
 	
 	public static List<Subject> findAll() throws SQLException {
 		List<Subject> subjects = new LinkedList<>();
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT * FROM fach";
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
-	
-		while(rs.next()) {
-			subjects.add(new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getBoolean(5)));
-		}
-		return subjects;
+		
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT * FROM fach";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+		
+			while(rs.next()) {
+				subjects.add(new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getBoolean(5)));
+			}
+			return subjects;
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 	
 	public static Subject findById(int id) throws SQLException {
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT * FROM fach WHERE fachID=" + id;
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
-		
-		if (rs.next()) {
-			return new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getBoolean(5));
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		} 
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT * FROM fach WHERE fachID=" + id;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			if (rs.next()) {
+				return new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getBoolean(5));
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			}
+		} catch (SQLException e) {
+			throw e;
+		}		 
 	}
 	
 	public static List<Subject> findByTeacher(int teacherID) throws SQLException {
 		List<Subject> subjects = new LinkedList<>();
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT * FROM fach WHERE teacher=" + teacherID;
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
 		
-		while (rs.next()) {
-			subjects.add(new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
-		}
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT * FROM fach WHERE teacher=" + teacherID;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while (rs.next()) {
+				subjects.add(new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+			}
 
-		return subjects;
+			return subjects;
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 	
 	public static void archive(List<Subject> toArchive) throws SQLException {
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			for (Subject subject: toArchive) {
 				String query = "UPDATE fach SET archived=TRUE WHERE fachID=" + subject.subjectID;
 				Statement stmt = con.createStatement();
 				stmt.executeUpdate(query);
 			}
+		} catch (SQLException e) {
+			throw e;
+		}			
 	}
 }
