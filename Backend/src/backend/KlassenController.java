@@ -22,7 +22,7 @@ public class KlassenController {
 	
 	@GetMapping("/klasse/{id}")
 	public Klasse getKlasseById(@PathVariable int id) throws SQLException {
-		Klasse klasse = Klasse.findKlasseById(id);
+		Klasse klasse = Klasse.findById(id);
 		return klasse;
 	}
 

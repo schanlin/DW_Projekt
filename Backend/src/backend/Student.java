@@ -28,7 +28,7 @@ public class Student extends User{
 	}
 	
 	public void insert() throws SQLException {
-		String query = "INSERT INTO user(username, passwort, vorname, nachname, rolle)"
+		String query = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID)"
 					 + "VALUES (?, ?, ?, ?, ?, ?)";
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			PreparedStatement stmt = con.prepareStatement(query);

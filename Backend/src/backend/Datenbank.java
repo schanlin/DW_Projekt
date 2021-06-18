@@ -2,6 +2,7 @@ package backend;
 
 import java.io.FileInputStream;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Properties;
 
 public class Datenbank {
@@ -29,8 +30,12 @@ public class Datenbank {
 			Klasse.insertData();
 			User.createTable();
 			User.insertData();
+			Subject.createTable();
+			Subject.insertData();
 		} catch (SQLException e) {
-			System.err.println("Tabellen konnten nicht angelegt werden: " + e.getMessage());
+			System.err.println("Tabellen konnten nicht angelegt werden: ");
+			e.printStackTrace();
+
 		}
 	}
 }

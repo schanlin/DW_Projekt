@@ -101,11 +101,11 @@ public class User {
 	}
 
 	public static void insertData() throws SQLException {
-		List<User> current = findAllUsers();
-		
-		if (!current.isEmpty()) {
-			return;
-		}
+//		List<User> current = findAllUsers();
+//		
+//		if (!current.isEmpty()) {
+//			return;
+//		}
 		
 		User[] teachers = new User[3];
 		teachers[0] = new User("storm", "PASSWORT", "Zoya", "Nazyalenski", "Lehrende");
@@ -192,6 +192,29 @@ public class User {
 			throw e;
 		}
 		
+	}
+	
+	public static User findByName(String name) throws SQLException {
+		String[] fullname = name.split(" ");
+		
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			String query;
+			if (fullname.length == 2) {
+				query = "SELECT userID, username, vorname, nachname, rolle FROM user WHERE vorname=" + fullname[0] + " AND nachname=" + fullname[1];
+			} else {
+				query = "SELECT userID FROM user WHERE vorname LIKE " + (fullname[0] + "%") 
+							 + "AND nachname LIKE " + ("%" + fullname[fullname.length-1]);
+			}
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			} 
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	public static List<User> findAllAdmins() throws SQLException {

@@ -13,6 +13,8 @@ public class Test {
 	private int testID;
 	private String testName;
 	private Date testDatum;
+	private Subject fach;
+	private Klasse klasse;
 	
 	public Test(int testID, String testName, Date testDatum) {
 		this.testID = testID;
@@ -51,6 +53,28 @@ public class Test {
 			throw e;
 		}		
 	}
+	
+	public void insert() throws SQLException {
+		String query = "INSERT INTO test (name, datum, fachID) VALUES (?, ?, ?)";
+		
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, this.testName);
+			stmt.setDate(2, this.testDatum);
+			stmt.setInt(3, x);
+		}
+	}
+	
+	public static void insertData() throws SQLException {
+		Test[] tests = new Test[6];
+		tests[0] = new Test("Verben", new Date(1483225200000L));
+		tests[1] = new Test("Nomen", new Date(1483225200000L));
+		tests[2] = new Test("Gedichtinterpretation", new Date(1483225200000L));
+		tests[3] = new Test("");
+		tests[4] = new Test("");
+		tests[5] = new Test("");
+	}
+
 	
 	public static List<Test> findAllTests() throws SQLException {
 		List<Test> tests = new LinkedList<>();

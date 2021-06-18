@@ -17,6 +17,10 @@ public class Klasse {
 		this.klassenID = klassenID;
 		this.klassenName = klassenName;
 	}
+	
+	public Klasse(String name) {
+		this.klassenName = name;
+	}
 
 	@JsonGetter
 	public String getKlassenName() {
@@ -38,28 +42,31 @@ public class Klasse {
 				     + "name varchar(256) NOT NULL," 
 					 + "PRIMARY KEY(klassenID)," 
 				     + "UNIQUE(name))";
-		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			throw e;
 		}		
 	}
+	
+	public void insert() throws SQLException {
+		String query = "INSERT INTO klasse (name) VALUES (?)";
+		
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, this.klassenName);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		}
+	}
 
 	public static void insertData() throws SQLException {
-		List<Klasse> current = findAll();
-		if (current.isEmpty()) {
-			String klasse1 = "INSERT INTO klasse (name) VALUES ('2016a')";
-			String klasse2 = "INSERT INTO klasse (name) VALUES ('2016b')";
-			
-			try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
-				Statement stmt = con.createStatement();
-				stmt.executeUpdate(klasse1);
-				stmt.executeUpdate(klasse2);
-			} catch (SQLException e) {
-				throw e;
-			}		
-		}
+		Klasse klasse1 = new Klasse("2016a");
+		Klasse klasse2 = new Klasse("2016b");
+		klasse1.insert();
+		klasse2.insert();
 	}
 
 	public static List<Klasse> findAll() throws SQLException {
@@ -80,7 +87,7 @@ public class Klasse {
 		}	
 	}
 
-	public static Klasse findByStudent(int studentID) throws SQLException{
+	public static Klasse findByStudent(int studentID) throws SQLException {
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			String query = "SELECT * FROM klasse JOIN user ON user.klassenID = klasse.klassenID WHERE userID=" + studentID;
 			Statement stmt = con.createStatement();
@@ -96,7 +103,7 @@ public class Klasse {
 		}		
 	}
 
-	public static Klasse findKlasseById(int id) throws SQLException{
+	public static Klasse findById(int id) throws SQLException {
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
 			String query = "SELECT * FROM klasse WHERE klassenID=" + id;
 			Statement stmt = con.createStatement();
@@ -110,6 +117,22 @@ public class Klasse {
 		} catch (SQLException e) {
 			throw e;
 		}		
+	}
+	
+	public static Klasse findByName(String name) throws SQLException {
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT * FROM klasse WHERE name=" + name;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			if (rs.next()) {
+				return new Klasse(rs.getInt(1), rs.getString(2));
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			}
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 }

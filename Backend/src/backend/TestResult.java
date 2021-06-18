@@ -53,6 +53,14 @@ public class TestResult {
 		}		
 	}
 	
+	public void insert() throws SQLException {
+		
+	}
+	
+	public static void insertData() throws SQLException {
+		
+	}
+	
 	public static List<TestResult> findAllResults() throws SQLException {
 		List<TestResult> testResults = new LinkedList<>();
 		

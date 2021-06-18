@@ -11,10 +11,10 @@ import java.util.LinkedList;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class Subject {
-	private final int subjectID;
+	private int subjectID;
 	private String subjectName;
-	private int klasseID;
-	private int teacherID;
+	private String klasse;
+	private String teacher;
 	private boolean archived;
 	
 	@JsonGetter
@@ -23,13 +23,13 @@ public class Subject {
 	}
 
 	@JsonGetter
-	public int getKlasse() {
-		return klasseID;
+	public String getKlasse() {
+		return klasse;
 	}
 
 	@JsonGetter
-	public int getTeacher() {
-		return teacherID;
+	public String getTeacher() {
+		return teacher;
 	}
 
 //	public List<Test> getTests() {
@@ -46,20 +46,26 @@ public class Subject {
 		return archived;
 	}
 
-	public Subject(int subjectID, String subjectName, int klasse, int teacher) {
+	public Subject(int subjectID, String subjectName, String klasse, String name) {
 		this.subjectID = subjectID;
 		this.subjectName = subjectName;
-		this.klasseID = klasse;
-		this.teacherID = teacher;
+		this.klasse = klasse;
+		this.teacher = name;
 		this.archived = false;
 	}
 	
-	public Subject(int subjectID, String subjectName, int klasse, int teacher, boolean archived) {
+	public Subject(int subjectID, String subjectName, String klasse, String teacher, boolean archived) {
 		this.subjectID = subjectID;
 		this.subjectName = subjectName;
-		this.klasseID = klasse;
-		this.teacherID = teacher;
+		this.klasse = klasse;
+		this.teacher = teacher;
 		this.archived = archived;
+	}
+	
+	public Subject(String name, String klassenName, String teacherName) {
+		this.subjectName = name;
+		this.klasse = klassenName;
+		this.teacher = teacherName;
 	}
 	
 	public static void createTable() throws SQLException {
@@ -80,31 +86,46 @@ public class Subject {
 		}
 	}
 	
+	public void insert() throws SQLException {
+		String query = "INSERT INTO fach(name, klassenID, lehrID, archiviert) VALUES(?, ?, ?, ?)";
+		
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, this.subjectName);
+			stmt.setInt(2, Klasse.findByName(this.klasse).getKlassenID());
+			stmt.setInt(3, Teacher.findByName(this.teacher).getUserID());
+			stmt.setBoolean(4, false);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		}
+	}
+	
 	public static void insertData() throws SQLException {
-		String fach1klasse1 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
-							+ "VALUES ('Deutsch', 1, 2, FALSE)";
-		String fach2klasse1 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
-							+ "VALUES ('Mathematik', 1, 3, FALSE)";
-		String fach3klasse1 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
-							+ "VALUES ('Biologie', 1, 2, FALSE)";
-		String fach1klasse2 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
-							+ "VALUES ('Deutsch', 2, 2, FALSE)";
-		String fach2klasse2 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
-							+ "VALUES ('Mathematik', 2, 3, FALSE)";
-		String fach3klasse2 = "INSERT INTO fach(name, klassenID, lehrID, archiviert)"
-							+ "VALUES ('Biologie', 2, , FALSE)";
+		Subject[] testSubjects = new Subject[6];
+		testSubjects[0] = new Subject("Deutsch", "2016a", "Zoya Nazyalenski");
+		testSubjects[1] = new Subject("Mathematik", "2016a", "Jarl Brum");
+		testSubjects[2] = new Subject("Biologie", "2016a", "Zoya Nazyalenski");
+		testSubjects[3] = new Subject("Deutsch", "2016b", "Zoya Nazyalenski");
+		testSubjects[4] = new Subject("Mathematik", "2016b", "Jarl Brum");
+		testSubjects[5] = new Subject("Biologie", "2016b", "Jarl Brum");
+		for (Subject sub: testSubjects) {
+			sub.insert();
+		}
 	}
 	
 	public static List<Subject> findAll() throws SQLException {
 		List<Subject> subjects = new LinkedList<>();
 		
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
-			String query = "SELECT * FROM fach";
+			String query = "SELECT fach.fachID, fach.name, klasse.name, user.vorname, user.nachname, fach.archiviert "
+						 + "FROM ((fach JOIN klasse ON fach.klassenID = klasse.klassenID) "
+						 + "JOIN user ON fach.lehrID=user.userID)";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 		
 			while(rs.next()) {
-				subjects.add(new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getBoolean(5)));
+				subjects.add(new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4) + rs.getString(5), rs.getBoolean(6)));
 			}
 			return subjects;
 		} catch (SQLException e) {
@@ -114,12 +135,14 @@ public class Subject {
 	
 	public static Subject findById(int id) throws SQLException {
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
-			String query = "SELECT * FROM fach WHERE fachID=" + id;
+			String query = "SELECT fach.fachID, fach.name, klasse.name, user.vorname, user.nachname, fach.archiviert "
+					 	 + "FROM ((fach JOIN klasse ON fach.klassenID = klasse.klassenID) "
+					 	 + "JOIN user ON fach.lehrID=user.userID) WHERE fachID=" + id;
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			
 			if (rs.next()) {
-				return new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getBoolean(5));
+				return new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4) + rs.getString(5), rs.getBoolean(6));
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 			}
@@ -132,12 +155,14 @@ public class Subject {
 		List<Subject> subjects = new LinkedList<>();
 		
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
-			String query = "SELECT * FROM fach WHERE teacher=" + teacherID;
+			String query = "SELECT fach.fachID, fach.name, klasse.name, user.vorname, user.nachname, fach.archiviert "
+				 	 	 + "FROM ((fach JOIN klasse ON fach.klassenID = klasse.klassenID) "
+				 	 	 + "JOIN user ON fach.lehrID=user.userID) WHERE lehrID=" + teacherID;
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			
 			while (rs.next()) {
-				subjects.add(new Subject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+				subjects.add(new Subject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4) + rs.getString(5), rs.getBoolean(6)));
 			}
 
 			return subjects;
