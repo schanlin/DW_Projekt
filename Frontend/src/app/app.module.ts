@@ -10,6 +10,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { UserComponent } from './user/user.component';
 import { ClassesComponent } from './classes/classes.component';
 import { SubjectsComponent } from './subjects/subjects.component';
+import {HttpClientModule} from "@angular/common/http";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import { DialogComponent } from './dialog/dialog.component';
 
 
 @NgModule({
@@ -20,12 +23,15 @@ import { SubjectsComponent } from './subjects/subjects.component';
     NavigationLinkComponent,
     UserComponent,
     ClassesComponent,
-    SubjectsComponent
+    SubjectsComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
     FontAwesomeModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

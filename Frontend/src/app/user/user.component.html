@@ -1,1 +1,26 @@
 <p>Liste der Nutzenden</p>
+<!--{{ users | json }} -->
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Nachname</th>
+    <th>Vorname</th>
+    <th>Rolle</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let User of users">
+    <td>{{User.userID}}</td>
+    <td>{{User.lastname}}</td>
+    <td>{{User.firstname}}</td>
+    <td>{{User.rolle}}</td>
+    <td>
+      <fa-icon [icon]="faPen" (click)="onEditUser()"></fa-icon>
+      <fa-icon [icon]="faTrash" (click)="onDeleteUser()"></fa-icon>
+    </td>
+  </tr>
+
+</table>
+
+<!-- for schleife um durch users durchzugehen -->
+
+

@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {routes} from "../app-routing.module";
 import {UserService} from "../user.service";
+import {Link} from "../models/link.model";
 
-interface Link {
-  display: string
-  path: string
-}
 
 @Component({
   selector: 'app-navigation-link',

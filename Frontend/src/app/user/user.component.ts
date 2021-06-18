@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from "../user.service";
 import {BackendService} from "../backend.service";
+import {User} from "../models/user.model";
+import {faPen} from '@fortawesome/free-solid-svg-icons';
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
+
 
 
 @Component({
@@ -11,11 +14,20 @@ import {BackendService} from "../backend.service";
 export class UserComponent implements OnInit {
 
   constructor(private backendService: BackendService) { }
+  users: User[] = [];
+  readonly faPen = faPen;
+  readonly faTrash = faTrash;
 
-  //users: ???[] = [];
+  onEditUser(){
+    alert("Ist geklickt")
+  }
+
+
+  onDeleteUser(){}
 
   ngOnInit(): void {
-    //obs.subscribe(e => this.users = e);
+    const obs = this.backendService.getAllUser();
+    obs.subscribe(e => this.users = e);
   }
 
 }
