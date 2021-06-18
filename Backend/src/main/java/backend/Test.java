@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
+import backend.klasse.Klasse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -53,7 +54,7 @@ public class Test {
 			throw e;
 		}		
 	}
-	
+
 	public void insert() throws SQLException {
 		String query = "INSERT INTO test (name, datum, fachID) VALUES (?, ?, ?)";
 		
@@ -61,18 +62,18 @@ public class Test {
 			PreparedStatement stmt = con.prepareStatement(query);
 			stmt.setString(1, this.testName);
 			stmt.setDate(2, this.testDatum);
-			stmt.setInt(3, x);
+			//stmt.setInt(3, x);
 		}
 	}
 	
 	public static void insertData() throws SQLException {
 		Test[] tests = new Test[6];
-		tests[0] = new Test("Verben", new Date(1483225200000L));
+	/*	tests[0] = new Test("Verben", new Date(1483225200000L));
 		tests[1] = new Test("Nomen", new Date(1483225200000L));
 		tests[2] = new Test("Gedichtinterpretation", new Date(1483225200000L));
 		tests[3] = new Test("");
 		tests[4] = new Test("");
-		tests[5] = new Test("");
+		tests[5] = new Test("");*/
 	}
 
 	

@@ -1,5 +1,7 @@
 package backend;
 
+import backend.klasse.Klasse;
+
 import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -9,7 +11,7 @@ public class Datenbank {
 	public static String url;
 	public static String user;
 	public static String password;
-	
+
 	public static void loadProperties() {
 		Properties properties = new Properties();
 		try {
@@ -18,16 +20,16 @@ public class Datenbank {
 			in.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-		} 
+		}
 		url = properties.getProperty("dw.database.url");
 		user = properties.getProperty("dw.database.user");
-		password = properties.getProperty("dw.database.password");		
+		password = properties.getProperty("dw.database.password");
 	}
-	
+
 	public static void initializeDatabase(){
 		try {
-			Klasse.createTable();
-			Klasse.insertData();
+	//		Klasse.createTable();
+	//		Klasse.insertData();
 			User.createTable();
 			User.insertData();
 			Subject.createTable();

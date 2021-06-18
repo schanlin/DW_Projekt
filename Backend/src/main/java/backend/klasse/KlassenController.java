@@ -1,4 +1,4 @@
-package backend;
+package backend.klasse;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +12,22 @@ import java.util.List;
 
 @RestController
 public class KlassenController {
-	
+
+	private final KlasseDao klasseDao;
+
+	public KlassenController(KlasseDao klasseDao) {
+		this.klasseDao = klasseDao;
+	}
+
 	@GetMapping("/klasse")
 	public List<Klasse> getAllKlassen() throws SQLException {
-		List<Klasse> klassen = new LinkedList<>();
-		klassen = Klasse.findAll();
+		List<Klasse> klassen = klasseDao.findAll();
 		return klassen;
 	}
 	
 	@GetMapping("/klasse/{id}")
 	public Klasse getKlasseById(@PathVariable int id) throws SQLException {
-		Klasse klasse = Klasse.findById(id);
+		Klasse klasse = klasseDao.findKlasseById(id);
 		return klasse;
 	}
 

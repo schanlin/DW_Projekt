@@ -92,7 +92,7 @@ public class Subject {
 		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
 			PreparedStatement stmt = con.prepareStatement(query);
 			stmt.setString(1, this.subjectName);
-			stmt.setInt(2, Klasse.findByName(this.klasse).getKlassenID());
+			//stmt.setInt(2, Klasse.findByName(this.klasse).getKlassenID());
 			stmt.setInt(3, Teacher.findByName(this.teacher).getUserID());
 			stmt.setBoolean(4, false);
 			stmt.executeUpdate();
