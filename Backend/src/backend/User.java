@@ -43,6 +43,15 @@ public class User {
 		this.lastname = lastname;
 		this.rolle = null;
 	}
+	
+	public User(String username, String password, String firstname, String lastname, String rolle) {
+		this.userID = 0;
+		this.username = username;
+		this.password = password;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.rolle = rolle;
+	}
 
 	@JsonGetter
 	public int getUserID() {
@@ -68,6 +77,10 @@ public class User {
 	public String getRolle() {
 		return rolle;
 	}
+	
+	public String getPassword() {
+		return password;
+	}
 
 	public static void createTable() throws SQLException {
 		String query = "CREATE TABLE IF NOT EXISTS user(" 
@@ -89,72 +102,70 @@ public class User {
 
 	public static void insertData() throws SQLException {
 		List<User> current = findAllUsers();
+		
 		if (!current.isEmpty()) {
 			return;
 		}
-		String teacher1 = "INSERT INTO user(username, passwort, vorname, nachname, rolle) "
-				+ "VALUES('storm', 'PASSWORT', 'Zoya', 'Nazyalenski', 'Lehrende')";
-		String teacher2 = "INSERT INTO user(username, passwort, vorname, nachname, rolle) "
-				+ "VALUES('hunter', 'PASSWORT', 'Jarl', 'Brum', 'Lehrende')";
-		String teacher3 = "INSERT INTO user(username, passwort, vorname, nachname, rolle) "
-				+ "VALUES('tailor', 'PASSWORT', 'Genya', 'Safin', 'Lehrende')";
-
-		String student1 = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID) "
-				+ "VALUES ('demjin', 'PASSWORT', 'Kaz', 'Brekker', 'Lernende', 1)";
-		String student2 = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID) "
-				+ "VALUES('phantom', 'PASSWORT', 'Inej', 'Ghaza', 'Lernende', 1)";
-		String student3 = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID) "
-				+ "VALUES('sharpshooter', 'PASSWORT', 'Jesper Llewellyn', 'Fahey', 'Lernende', 1)";
-		String student4 = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID) "
-				+ "VALUES('merchling', 'PASSWORT', 'Wylan', 'Van Eck', 'Lernende', 1)";
-
-		String student5 = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID) "
-				+ "VALUES('redbird', 'PASSWORT', 'Nina', 'Zenik', 'Lernende', 2)";
-		String student6 = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID) "
-				+ "VALUES('trassel', 'PASSWORT', 'Matthias Benedik', 'Helvar', 'Lernende', 2)";
-		String student7 = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID) "
-				+ "VALUES('sunny', 'PASSWORT', 'Alina', 'Starkov', 'Lernende', 2)";
-		String student8 = "INSERT INTO user(username, passwort, vorname, nachname, rolle, klassenID) "
-				+ "VALUES('brief', 'PASSWORT', 'Malyen', 'Oretsev', 'Lernende', 2)";
-
-		String student9 = "INSERT INTO user(username, passwort, vorname, nachname, rolle) "
-				+ "VALUES('phoenix', 'PASSWORT', 'Kuwei', 'Yul-Bo', 'Lernende')";
-
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		Statement stmt = con.createStatement();
-		stmt.executeUpdate(teacher1);
-		stmt.executeUpdate(teacher2);
-		stmt.executeUpdate(teacher3);
-		stmt.executeUpdate(student1);
-		stmt.executeUpdate(student2);
-		stmt.executeUpdate(student3);
-		stmt.executeUpdate(student4);
-		stmt.executeUpdate(student5);
-		stmt.executeUpdate(student6);
-		stmt.executeUpdate(student7);
-		stmt.executeUpdate(student8);
-		stmt.executeUpdate(student9);
+		
+		User[] teachers = new User[3];
+		teachers[0] = new User("storm", "PASSWORT", "Zoya", "Nazyalenski", "Lehrende");
+		teachers[1] = new User("hunter", "PASSWORT", "Jarl", "Brum", "Lehrende");
+		teachers[2] = new User("tailor", "PASSWORT", "Genya", "Safin", "Lehrende");
+		
+		for (User teacher: teachers) {
+			teacher.insert();
+		}
+		
+		Student[] students = new Student[9];
+		students[0] = new Student("demjin", "PASSWORT", "Kaz", "Brekker", "Lernende", "2016a");
+		students[1] = new Student("phantom", "PASSWORT", "Inej", "Ghaza", "Lernende", "2016a");
+		students[2] = new Student("sharpshooter", "PASSWORT", "Jesper Llewellyn", "Fahey", "Lernende", "2016a");
+		students[3] = new Student("merchling", "PASSWORT", "Wylan", "Van Eck", "Lernende", "2016a");
+		students[4] = new Student("redbird", "PASSWORT", "Nina", "Zenik", "Lernende", "2016b");
+		students[5] = new Student("trassel", "PASSWORT", "Matthias Benedik", "Helvar", "Lernende", "2016b");
+		students[6] = new Student("sunny", "PASSWORT", "Alina", "Starkov", "Lernende", "2016b");
+		students[7] = new Student("brief", "PASSWORT", "Malyen", "Oretsev", "Lernende", "2016b");
+		students[8] = new Student("poenix", "PASSWORT", "Kuwei", "Yul-Bo", "Lernende", null);
+		
+		for (Student student: students) {
+			student.insert();
+		}
 	}
 	
-	public static void insert(String username, String password, String firstname, String lastname, String rolle) throws SQLException {
-		
+	public void insert() throws SQLException {
+		String query = "INSERT INTO user(username, passwort, vorname, nachname, rolle)"
+					 + "VALUES (?, ?, ?, ?, ?)";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, this.username);
+			stmt.setString(2, this.password);
+			stmt.setString(3, this.firstname);
+			stmt.setString(4, this.lastname);
+			stmt.setString(5, this.rolle);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	public static void createAdmin() throws SQLException {
 		List<User> admins = findAllAdmins();
 		if (admins.isEmpty()) {
-			Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-			String query = "INSERT INTO user (username, passwort, vorname, nachname, rolle)"
+			try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+				String query = "INSERT INTO user (username, passwort, vorname, nachname, rolle)"
 		 				+ "VALUES ('admin', 'PASSWORT', 'leer', 'leer', 'Admin')";
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(query);
+				Statement stmt = con.createStatement();
+				stmt.executeUpdate(query);
+			} catch (SQLException e) {
+				throw e;
+			}			
 		}
 	}
 
 	public static List<User> findAllUsers() throws SQLException {
 		List<User> users = new LinkedList<>();
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT userID, username, vorname, nachname, rolle FROM user";
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT userID, username, vorname, nachname, rolle FROM user";
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 	
@@ -162,31 +173,41 @@ public class User {
 			users.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
 		}
 		return users;
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 
 	public static User findById(int id) throws SQLException {
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT userID, username, vorname, nachname, rolle FROM user WHERE userID=" + id;
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
-		if (rs.next()) {
-			return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User konnte nicht gefunden werden.");
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT userID, username, vorname, nachname, rolle FROM user WHERE userID=" + id;
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User konnte nicht gefunden werden.");
+			}
+		} catch (SQLException e) {
+			throw e;
 		}
+		
 	}
 
 	public static List<User> findAllAdmins() throws SQLException {
 		List<User> admins = new LinkedList<>();
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT userID, username FROM user WHERE rolle='Admin'";
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "SELECT userID, username FROM user WHERE rolle='Admin'";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
 
-		while (rs.next()) {
-			admins.add(new User(rs.getInt(1), rs.getString(2), null, null, "Admin"));
-		}
-		return admins;
+			while (rs.next()) {
+				admins.add(new User(rs.getInt(1), rs.getString(2), null, null, "Admin"));
+			}
+			return admins;
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 
 	public static void delete(int id) throws SQLException {
@@ -203,14 +224,17 @@ public class User {
 			}
 		}
 
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "DELETE FROM user WHERE userID=" + id;
-		Statement stmt = con.createStatement();
-		int affected = stmt.executeUpdate(query);
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)){
+			String query = "DELETE FROM user WHERE userID=" + id;
+			Statement stmt = con.createStatement();
+			int affected = stmt.executeUpdate(query);
 
-		if (affected == 0) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		}
+			if (affected == 0) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			}
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 
 }

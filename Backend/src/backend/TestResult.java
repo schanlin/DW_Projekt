@@ -44,21 +44,29 @@ public class TestResult {
 					 + "PRIMARY KEY(testID, studentID),"
 					 + "FOREIGN KEY(testID) REFERENCES test(testID),"
 					 + "FOREIGN KEY(studentID) REFERENCES user(userID))";
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		Statement stmt = con.createStatement();
-		stmt.executeUpdate(query);
+		
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 	
 	public static List<TestResult> findAllResults() throws SQLException {
 		List<TestResult> testResults = new LinkedList<>();
-		Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password);
-		String query = "SELECT * FROM ergebnis";
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
 		
-		while(rs.next()) {
-			testResults.add(new TestResult(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
-		}
-		return testResults;
+		try (Connection con = DriverManager.getConnection(Datenbank.url, Datenbank.user, Datenbank.password)) {
+			String query = "SELECT * FROM ergebnis";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				testResults.add(new TestResult(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+			}
+			return testResults;
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 }
