@@ -4,18 +4,23 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-import backend.Datenbank;
+import backend.Database;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class Klasse {
-	private int klassenID;
+	private Integer klassenID;
 	private String klassenName;
 
-	public Klasse(int klassenID, String klassenName) {
-		this.klassenID = klassenID;
+	Klasse(int klassenId, String klassenName) {
+		this.klassenID = klassenId;
+		this.klassenName = klassenName;
+	}
+	
+	public Klasse(String klassenName) {
+		this.klassenID = null;
 		this.klassenName = klassenName;
 	}
 

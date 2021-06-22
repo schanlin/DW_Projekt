@@ -1,13 +1,10 @@
 package backend;
 
-import backend.klasse.Klasse;
-
 import java.io.FileInputStream;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.Properties;
 
-public class Datenbank {
+public class Database {
 	public static String url;
 	public static String user;
 	public static String password;
@@ -24,20 +21,5 @@ public class Datenbank {
 		url = properties.getProperty("dw.database.url");
 		user = properties.getProperty("dw.database.user");
 		password = properties.getProperty("dw.database.password");
-	}
-
-	public static void initializeDatabase(){
-		try {
-	//		Klasse.createTable();
-	//		Klasse.insertData();
-			User.createTable();
-			User.insertData();
-			Subject.createTable();
-			Subject.insertData();
-		} catch (SQLException e) {
-			System.err.println("Tabellen konnten nicht angelegt werden: ");
-			e.printStackTrace();
-
-		}
 	}
 }

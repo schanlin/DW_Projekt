@@ -1,9 +1,6 @@
 package backend;
 
-import backend.User;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.sql.SQLException;
 
 @ConfigurationProperties(prefix = "dw.database")
 public class DatabaseConfig {

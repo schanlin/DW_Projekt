@@ -1,0 +1,98 @@
+package backend.subject;
+
+import backend.Database;
+import backend.test.TestDao;
+import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
+
+@Service
+public class SubjectDao {
+    private final JdbcTemplate template;
+    private final TestDao testDao;
+
+    public SubjectDao(JdbcTemplate template, TestDao testDao) {
+        this.template = template;
+        this.testDao = testDao;
+    }
+
+    public static void createTable() throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS fach("
+                + "fachID int AUTO_INCREMENT NOT NULL,"
+                + "name varchar(256) NOT NULL,"
+                + "klassenID int,"
+                + "lehrID int,"
+                + "archiviert bool,"
+                + "PRIMARY KEY(fachID),"
+                + "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID),"
+                + "FOREIGN KEY(lehrID) REFERENCES user(userID))";
+        try (Connection con = DriverManager.getConnection(Database.url, Database.user, Database.password)){
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    public Subject insert(Subject subject) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO fach (name, klassenID, lehrID, archiviert) " +
+                    "VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, subject.getSubjectName());
+            stmt.setInt(2, subject.getKlasse());
+            stmt.setInt(3, subject.getTeacher());
+            stmt.setBoolean(4, subject.isArchived());
+            return stmt;
+        };
+
+        KeyHolder holder = new GeneratedKeyHolder();
+        template.update(creator, holder);
+        return new Subject(holder.getKey().intValue(), subject.getSubjectName(), subject.getKlasse(), subject.getTeacher(), subject.isArchived());
+    }
+
+    public List<Subject> findAll() {
+        return template.query("SELECT fachID, name, klassenID, lehrID, archiviert FROM fach", (rs, rowNum) ->
+                new Subject(rs.getInt("fachID"), rs.getString("name"), rs.getInt("klassenID"),
+                        rs.getInt("lehrID"), rs.getBoolean("archiviert")));
+    }
+
+    public Subject findById(int id) {
+        return template.queryForObject("SELECT fachID, name, klassenID, lehrID, archiviert FROM fach WHERE fachID=" +id,
+                (rs, rowNum) ->
+                new Subject(rs.getInt("fachID"), rs.getString("name"), rs.getInt("klassenID"),
+                        rs.getInt("lehrID"), rs.getBoolean("archiviert")));
+    }
+
+    public List<Subject> findByTeacher(int teacherID) {
+        return template.query("SELECT fachID, name, klassenID, lehrID, archiviert FROM fach WHERE lehrID=" + teacherID, (rs, rowNum) ->
+                new Subject(rs.getInt("fachID"), rs.getString("name"), rs.getInt("klassenID"),
+                        rs.getInt("lehrID"), rs.getBoolean("archiviert")));
+    }
+
+    public List<Subject> findByKlasse(int klassenID) {
+        return template.query("SELECT fachID, name, klassenID, lehrID, archiviert FROM fach WHERE klassenID=" + klassenID, (rs, rowNum) ->
+                new Subject(rs.getInt("fachID"), rs.getString("name"), rs.getInt("klassenID"),
+                        rs.getInt("lehrID"), rs.getBoolean("archiviert")));
+    }
+
+    public int delete(int id) {
+        if (testDao.countBySubject(id)>0) {
+            return archive(id);
+        } else {
+            return template.update("DELETE FROM fach WHERE fachID=" + id);
+        }
+    }
+
+    public int archive(int id) {
+        return template.update("UPDATE fach SET lehrID=null, archived=TRUE WHERE fachID=" + id);
+    }
+
+}
