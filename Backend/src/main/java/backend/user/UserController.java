@@ -17,6 +17,11 @@ public class UserController {
 		this.userDao = userDao;
 	}
 
+	@PostMapping("/user")
+	public User postUser(@RequestBody User user) {
+		return userDao.insert(user);
+	}
+
 	@GetMapping("/user")
 	public List<User> getAllUsers() {
 		List<User> users = userDao.findAll();
@@ -32,8 +37,13 @@ public class UserController {
 		return user;
 	}
 
-//	@PostMapping(value="/user", consumes = "application/json")
-
+	@PutMapping("/user/{id}")
+	public void putUser(@RequestBody User user, @PathVariable int id) {
+		int status = userDao.update(user, id);
+		if (status==0) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 	@DeleteMapping("/user/{id}")
 	public void deleteUser(@PathVariable int id) throws SQLException {

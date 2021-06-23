@@ -1,5 +1,6 @@
 package backend.user;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class User {
@@ -36,7 +37,8 @@ public class User {
 		this.lastname = lastname;
 		this.rolle = null;
 	}
-	
+
+	@JsonCreator
 	public User(String username, String password, String firstname, String lastname, String rolle) {
 		this.userID = 0;
 		this.username = username;

@@ -20,13 +20,13 @@ public class TeacherController {
 	}
 	
 	@GetMapping("/teacher")
-	public List<Teacher> getAllTeachers() throws SQLException {
+	public List<Teacher> getAllTeachers() {
 		List<Teacher> teachers = teacherDao.findAll();
 		return teachers;
 	}
 	
 	@GetMapping("/teacher/{id}")
-	public Teacher getTeacherById(@PathVariable int id) throws SQLException {
+	public Teacher getTeacherById(@PathVariable int id) {
 		Teacher teacher = teacherDao.findById(id);
 		if (teacher==null){
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);

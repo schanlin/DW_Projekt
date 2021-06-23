@@ -1,12 +1,10 @@
 package backend.klasse;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,10 +20,14 @@ public class KlassenController {
 		this.klasseDao = klasseDao;
 	}
 
+	@PostMapping("/klasse")
+	public Klasse postKlasse(@RequestBody Klasse klasse) {
+		return klasseDao.insert(klasse);
+	}
+
 	@GetMapping("/klasse")
 	public List<Klasse> getAllKlassen() {
-		List<Klasse> klassen = klasseDao.findAll();
-		return klassen;
+		return klasseDao.findAll();
 	}
 	
 	@GetMapping("/klasse/{id}")
@@ -35,6 +37,14 @@ public class KlassenController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		return klasse;
+	}
+
+	@PutMapping("/klasse/{id}")
+	public void putKlasse(@RequestBody Klasse klasse, @PathVariable int id) {
+		int status = klasseDao.update(klasse, id);
+		if (status==0) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@DeleteMapping("/klasse/{id}")

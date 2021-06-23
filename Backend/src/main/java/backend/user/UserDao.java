@@ -64,37 +64,25 @@ public class UserDao {
 
     public User findById(int id) {
         return template.queryForObject("SELECT userID, username, vorname, nachname, rolle FROM user" +
-                "WHERE userID=" + id, (rs, rowNum) ->
+                " WHERE userID=" + id, (rs, rowNum) ->
                 new User(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
                         rs.getString("nachname"), rs.getString("rolle")));
     }
 
+    public int update(User user, int id) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET username = ?, vorname = ?, " +
+                    " nachname = ? WHERE userID = ?");
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getFirstname());
+            stmt.setString(3, user.getLastname());
+            stmt.setInt(4, id);
+            return stmt;
+        };
+        return template.update(creator);
+    }
 
-
-//    public static User findByName(String name) throws SQLException {
-//        String[] fullname = name.split(" ");
-//
-//        try (Connection con = DriverManager.getConnection(Database.url, Database.user, Database.password)) {
-//            String query;
-//            if (fullname.length == 2) {
-//                query = "SELECT userID, username, vorname, nachname, rolle FROM user WHERE vorname=" + fullname[0] + " AND nachname=" + fullname[1];
-//            } else {
-//                query = "SELECT userID FROM user WHERE vorname LIKE " + (fullname[0] + "%")
-//                        + "AND nachname LIKE " + ("%" + fullname[fullname.length-1]);
-//            }
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(query);
-//            if (rs.next()) {
-//                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
-//            } else {
-//                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//            }
-//        } catch (SQLException e) {
-//            throw e;
-//        }
-//    }
-
-    public int delete(User user) throws SQLException {
+    public int delete(User user) {
         if (user.getRolle().equals("Lernende")) {
             return delete(new Student(user.getUserID(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getRolle()));
         }

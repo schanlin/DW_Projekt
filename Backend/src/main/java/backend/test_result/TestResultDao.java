@@ -66,4 +66,12 @@ public class TestResultDao {
         return template.update("DELETE FROM ergebnis WHERE lernID=" + studentId);
     }
 
+    public int deleteByTest(int testId) {
+        return template.update("DELETE FROM ergebnis WHERE testID=" + testId);
+    }
+
+    public double findAverageByStudentAndSubject(int subjectID, int studentID) {
+        return template.queryForObject("SELECT avg(ergebnis.note) FROM ergebnis INNER JOIN test WHERE test.fachID =" +
+                subjectID + " AND ergebnis.lernID=" + studentID, Double.class);
+    }
 }

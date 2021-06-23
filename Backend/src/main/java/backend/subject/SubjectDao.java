@@ -83,6 +83,25 @@ public class SubjectDao {
                         rs.getInt("lehrID"), rs.getBoolean("archiviert")));
     }
 
+    public int update(Subject toUpdate, int id) {
+        Subject current = findById(id);
+        if (current.isArchived()) {
+            return -1;
+        }
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE fach SET name = ?, klassenID = ?," +
+                    " lehrID = ?, archiviert = ? WHERE fachID = ?");
+            stmt.setString(1, toUpdate.getSubjectName());
+            stmt.setInt(2, toUpdate.getKlasse());
+            stmt.setInt(3, toUpdate.getTeacher());
+            stmt.setBoolean(4, toUpdate.isArchived());
+            stmt.setInt(5, id);
+            return stmt;
+        };
+
+        return template.update(creator);
+    }
+
     public int delete(int id) {
         if (testDao.countBySubject(id)>0) {
             return archive(id);
@@ -92,7 +111,10 @@ public class SubjectDao {
     }
 
     public int archive(int id) {
-        return template.update("UPDATE fach SET lehrID=null, archived=TRUE WHERE fachID=" + id);
+        if (testDao.countBySubject(id)==0) {
+            return -1;
+        return template.update("UPDATE fach SET lehrID = null, archiviert = TRUE WHERE fachID=" + id);
     }
+
 
 }

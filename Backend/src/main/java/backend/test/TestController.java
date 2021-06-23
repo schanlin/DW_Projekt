@@ -5,9 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -16,6 +14,11 @@ public class TestController {
 
 	public TestController(TestDao testDao) {
 		this.testDao = testDao;
+	}
+
+	@PostMapping("/test")
+	public Test postTest(@RequestBody Test test) {
+		return testDao.insert(test);
 	}
 
 	@GetMapping("/test")
@@ -31,6 +34,22 @@ public class TestController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		return test;
+	}
+
+	@PutMapping("/test/{id}")
+	public void putTest(@RequestBody Test test, @PathVariable int id) {
+		int status = testDao.update(test, id);
+		if (status==0) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@DeleteMapping("/test/{id}")
+	public void deleteTest(@PathVariable int id) {
+		int status = testDao.delete(id);
+		if (status==0) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
 	}
 
 }
