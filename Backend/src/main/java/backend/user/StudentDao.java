@@ -4,6 +4,7 @@ import backend.Database;
 import backend.klasse.Klasse;
 import backend.klasse.KlasseDao;
 import backend.test_result.TestResultDao;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -29,11 +30,13 @@ public class StudentDao {
     }
 
     public Student insert(Student student) {
+        String hashPW = DigestUtils.md5Hex(student.getPassword()).toUpperCase();
+
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort," +
                     "vorname, nachname, rolle, klassenID) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, student.getUsername());
-            stmt.setString(2, student.getPassword());
+            stmt.setString(2, hashPW);
             stmt.setString(3, student.getFirstname());
             stmt.setString(4, student.getLastname());
             stmt.setString(5, student.getRolle());
