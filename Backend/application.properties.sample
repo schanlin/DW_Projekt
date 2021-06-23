@@ -1,3 +1,3 @@
 dw.database.url=jdbc:mariadb://localhost:3306/dw?allowPublicKeyRetrieval=true
 dw.database.user=root
-dw.database.password=Feuersturm11
+dw.database.password=password

@@ -25,7 +25,7 @@ public class StudentDao {
 
     public StudentDao(JdbcTemplate template, TestResultDao testResultDao) {
         this.template = template;
-        this.template = testResultDao;
+        this.testResultDao = testResultDao;
     }
 
     public Student insert(Student student) {

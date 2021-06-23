@@ -74,7 +74,7 @@ public class TestDao {
     }
 
     public int countBySubject(int subjectId) {
-        return template.queryForObject("SELECT count(*) FROM test WHERE fachID=" + subjectId);
+        return template.queryForObject("SELECT count(*) FROM test WHERE fachID=" + subjectId, Integer.class);
     }
 
 }
