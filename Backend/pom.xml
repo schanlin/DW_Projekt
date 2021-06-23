@@ -4,15 +4,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dw</groupId>
 	<artifactId>dw</artifactId>
+	<name>Datenbanken und Webtechniken</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.6</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<version>2.5.1</version>
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -20,6 +21,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -28,26 +30,20 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jdbc</artifactId>
-			<version>2.2.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
+
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
-			<version>2.7.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui -->
+
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.5.9</version>
 		</dependency>
+
 	</dependencies>
-	<repositories>
-		<repository>
-			<id>spring-milestone</id>
-			<name>Spring Maven MILESTONE Repository</name>
-			<url>https://repo.spring.io/libs-milestone</url>
-		</repository>
-	</repositories>
 </project>
