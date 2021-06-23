@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.sql.*;
 import java.util.List;
@@ -40,11 +41,13 @@ public class UserDao {
     }
 
     public User insert(User user) {
+        String hashPW = DigestUtils.md5Hex(user.getPassword()).toUpperCase();
+
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort, vorname, nachname, rolle)" +
                                                                 "VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
+            stmt.setString(2, hashPW);
             stmt.setString(3, user.getFirstname());
             stmt.setString(4, user.getLastname());
             stmt.setString(5, user.getRolle());
@@ -53,7 +56,7 @@ public class UserDao {
 
         KeyHolder holder = new GeneratedKeyHolder();
         template.update(creator, holder);
-        return new User(holder.getKey().intValue(), user.getUsername(), user.getPassword(), user.getFirstname(), user.getLastname(), user.getRolle());
+        return new User(holder.getKey().intValue(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getRolle());
     }
 
     public List<User> findAll() {
