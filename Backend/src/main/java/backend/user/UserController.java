@@ -5,10 +5,14 @@ import java.util.List;
 
 import backend.user.User;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.RolesAllowed;
+
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
 	private final UserDao userDao;
@@ -17,18 +21,23 @@ public class UserController {
 		this.userDao = userDao;
 	}
 
-	@PostMapping("/user")
+	@GetMapping("/hello")
+	public String hello() {
+		return "hello world";
+	}
+
+	@PostMapping
 	public User postUser(@RequestBody User user) {
 		return userDao.insert(user);
 	}
 
-	@GetMapping("/user")
+	@GetMapping
 	public List<User> getAllUsers() {
 		List<User> users = userDao.findAll();
 		return users;
 	}
 	
-	@GetMapping("/user/{id}")
+	@GetMapping("/{id}")
 	public User getUserById(@PathVariable int id) {
 		User user = userDao.findById(id);
 		if (user==null) {
@@ -37,7 +46,7 @@ public class UserController {
 		return user;
 	}
 
-	@PutMapping("/user/{id}")
+	@PutMapping("/{id}")
 	public void putUser(@RequestBody User user, @PathVariable int id) {
 		int status = userDao.update(user, id);
 		if (status==0) {
@@ -45,7 +54,7 @@ public class UserController {
 		}
 	}
 	
-	@DeleteMapping("/user/{id}")
+	@DeleteMapping("/{id}")
 	public void deleteUser(@PathVariable int id) throws SQLException {
 		int status = userDao.delete(userDao.findById(id));
 		if (status<0) {

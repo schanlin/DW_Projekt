@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -17,10 +19,12 @@ import java.util.List;
 public class UserDao {
     private final JdbcTemplate template;
     private final SubjectDao subjectDao;
+    private final PasswordEncoder encoder;
 
-    public UserDao(JdbcTemplate template, SubjectDao subjectDao) {
+    public UserDao(JdbcTemplate template, SubjectDao subjectDao, PasswordEncoder encoder) {
         this.template = template;
         this.subjectDao = subjectDao;
+        this.encoder = encoder;
     }
 
     public static void createTable() throws SQLException {
@@ -40,14 +44,12 @@ public class UserDao {
         stmt.executeUpdate(query);
     }
 
-    public User insert(User user) {
-        String hashPW = DigestUtils.md5Hex(user.getPassword()).toUpperCase();
-
+   public User insert(User user) {
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort, vorname, nachname, rolle)" +
                                                                 "VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, hashPW);
+            stmt.setString(2, encoder.encode(user.getPassword()));
             stmt.setString(3, user.getFirstname());
             stmt.setString(4, user.getLastname());
             stmt.setString(5, user.getRolle());

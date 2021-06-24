@@ -15,6 +15,7 @@ import backend.user.Student;
 import backend.user.StudentDao;
 import backend.user.User;
 import backend.user.UserDao;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import backend.klasse.Klasse;
@@ -28,15 +29,17 @@ public class DemoDataInitializer {
 	private final SubjectDao subjectDao;
 	private final TestDao testDao;
 	private final TestResultDao testResultDao;
+	private final PasswordEncoder encoder;
 
 	public DemoDataInitializer(KlasseDao klasseDao, UserDao userDao, StudentDao studentDao, SubjectDao subjectDao,
-							   TestDao testDao, TestResultDao testResultDao) {
+							   TestDao testDao, TestResultDao testResultDao, PasswordEncoder encoder) {
 		this.klasseDao = klasseDao;
 		this.userDao = userDao;
 		this.studentDao = studentDao;
 		this.subjectDao = subjectDao;
 		this.testDao = testDao;
 		this.testResultDao = testResultDao;
+		this.encoder = encoder;
 	}
 	
 	@PostConstruct
@@ -51,7 +54,7 @@ public class DemoDataInitializer {
 		 klasseDao.insert(new Klasse("2016b"));
 
 		 UserDao.createTable();
-		 userDao.insert(new User("admin", "PASSWORT", "Admini", "Strator", "Admin"));
+		 userDao.insert(new User("admin", encoder.encode("PASSWORT"), "Admini", "Strator", "Admin"));
 		 userDao.insert(new User("storm", "PASSWORT", "Zoya", "Nazyalenski", "Lehrende"));
 		 userDao.insert(new User("hunter", "PASSWORT", "Jarl", "Brum", "Lehrende"));
 		 userDao.insert(new User("tailor", "PASSWORT", "Genya", "Safin", "Lehrende"));
