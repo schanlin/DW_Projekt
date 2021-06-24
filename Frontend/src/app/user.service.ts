@@ -5,7 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class UserService {
   constructor() { }
-  getName() { return 'Armin Meister';}
+  getLastname() { return 'Meister';}
+  getFirstname() {return 'Armin';}
   getRole() { return 'Administrator';}
-  getEmailAdress(){return 'admin@emxample.com'}
+  getEmailAdress(){return 'admin@emxample.com';}
+  getID(){return 1;}
+  getUsername(){return 'MeiArm';}
 }

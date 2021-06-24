@@ -11,3 +11,9 @@ body{
 .html{
 
 }
+
+.close {
+  margin: 0.5em;
+  display:block;
+  text-align: right;
+}

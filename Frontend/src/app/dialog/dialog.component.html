@@ -1,1 +1,5 @@
-<p>dialog works!</p>
+<div *ngIf="isOpen" class="background" fxLayout="row" fxLayoutAlign="center center">
+  <div fxFlex="nogrow" class="container">
+    <ng-content></ng-content> <!-- hier können Inhalte reingeladen werden-->
+  </div>
+</div>
