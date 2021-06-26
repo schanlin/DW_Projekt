@@ -5,13 +5,17 @@
   height:100%;
   top: 0;
   left: 0;
+
 }
 
 .container {
   background: white;
   border: solid black 1px;
   width: content-box;
+  padding: 1em;
 }
-.body{
+
+table{
+  mso-cellspacing: 1em;
 
 }

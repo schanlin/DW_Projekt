@@ -13,10 +13,13 @@ import {faTrash} from '@fortawesome/free-solid-svg-icons';
 })
 export class UserComponent implements OnInit {
 
-  constructor(private backendService: BackendService) { }
+  constructor(private backendService: BackendService, private userService: UserService) { }
   users: User[] = [];
   readonly faPen = faPen;
   readonly faTrash = faTrash;
+  readonly faTimes = faTimes;
+
+
 
   onEditUser(){
     alert("Ist geklickt")
@@ -28,6 +31,7 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     const obs = this.backendService.getAllUser();
     obs.subscribe(e => this.users = e);
+
   }
 
 }

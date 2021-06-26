@@ -27,6 +27,7 @@ export class NavigationProfileComponent implements OnInit {
     lastname: new FormControl(''),
     userEmail: new FormControl('', [Validators.email]),
     password: new FormControl('', [Validators.minLength(6)]),
+    username: new FormControl(''),
   })
 
   ngOnInit(): void {
