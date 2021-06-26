@@ -47,6 +47,21 @@ public class TestResultDao {
         return result;
     }
 
+    public int insertOrUpdate(TestResult result) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO ergebnis VALUES(?,?,?) "
+                    + " ON DUPLICATE KEY UPDATE note=?");
+            stmt.setInt(1, result.getTestID());
+            stmt.setInt(2, result.getStudentID());
+            stmt.setInt(3, result.getMark());
+            stmt.setInt(4, result.getMark());
+            return stmt;
+        };
+
+        return template.update(creator);
+    }
+
+
     public List<TestResult> findAll() {
         return template.query("SELECT testID, lernID, note FROM ergebnis", (rs, rowNum) ->
                 new TestResult(rs.getInt("testID"), rs.getInt("lernID"), rs.getInt("note")));
@@ -70,15 +85,16 @@ public class TestResultDao {
         return template.update("DELETE FROM ergebnis WHERE testID=" + testId);
     }
 
-    /*
+
     public double findAverageByStudentAndSubject(int subjectID, int studentID) {
         return template.queryForObject("SELECT avg(ergebnis.note) FROM ergebnis INNER JOIN test WHERE test.fachID =" +
                 subjectID + " AND ergebnis.lernID=" + studentID, Double.class);
     }
 
     public List<AverageByStudent> findAllAverageByStudentAndSubject(int subjectID) {
-        return template.query("SELECT lernID, avg(note) FROM ergebnis WHERE fachID=" + subjectID + " GROUP BY lernID",
+        return template.query("SELECT lernID, avg(note) FROM ergebnis INNER JOIN test ON test.testID = ergebnis.testID " +
+                        "WHERE fachID=" + subjectID + " GROUP BY lernID",
                 (rs, rowNum) ->
-                new AverageByStudent(rs.getInt(1), rs.getInt(2)));
-    }*/
+                new AverageByStudent(rs.getInt(1), rs.getDouble(2)));
+    }
 }
