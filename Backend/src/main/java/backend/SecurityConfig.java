@@ -27,8 +27,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/user").hasAuthority("Admin")
-
+//                .antMatchers(HttpMethod.POST, "/user/**", "/student/**", "/klasse/**", "/subject/**").hasAuthority("Admin")
+//                .antMatchers(HttpMethod.POST, "/test/**").hasAuthority("Admin")
+//                .antMatchers(HttpMethod.POST, "/test").hasAuthority("Lehrende")
+//                .antMatchers(HttpMethod.GET,  "/user/**", "user/{id}", "/student/**", "/klasse/**", "/subject/**", "/test/**").hasAuthority("Admin")
+//                .antMatchers(HttpMethod.GET, "/user/{id}").hasAuthority("Lehrende")
+//                .antMatchers(HttpMethod.GET, "/user/{id}").hasAuthority("Lernende")
+//                .antMatchers(HttpMethod.PUT, "/user", "/student", "/klasse", "/subject").hasAuthority("Admin")
+//                .antMatchers(HttpMethod.PUT, "/test").hasAuthority("Admin")
+//                .antMatchers(HttpMethod.PUT, "/test").hasAuthority("Lehrende")
+//                .antMatchers(HttpMethod.DELETE, "/user", "/student", "/klasse", "/subject").hasAuthority("Admin")
+//                .antMatchers(HttpMethod.DELETE, "/test").hasAuthority("Admin")
+//                .antMatchers(HttpMethod.DELETE, "/test").hasAuthority("Lehrende")
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .and().logout();

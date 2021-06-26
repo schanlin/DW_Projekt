@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -23,20 +24,20 @@ import backend.klasse.*;
 public class StudentDao {
     private final JdbcTemplate template;
     private final TestResultDao testResultDao;
+    private final PasswordEncoder encoder;
 
-    public StudentDao(JdbcTemplate template, TestResultDao testResultDao) {
+    public StudentDao(JdbcTemplate template, TestResultDao testResultDao, PasswordEncoder encoder) {
         this.template = template;
         this.testResultDao = testResultDao;
+        this.encoder = encoder;
     }
 
     public Student insert(Student student) {
-        String hashPW = DigestUtils.md5Hex(student.getPassword()).toUpperCase();
-
-        PreparedStatementCreator creator = (connection) -> {
+       PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort," +
                     "vorname, nachname, rolle, klassenID) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, student.getUsername());
-            stmt.setString(2, hashPW);
+            stmt.setString(2, encoder.encode(student.getPassword()));
             stmt.setString(3, student.getFirstname());
             stmt.setString(4, student.getLastname());
             stmt.setString(5, student.getRolle());

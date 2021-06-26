@@ -74,6 +74,16 @@ public class UserDao {
                         rs.getString("nachname"), rs.getString("rolle")));
     }
 
+    public int updatePassword(String newPw, int id) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET passwort = ? WHERE userID = ?");
+            stmt.setString(1, encoder.encode(newPw));
+            stmt.setInt(2, id);
+            return stmt;
+        };
+        return  template.update(creator);
+    }
+
     public int update(User user, int id) {
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("UPDATE user SET username = ?, vorname = ?, " +

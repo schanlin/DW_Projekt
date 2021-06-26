@@ -1,15 +1,21 @@
 package backend.user;
 
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.List;
 
 import backend.user.User;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.boot.rsocket.context.LocalRSocketServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -21,12 +27,8 @@ public class UserController {
 		this.userDao = userDao;
 	}
 
-	@GetMapping("/hello")
-	public String hello() {
-		return "hello world";
-	}
-
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public User postUser(@RequestBody User user) {
 		return userDao.insert(user);
 	}
@@ -38,12 +40,22 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public User getUserById(@PathVariable int id) {
+	public User getUserById(@PathVariable int id, HttpServletRequest request) {
+		return userDao.findById(id);
+
+/*		Principal principal = request.getUserPrincipal();
 		User user = userDao.findById(id);
+
 		if (user==null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
-		return user;
+
+		if (principal.getName().equals(user.getUsername()) || request.isUserInRole("Admin")) {
+			return user;
+		} else {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		}*/
+
 	}
 
 	@PutMapping("/{id}")
@@ -53,9 +65,18 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 	}
+
+	@PutMapping("/{id}/password")
+	public void changePassword(@RequestBody ChangePasswordRequest request, @PathVariable int id) {
+		int status = userDao.updatePassword(request.getNewPassword(), id);
+		if (status==0) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 	@DeleteMapping("/{id}")
-	public void deleteUser(@PathVariable int id) throws SQLException {
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteUser(@PathVariable int id) {
 		int status = userDao.delete(userDao.findById(id));
 		if (status<0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete teachers with active subjects.");
