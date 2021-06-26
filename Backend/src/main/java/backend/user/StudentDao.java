@@ -1,21 +1,14 @@
 package backend.user;
 
-import backend.Database;
-import backend.klasse.Klasse;
-import backend.klasse.KlasseDao;
 import backend.test_result.TestResultDao;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.*;
-import java.util.LinkedList;
 import java.util.List;
 
 import backend.klasse.*;

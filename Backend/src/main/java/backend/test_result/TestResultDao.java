@@ -70,6 +70,7 @@ public class TestResultDao {
         return template.update("DELETE FROM ergebnis WHERE testID=" + testId);
     }
 
+    /*
     public double findAverageByStudentAndSubject(int subjectID, int studentID) {
         return template.queryForObject("SELECT avg(ergebnis.note) FROM ergebnis INNER JOIN test WHERE test.fachID =" +
                 subjectID + " AND ergebnis.lernID=" + studentID, Double.class);
@@ -79,5 +80,5 @@ public class TestResultDao {
         return template.query("SELECT lernID, avg(note) FROM ergebnis WHERE fachID=" + subjectID + " GROUP BY lernID",
                 (rs, rowNum) ->
                 new AverageByStudent(rs.getInt(1), rs.getInt(2)));
-    }
+    }*/
 }

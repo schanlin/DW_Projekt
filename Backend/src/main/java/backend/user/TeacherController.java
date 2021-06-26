@@ -43,9 +43,10 @@ public class TeacherController {
 		return subjectDao.findByTeacher(id);
 	}
 
+	/*
 	@GetMapping("/teacher/{teacherId}/subjects/{subjectId}/overview")
 	public List<AverageByStudent> getAverageByStudent(@PathVariable int teacherId, @PathVariable int subjectId) {
 
-	}
+	}*/
 
 }
