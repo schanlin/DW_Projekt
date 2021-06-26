@@ -7,7 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.sql.*;
 import java.util.List;
@@ -16,10 +19,12 @@ import java.util.List;
 public class UserDao {
     private final JdbcTemplate template;
     private final SubjectDao subjectDao;
+    private final PasswordEncoder encoder;
 
-    public UserDao(JdbcTemplate template, SubjectDao subjectDao) {
+    public UserDao(JdbcTemplate template, SubjectDao subjectDao, PasswordEncoder encoder) {
         this.template = template;
         this.subjectDao = subjectDao;
+        this.encoder = encoder;
     }
 
     public static void createTable() throws SQLException {
@@ -39,12 +44,12 @@ public class UserDao {
         stmt.executeUpdate(query);
     }
 
-    public User insert(User user) {
+   public User insert(User user) {
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort, vorname, nachname, rolle)" +
                                                                 "VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
+            stmt.setString(2, encoder.encode(user.getPassword()));
             stmt.setString(3, user.getFirstname());
             stmt.setString(4, user.getLastname());
             stmt.setString(5, user.getRolle());
@@ -53,7 +58,7 @@ public class UserDao {
 
         KeyHolder holder = new GeneratedKeyHolder();
         template.update(creator, holder);
-        return new User(holder.getKey().intValue(), user.getUsername(), user.getPassword(), user.getFirstname(), user.getLastname(), user.getRolle());
+        return new User(holder.getKey().intValue(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getRolle());
     }
 
     public List<User> findAll() {
@@ -64,37 +69,35 @@ public class UserDao {
 
     public User findById(int id) {
         return template.queryForObject("SELECT userID, username, vorname, nachname, rolle FROM user" +
-                "WHERE userID=" + id, (rs, rowNum) ->
+                " WHERE userID=" + id, (rs, rowNum) ->
                 new User(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
                         rs.getString("nachname"), rs.getString("rolle")));
     }
 
+    public int updatePassword(String newPw, int id) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET passwort = ? WHERE userID = ?");
+            stmt.setString(1, encoder.encode(newPw));
+            stmt.setInt(2, id);
+            return stmt;
+        };
+        return  template.update(creator);
+    }
 
+    public int update(User user, int id) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET username = ?, vorname = ?, " +
+                    " nachname = ? WHERE userID = ?");
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getFirstname());
+            stmt.setString(3, user.getLastname());
+            stmt.setInt(4, id);
+            return stmt;
+        };
+        return template.update(creator);
+    }
 
-//    public static User findByName(String name) throws SQLException {
-//        String[] fullname = name.split(" ");
-//
-//        try (Connection con = DriverManager.getConnection(Database.url, Database.user, Database.password)) {
-//            String query;
-//            if (fullname.length == 2) {
-//                query = "SELECT userID, username, vorname, nachname, rolle FROM user WHERE vorname=" + fullname[0] + " AND nachname=" + fullname[1];
-//            } else {
-//                query = "SELECT userID FROM user WHERE vorname LIKE " + (fullname[0] + "%")
-//                        + "AND nachname LIKE " + ("%" + fullname[fullname.length-1]);
-//            }
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(query);
-//            if (rs.next()) {
-//                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
-//            } else {
-//                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//            }
-//        } catch (SQLException e) {
-//            throw e;
-//        }
-//    }
-
-    public int delete(User user) throws SQLException {
+    public int delete(User user) {
         if (user.getRolle().equals("Lernende")) {
             return delete(new Student(user.getUserID(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getRolle()));
         }

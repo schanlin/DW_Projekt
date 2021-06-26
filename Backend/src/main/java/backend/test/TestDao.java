@@ -1,6 +1,7 @@
 package backend.test;
 
 import backend.Database;
+import backend.test_result.TestResultDao;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -16,9 +17,11 @@ import java.util.List;
 @Service
 public class TestDao {
     private final JdbcTemplate template;
+    private final TestResultDao testResultDao;
 
-    public TestDao(JdbcTemplate template) {
+    public TestDao(JdbcTemplate template, TestResultDao testResultDao) {
         this.template = template;
+        this.testResultDao = testResultDao;
     }
 
     public static void createTable() throws SQLException {
@@ -77,4 +80,21 @@ public class TestDao {
         return template.queryForObject("SELECT count(*) FROM test WHERE fachID=" + subjectId, Integer.class);
     }
 
+    public int update(Test toUpdate, int id) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE test SET name = ?, datum = ?, fachID = ?" +
+                    " WHERE testID = ?");
+            stmt.setString(1, toUpdate.getTestName());
+            stmt.setDate(2, toUpdate.getTestDatum());
+            stmt.setInt(3, toUpdate.getSubject());
+            stmt.setInt(4, id);
+            return stmt;
+        };
+        return template.update(creator);
+    }
+
+    public int delete(int id) {
+        testResultDao.deleteByTest(id);
+        return template.update("DELETE FROM test WHERE testID=" + id);
+    }
 }

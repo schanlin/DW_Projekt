@@ -6,10 +6,7 @@ import java.util.List;
 
 import backend.subject.Subject;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -18,6 +15,11 @@ public class SubjectController {
 
 	public SubjectController(SubjectDao s) {
 		this.subjectDao = s;
+	}
+
+	@PostMapping("/subject")
+	public Subject postSubject(@RequestBody Subject subject) {
+		return subjectDao.insert(subject);
 	}
 	
 	@GetMapping("/subject")
@@ -33,6 +35,17 @@ public class SubjectController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		return subject;
+	}
+
+	@PutMapping("/subject/{id}")
+	public void updateSubject(@RequestBody Subject subject, @PathVariable int id) {
+		int status = subjectDao.update(subject, id);
+		if (status==0) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		if (status==-1) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot make any changes to archived subjects.");
+		}
 	}
 	
 	@DeleteMapping("/subject/{id}")

@@ -15,6 +15,7 @@ import backend.user.Student;
 import backend.user.StudentDao;
 import backend.user.User;
 import backend.user.UserDao;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import backend.klasse.Klasse;
@@ -51,7 +52,7 @@ public class DemoDataInitializer {
 		 klasseDao.insert(new Klasse("2016b"));
 
 		 UserDao.createTable();
-		 userDao.insert(new User("admin", "PASSWORT", "Admini", "Strator", "Admin"));
+		 userDao.insert(new User("admin", "regenbogen", "Admini", "Strator", "Admin"));
 		 userDao.insert(new User("storm", "PASSWORT", "Zoya", "Nazyalenski", "Lehrende"));
 		 userDao.insert(new User("hunter", "PASSWORT", "Jarl", "Brum", "Lehrende"));
 		 userDao.insert(new User("tailor", "PASSWORT", "Genya", "Safin", "Lehrende"));

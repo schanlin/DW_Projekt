@@ -75,6 +75,16 @@ public class KlasseDao {
 		return template.queryForObject("SELECT count(*) FROM klasse", Integer.class);
 	}
 
+    public int update(Klasse toUpdate, int id) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE klasse SET name = ? WHERE klassenID = ?");
+            stmt.setString(1, toUpdate.getKlassenName());
+            stmt.setInt(2, id);
+            return stmt;
+        };
+        return template.update(creator);
+    }
+
 	public int delete(int id) {
         studentDao.deassignAll(id);
         List<Subject> toDelete = subjectDao.findByKlasse(id);
@@ -83,5 +93,5 @@ public class KlasseDao {
         }
         return template.update("DELETE FROM klasse WHERE klassenID=" + id);
     }
-    
+
 }
