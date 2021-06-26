@@ -51,7 +51,7 @@ public class TeacherController {
 
 	@GetMapping("/teacher/{teacherId}/subjects/{subjectId}/overview")
 	public List<AverageByStudent> getAverageByStudent(@PathVariable int subjectId) {
-		return testResultDao.findAllAverageByStudentAndSubject(subjectId);
+		return testResultDao.findAllAveragesByStudent(subjectId);
 	}
 
 	@GetMapping("/teacher/{teacherId}/subjects/{subjectId}/tests")
