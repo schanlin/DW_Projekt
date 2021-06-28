@@ -4,6 +4,9 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import backend.test_result.AverageBySubject;
+import backend.test_result.TestResult;
+import backend.test_result.TestResultDao;
 import backend.user.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +15,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class StudentController {
 	private final StudentDao studentDao;
+	private final TestResultDao testResultDao;
 
-	public StudentController(StudentDao studentDao) {
+	public StudentController(StudentDao studentDao, TestResultDao testResultDao) {
 		this.studentDao = studentDao;
+		this.testResultDao = testResultDao;
 	}
 
 	@PostMapping("/student")
@@ -44,5 +49,15 @@ public class StudentController {
 		if (status==0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@GetMapping("/student/{id}/subjects")
+	public List<AverageBySubject> getAverageBySubjectAndStudent(@PathVariable int id) {
+		return testResultDao.findAllAveragesBySubject(id);
+	}
+
+	@GetMapping("/student/{studentId}/subjects/{subjectId}/results")
+	public List<TestResult> getResultsByStudentAndSubject(@PathVariable int studentId, @PathVariable int subjectId) {
+		return testResultDao.findBySubjectAndStudent(studentId, subjectId);
 	}
 }
