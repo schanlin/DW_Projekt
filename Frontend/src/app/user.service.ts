@@ -18,4 +18,8 @@ export class UserService {
   getEmailAdress(){return 'admin@emxample.com';}
   getID(){return 1;}
   getUsername(){return 'MeiArm';}
+
+  getAllUser(): Observable<User[]> {
+    return this.http.get<User[]>(this.baseURL+"/user");
+  }
 }

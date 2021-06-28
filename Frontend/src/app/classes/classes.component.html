@@ -1,1 +1,16 @@
-<p>Liste der Klassen</p>
+<h1>Liste der Klassen</h1>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th></th>
+  </tr>
+<tr *ngFor="let Classes of classes">
+  <td>{{Classes.klassenID}}</td>
+  <td>{{Classes.klassenName}}</td>
+  <td>
+    <fa-icon [icon]="faPen"></fa-icon> (click)="onEditUser(User)"
+    <fa-icon [icon]="faTrash" ></fa-icon> (click)="onDeleteUser()"
+  </td>
+</tr>
+</table>

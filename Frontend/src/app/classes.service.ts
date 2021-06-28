@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {User} from "./models/user.model";
+import {Classes} from "./models/class.model"
+import {Observable, of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BackendService {
+export class ClassesService {
   private baseURL = 'http://localhost:4200/api';
-
-  // TODO Subject as "Store light"?
-
   constructor(private http: HttpClient) { }
 
-
+  getAllClasses(): Observable<Classes[]>{
+    return this.http.get<Classes[]>(this.baseURL+"/klasse");
+  }
 }

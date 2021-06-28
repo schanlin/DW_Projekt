@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+//Models
+import {Classes} from "../models/class.model";
 //Font Awesome Symbole
 import {faPen} from '@fortawesome/free-solid-svg-icons';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 //Komponenten und Services
 import {DialogComponent} from "../dialog/dialog.component";
-import {UserService} from "../user.service";
-import {BackendService} from "../backend.service";
+import {ClassesService} from "../classes.service";
 
 @Component({
   selector: 'app-classes',
@@ -16,16 +17,14 @@ import {BackendService} from "../backend.service";
 })
 export class ClassesComponent implements OnInit {
 
-  constructor() { }
-  //classes: string[];
+  constructor(private classesService: ClassesService) { }
+  classes: Classes[] = [];
   readonly faPen = faPen;
   readonly faTrash = faTrash;
   readonly faTimes = faTimes;
 
   ngOnInit(): void {
-   // const obs = this.backendService.getAllUser();
-    //obs.subscribe(e => this.classes = e);
+    const obs = this.classesService.getAllClasses();
+    obs.subscribe(e => this.classes = e);
   }
-
-
 }

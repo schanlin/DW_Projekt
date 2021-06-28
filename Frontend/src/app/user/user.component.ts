@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
   onDeleteUser(){}
 
   ngOnInit(): void {
-    const obs = this.backendService.getAllUser();
+    const obs = this.userService.getAllUser();
     obs.subscribe(e => this.users = e);
 
   }
