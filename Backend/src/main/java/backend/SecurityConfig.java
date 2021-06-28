@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.DELETE, "/user", "/student", "/klasse", "/subject").hasAuthority("Admin")
 //                .antMatchers(HttpMethod.DELETE, "/test").hasAuthority("Admin")
 //                .antMatchers(HttpMethod.DELETE, "/test").hasAuthority("Lehrende")
+              //  .antMatchers("/swagger-ui.html").allowed()
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .and().logout();

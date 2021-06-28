@@ -20,5 +20,6 @@ export class DialogComponent implements OnInit {
 
   public closeDialog(): void{
     this.isOpen = false;
+    //this.openChange.emit(false);
   }
 }
