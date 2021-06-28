@@ -47,6 +47,14 @@ public class SubjectController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot make any changes to archived subjects.");
 		}
 	}
+
+	@PutMapping("/subject/{id}/archive")
+	public void archiveSubject(@PathVariable int id) {
+		int status = subjectDao.archive(id);
+		if (status==0) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 	@DeleteMapping("/subject/{id}")
 	public void deleteSubject(@PathVariable int id) {
