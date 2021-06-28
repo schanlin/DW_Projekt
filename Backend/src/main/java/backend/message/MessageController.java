@@ -4,10 +4,7 @@ import backend.subject.SubjectDao;
 import backend.user.User;
 import backend.user.UserDao;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -95,5 +92,29 @@ public class MessageController {
             }
         }
         return messageDao.insert(newMessage);
+    }
+
+    @GetMapping("/message/{userId}")
+    public List<Message> getMessageByUser(@PathVariable int userId) {
+        return messageDao.findByRecipient(userId);
+    }
+
+    @GetMapping("/message/m/{messageId}")
+    public Message getMessage(@PathVariable int messageId) {
+        Message m = messageDao.findById(messageId);
+        if (m==null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return m;
+    }
+
+    @GetMapping("/message/{userId}/unread")
+    public int getAmountUnread(@PathVariable int userId) {
+        return messageDao.countUnreadByUser(userId);
+    }
+
+    @PutMapping("/message/m/{messageId}")
+    public void readMessage(@PathVariable int messageId) {
+        messageDao.updateRead(messageId);
     }
 }

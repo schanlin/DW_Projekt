@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
+import java.util.List;
 
 @Service
 public class MessageDao {
@@ -43,7 +44,7 @@ public class MessageDao {
                     " timestamp, inhalt, gelesen) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, message.getSender());
             stmt.setInt(2, message.getRecipient());
-            stmt.setDate(3, new Date(System.currentTimeMillis()));
+            stmt.setDate(3, message.getTimestamp());
             stmt.setString(4, message.getContent());
             stmt.setBoolean(5, message.isRead());
             return stmt;
@@ -52,5 +53,27 @@ public class MessageDao {
         KeyHolder holder = new GeneratedKeyHolder();
         template.update(creator, holder);
         return new Message(holder.getKey().intValue(), message.getSender(), message.getRecipient(), message.getTimestamp(), message.getContent(), message.isRead());
+    }
+
+    public Message findById(int messageId) {
+        return template.queryForObject("SELECT nachrichtID, absender, empfaenger, timestamp, inhalt, gelesen FROM nachricht WHERE nachrichtID=" + messageId,
+                (rs, rowNum) ->
+                        new Message(rs.getInt("nachrichtID"), rs.getInt("absender"), rs.getInt("empfaenger"),
+                                rs.getDate("timestamp"), rs.getString("inhalt"), rs.getBoolean("gelesen")));
+    }
+
+    public List<Message> findByRecipient(int userId) {
+        return template.query("SELECT nachrichtID, absender, empfaenger, timestamp, inhalt, gelesen FROM nachricht WHERE empfaenger=" + userId,
+                (rs, rowNum) ->
+                new Message(rs.getInt("nachrichtID"), rs.getInt("absender"), rs.getInt("empfaenger"),
+                        rs.getDate("timestamp"), rs.getString("inhalt"), rs.getBoolean("gelesen")));
+    }
+
+    public int countUnreadByUser(int userId) {
+        return template.queryForObject("SELECT count(*) FROM nachricht WHERE empfaenger=" + userId + " AND gelesen=FALSE", Integer.class);
+    }
+
+    public int updateRead(int messageId) {
+        return template.update("UPDATE nachricht SET gelesen=TRUE WHERE nachrichtID=" + messageId);
     }
 }
