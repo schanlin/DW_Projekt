@@ -8,12 +8,36 @@ body{
   font-family: sans-serif;
 
 }
-.html{
-
-}
 
 .close {
   margin: 0.5em;
   display:block;
   text-align: right;
+}
+
+h1{
+  text-decoration: underline;
+  text-underline-position: under;
+  font-weight: normal;
+  text-decoration-thickness: 3px;
+}
+
+table{
+  text-align: left;
+  border-collapse: collapse;
+  background: white;
+}
+td, th{
+  padding: 0.5em;
+  padding-right: 2em;
+  padding-left: 1em;
+  border-right: thin solid #0e384c;
+}
+
+td:last-child, th:last-child {
+  border-right: none;
+}
+
+tr:nth-child(even){
+  background:#CFD7DB;
 }

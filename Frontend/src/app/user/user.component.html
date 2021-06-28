@@ -1,4 +1,4 @@
-<p>Liste der Nutzenden</p>
+<h1>Liste der Nutzenden</h1>
 <!--{{ users | json }} -->
 <table>
   <tr>
@@ -12,7 +12,7 @@
     <td>{{User.userID}}</td>
     <td>{{User.lastname}}</td>
     <td>{{User.firstname}}</td>
-    <td>{{User.rolle}}</td>
+    <td>{{User.role}}</td>
     <td>
       <fa-icon [icon]="faPen" (click)="onEditUser()" ></fa-icon>
       <fa-icon [icon]="faTrash" (click)="onDeleteUser()"></fa-icon>

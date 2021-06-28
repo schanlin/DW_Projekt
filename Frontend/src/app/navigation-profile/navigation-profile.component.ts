@@ -22,12 +22,12 @@ export class NavigationProfileComponent implements OnInit {
   username: string = "";
 
   profileForm = new FormGroup({
-    id: new FormControl(''),
+    id: new FormControl({disabled:true}),
     firstname: new FormControl('', [Validators.required]),
-    lastname: new FormControl(''),
-    userEmail: new FormControl('', [Validators.email]),
-    password: new FormControl('', [Validators.minLength(6)]),
-    username: new FormControl(''),
+    lastname: new FormControl('', Validators.required),
+    userEmail: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    username: new FormControl('', Validators.required),
   })
 
   ngOnInit(): void {
