@@ -62,7 +62,7 @@ public class UserDao {
     public List<User> findAll() {
         return template.query("SELECT userID, username, vorname, nachname, rolle FROM user", (rs, rowNum) ->
                 new User(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("Nachname"), rs.getString("Rolle")));
+                        rs.getString("nachname"), rs.getString("rolle")));
     }
 
     public User findById(int id) {
@@ -70,6 +70,18 @@ public class UserDao {
                 " WHERE userID=" + id, (rs, rowNum) ->
                 new User(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
                         rs.getString("nachname"), rs.getString("rolle")));
+    }
+
+    public User findByUsername(String username) {
+        PreparedStatementCreator creator = (connection) -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT userID, username, vorname, nachname, rolle" +
+                    " FROM user WHERE username=?");
+            stmt.setString(1, username);
+            return stmt;
+        };
+        return template.query(creator, (rs, rowNum) ->
+                new User(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
+                        rs.getString("nachname"), rs.getString("rolle"))).get(0);
     }
 
     public int updatePassword(String newPw, int id) {

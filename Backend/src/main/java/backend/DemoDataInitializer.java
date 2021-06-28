@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.annotation.PostConstruct;
 
+import backend.message.MessageDao;
 import backend.subject.Subject;
 import backend.subject.SubjectDao;
 import backend.test.Test;
@@ -15,7 +16,6 @@ import backend.user.Student;
 import backend.user.StudentDao;
 import backend.user.User;
 import backend.user.UserDao;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import backend.klasse.Klasse;
@@ -29,15 +29,17 @@ public class DemoDataInitializer {
 	private final SubjectDao subjectDao;
 	private final TestDao testDao;
 	private final TestResultDao testResultDao;
+	private final MessageDao messageDao;
 
 	public DemoDataInitializer(KlasseDao klasseDao, UserDao userDao, StudentDao studentDao, SubjectDao subjectDao,
-							   TestDao testDao, TestResultDao testResultDao) {
+							   TestDao testDao, TestResultDao testResultDao, MessageDao messageDao) {
 		this.klasseDao = klasseDao;
 		this.userDao = userDao;
 		this.studentDao = studentDao;
 		this.subjectDao = subjectDao;
 		this.testDao = testDao;
 		this.testResultDao = testResultDao;
+		this.messageDao = messageDao;
 	}
 	
 	@PostConstruct
@@ -108,6 +110,8 @@ public class DemoDataInitializer {
 		testResultDao.insert(new TestResult(6, 10, 3));
 		testResultDao.insert(new TestResult(6, 11, 1));
 		testResultDao.insert(new TestResult(6, 12, 2));
+
+		MessageDao.createTable();
 	}
 	
 }

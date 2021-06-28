@@ -18,6 +18,7 @@ public class SubjectController {
 	}
 
 	@PostMapping("/subject")
+	@ResponseStatus(HttpStatus.CREATED)
 	public Subject postSubject(@RequestBody Subject subject) {
 		return subjectDao.insert(subject);
 	}
@@ -45,6 +46,14 @@ public class SubjectController {
 		}
 		if (status==-1) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot make any changes to archived subjects.");
+		}
+	}
+
+	@PutMapping("/subject/{id}/archive")
+	public void archiveSubject(@PathVariable int id) {
+		int status = subjectDao.archive(id);
+		if (status==0) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 	}
 	

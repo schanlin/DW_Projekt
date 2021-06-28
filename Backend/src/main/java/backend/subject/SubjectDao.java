@@ -83,6 +83,17 @@ public class SubjectDao {
                         rs.getInt("lehrID"), rs.getBoolean("archiviert")));
     }
 
+    public List<Integer> findIdByUserStudent(int userId) {
+        return template.query("SELECT fachID FROM fach INNER JOIN user WHERE fach.klassenID=user.klassenID " +
+                "AND archiviert=FALSE AND userID=" + userId, (rs, rowNum) ->
+                new Integer(rs.getInt(1)));
+    }
+
+    public List<Integer> findIdByUserTeacher(int userId) {
+        return template.query("SELECT fachID FROM fach WHERE lehrID=" + userId, (rs, rowNum) ->
+                new Integer(rs.getInt(1)));
+    }
+
     public int update(Subject toUpdate, int id) {
         Subject current = findById(id);
         if (current.isArchived()) {

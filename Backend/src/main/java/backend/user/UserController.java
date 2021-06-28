@@ -38,6 +38,11 @@ public class UserController {
 		List<User> users = userDao.findAll();
 		return users;
 	}
+
+	@GetMapping("/current")
+	public User getActiveUser(Principal principal) {
+		return userDao.findByUsername(principal.getName());
+	}
 	
 	@GetMapping("/{id}")
 	public User getUserById(@PathVariable int id, HttpServletRequest request) {
