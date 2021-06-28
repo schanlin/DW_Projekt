@@ -3,5 +3,5 @@ export interface User {
   username: string
   firstname: string
   lastname: string
-  rolle: string
+  role: string
 }
