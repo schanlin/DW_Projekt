@@ -85,7 +85,7 @@ public class SubjectDao {
 
     public List<Integer> findIdByUserStudent(int userId) {
         return template.query("SELECT fachID FROM fach INNER JOIN user WHERE fach.klassenID=user.klassenID " +
-                "AND archiviert=FALSE", (rs, rowNum) ->
+                "AND archiviert=FALSE AND userID=" + userId, (rs, rowNum) ->
                 new Integer(rs.getInt(1)));
     }
 

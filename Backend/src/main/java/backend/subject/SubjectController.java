@@ -18,6 +18,7 @@ public class SubjectController {
 	}
 
 	@PostMapping("/subject")
+	@ResponseStatus(HttpStatus.CREATED)
 	public Subject postSubject(@RequestBody Subject subject) {
 		return subjectDao.insert(subject);
 	}
