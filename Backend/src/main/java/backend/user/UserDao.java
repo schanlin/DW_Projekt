@@ -85,7 +85,7 @@ public class UserDao {
     }
 
     public List<String> findAllUsernames() {
-        return template.query("SELECER username FROM user", (rs, rowNum) ->
+        return template.query("SELECT username FROM user", (rs, rowNum) ->
                 rs.getString("username"));
     }
 
