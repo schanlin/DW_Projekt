@@ -5,6 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import backend.subject.Subject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,20 +24,36 @@ public class SubjectController {
 		this.subjectDao = s;
 	}
 
+	@Operation(summary = "Create a new subject")
+	@ApiResponse(responseCode = "201", description = "Subject was created successfully",
+		content = {@Content(mediaType = "application/json",
+		schema = @Schema(implementation = Subject.class))})
 	@PostMapping("/subject")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Subject postSubject(@RequestBody Subject subject) {
 		return subjectDao.insert(subject);
 	}
-	
+
+	@Operation(summary = "Get all subjects")
+	@ApiResponse(responseCode = "200", description = "Returned all subjects",
+		content = {@Content(mediaType = "application/json",
+		array = @ArraySchema(schema = @Schema(implementation = Subject.class)))})
 	@GetMapping("/subject")
 	public List<Subject> getAllSubjects() {
 		List<Subject> subjects = subjectDao.findAll();
 		return subjects;
 	}
-	
+
+	@Operation(summary = "Get a subject by id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Subject found",
+				content = {@Content(mediaType = "application/json",
+				schema = @Schema(implementation = Subject.class))}),
+			@ApiResponse(responseCode = "404", description = "Subject not found",
+				content = @Content)
+	})
 	@GetMapping("/subject/{id}")
-	public Subject getSubjectById(@PathVariable int id) {
+	public Subject getSubjectById(@Parameter(description = "The id of the subject to be searched") @PathVariable int id) {
 		Subject subject = subjectDao.findById(id);
 		if (subject==null){
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -38,30 +61,47 @@ public class SubjectController {
 		return subject;
 	}
 
+	@Operation(summary = "Update subject attributes")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Subject updated successfully"),
+			@ApiResponse(responseCode = "205", description = "Subject was archived, teacher set to <null>"),
+			@ApiResponse(responseCode = "403", description = "Subjects without dependencies should be deleted instead of archived"),
+			@ApiResponse(responseCode = "404", description = "Subject not found"),
+			@ApiResponse(responseCode = "409", description = "Cannot make changes to archived subjects"),
+	})
 	@PutMapping("/subject/{id}")
-	public void updateSubject(@RequestBody Subject subject, @PathVariable int id) {
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void updateSubject(@RequestBody Subject subject, @Parameter(description = "Id of the subject to be updated") @PathVariable int id) {
 		int status = subjectDao.update(subject, id);
 		if (status==0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		if (status==-1) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot make any changes to archived subjects.");
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot make any changes to archived subjects.");
+		}
+		if (status==-2) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Subjects without dependent tests should be deleted instead of archived.");
+		}
+		if (status==-3) {
+			throw new ResponseStatusException(HttpStatus.RESET_CONTENT, "Subject was archived, teacher set to <null>.");
 		}
 	}
 
-	@PutMapping("/subject/{id}/archive")
-	public void archiveSubject(@PathVariable int id) {
-		int status = subjectDao.archive(id);
-		if (status==0) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		}
-	}
-	
+	@Operation(summary = "Delete a subject")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Subject deleted successfully"),
+			@ApiResponse(responseCode = "404", description = "Subject not found"),
+			@ApiResponse(responseCode = "409", description = "Cannot delete subjects with dependent tests")
+	})
 	@DeleteMapping("/subject/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteSubject(@PathVariable int id) {
 		int status = subjectDao.delete(id);
 		if (status==0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		if (status==-1) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot delete subjects with dependent tests.");
 		}
 	}
 

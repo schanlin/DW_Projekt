@@ -7,6 +7,7 @@ import java.util.List;
 import backend.klasse.Klasse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +37,7 @@ public class TestController {
 	@Operation(summary = "Get all tests")
 	@ApiResponse(responseCode = "200", description = "Returned all tests",
 		content = {@Content(mediaType = "application/json",
-		schema = @Schema(implementation = Test.class))})
+		array = @ArraySchema(schema = @Schema(implementation = Test.class)))})
 	@GetMapping("/test")
 	public List<Test> getAllTests() {
 		List<Test> tests = testDao.findAll();
@@ -79,7 +80,7 @@ public class TestController {
 			@ApiResponse(responseCode = "404", description = "Test not found")
 	})
 	@DeleteMapping("/test/{id}")
-	public void deleteTest(@PathVariable int id) {
+	public void deleteTest(@Parameter(description = "Id of the test to be deleted") @PathVariable int id) {
 		int status = testDao.delete(id);
 		if (status==0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
