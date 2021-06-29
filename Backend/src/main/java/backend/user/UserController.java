@@ -45,7 +45,7 @@ public class UserController {
 
 	@GetMapping("/current")
 	public User getActiveUser(Principal principal) {
-		return userDao.findByUsername(principal.getName());
+		return userDao.findByUsername("admin"); //FÜR TESTZWECKE GEHARDCODED; ÄNDERN NICHT VERGESSEN!!!
 	}
 	
 	@GetMapping("/{id}")
