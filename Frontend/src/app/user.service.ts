@@ -13,13 +13,8 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getID(){return 1;}
-  /*getID(): Observable<User>{
-    const thisUser: Observable<User> = this.http.get<User>(`${this.baseURL}/user/${id}`);
-    return thisUser.userID;
-  }*/
   getLastname() { return 'Meister';}
-  /*getLastname() {
-    return this.http.get<User[]>(this.baseURL+"/user");}*/
+
   getFirstname() {return 'Armin';}
   getRole() { return 'Administrator';}
   getEmailAdress(){return 'admin@emxample.com';}

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {routes} from "../app-routing.module";
 import {UserService} from "../user.service";
 import {Link} from "../models/link.model";
+import {Observable} from "rxjs";
+import {User} from "../models/user.model";
 
 
 @Component({
@@ -12,20 +14,18 @@ import {Link} from "../models/link.model";
 export class NavigationLinkComponent implements OnInit {
 
   constructor(private userService: UserService) {  }
-  links: Link[] = []; //array
-
+  links: Link[] = [];
+  role: string = "";
   ngOnInit(): void {
-    const role: string = this.userService.getRole();
-    this.links = routes
-      .filter(route => route.data!.roles.includes(role))
-      .map(   route => { return {
-        "display": route.data!.display,
-        "path":    route.path!
-       }});
-
-      //.map(   route => <Link>{
-      //  "display": route.data!.display,
-      //  "path":    route.data!.path
-      // });
+    const user: Observable<User> = this.userService.getCurrentUser();
+    user.subscribe(e => {
+      this.role = e.rolle;
+      this.links = routes
+        .filter(route => route.data!.roles.includes(this.role))
+        .map(   route => { return {
+          "display": route.data!.display,
+          "path":    route.path!
+        }});
+    });
   }
 }

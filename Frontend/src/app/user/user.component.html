@@ -1,4 +1,30 @@
-<h1>Liste der Nutzenden</h1>
+<h1>Liste der Nutzenden</h1>  <button (click)="onAddButton()">Click me!</button>
+
+<app-dialog [headline] ="'Neuen Nutzenden anlegen'" #dialogNew>
+  <form [formGroup]="profileFormNewUser">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>Vorname:</label>
+      <input fxFlex="initial" formControlName="newFirstname">
+  </div>
+    <div>
+      <label>Nachname:</label>
+      <input formControlName="newLastname">
+    </div>
+    <div>
+      <label>Username:</label>
+      <input formControlName="newUsername">
+    </div>
+    <div>
+      <label>Passwort:</label>
+      <input formControlName="newPassword" type="password">
+    </div>
+    <div><label>E-Mail:</label>
+      <input formControlName="newUserEmail">
+    </div>
+  </form>
+  <button [disabled]="!profileFormNewUser.valid" (click)="onAddNewUser()">Click me!</button>
+</app-dialog>
+
 <!--{{ users | json }} -->
 <table>
   <tr>
@@ -6,6 +32,7 @@
     <th>Nachname</th>
     <th>Vorname</th>
     <th>Rolle</th>
+    <th></th>
     <th></th>
   </tr>
   <tr *ngFor="let User of users">

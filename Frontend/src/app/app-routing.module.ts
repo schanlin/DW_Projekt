@@ -6,9 +6,9 @@ import { ClassesComponent } from './classes/classes.component';
 
 
 export const routes: Routes = [
-  { path: 'user',     component: UserComponent,     data: {roles: ["Administrator"],                       display: "Nutzende"} },
-  { path: 'subjects', component: SubjectsComponent, data: {roles: ["Administrator", "Student", "Teacher"], display: "Fächer"} },
-  { path: 'classes',  component: ClassesComponent,  data: {roles: ["Administrator", "Student", "Teacher"], display: "Klassen"} }
+  { path: 'user',     component: UserComponent,     data: {roles: ["Admin"],                         display: "Nutzende"} },
+  { path: 'subjects', component: SubjectsComponent, data: {roles: ["Admin", "Lernende", "Lehrende"], display: "Fächer"} },
+  { path: 'classes',  component: ClassesComponent,  data: {roles: ["Admin", "Lernende", "Lehrende"], display: "Klassen"} }
 ];
 
 @NgModule({

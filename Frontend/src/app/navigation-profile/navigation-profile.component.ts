@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../user.service";
+import {User} from "../models/user.model";
 import JsGravatar from '@gravatar/js';
 import {faPen} from '@fortawesome/free-solid-svg-icons';
 
@@ -35,9 +36,9 @@ export class NavigationProfileComponent implements OnInit {
     this.firstname = this.userService.getFirstname();
     this.lastname = this.userService.getLastname();
     this.userEmail = this.userService.getEmailAdress();
-    this.id = this.userService.getID();
-    this.profilepic = JsGravatar({email: this.userEmail, size: 100, protocol: 'https', defaultImage: 'identicon'});
-    this.username = this.userService.getUsername();
-  }
+    this.id = this.userService.getID();*/
+
+
+  //}
 
 }
