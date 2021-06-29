@@ -4,22 +4,29 @@
   <form [formGroup]="profileFormNewUser">
     <div fxLayout="row" fxLayoutAlign="start center">
       <label fxFlex>Vorname:</label>
-      <input fxFlex="initial" formControlName="newFirstname">
+      <input fxFlex="initial" formControlName="newFirstname" placeholder="Alex">
   </div>
     <div>
       <label>Nachname:</label>
-      <input formControlName="newLastname">
+      <input formControlName="newLastname" placeholder="Mustermensch">
     </div>
     <div>
       <label>Username:</label>
-      <input formControlName="newUsername">
+      <input formControlName="newUsername" placeholder="musteralex">
     </div>
     <div>
       <label>Passwort:</label>
-      <input formControlName="newPassword" type="password">
+      <input formControlName="newPassword" type="password" placeholder="passwort">
     </div>
     <div><label>E-Mail:</label>
       <input formControlName="newUserEmail">
+    </div>
+    <div><label>Rolle</label>
+      <select formControlName="newRole">
+        <option value="Admin">Admin</option>
+        <option value="Lehrende">Lehrende</option>
+        <option value="Lernende">Lernende</option>
+      </select>
     </div>
   </form>
   <button [disabled]="!profileFormNewUser.valid" (click)="onAddNewUser()">Click me!</button>

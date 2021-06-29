@@ -4,6 +4,6 @@ export interface User {
   firstname: string
   lastname: string
   rolle: string
-  password: number
-  //email: string
+  password: string
+  email: string
 }
