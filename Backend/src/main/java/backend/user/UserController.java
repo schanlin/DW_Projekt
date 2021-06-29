@@ -77,7 +77,7 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUser(@PathVariable int id) {
-		int status = userDao.delete(userDao.findById(id));
+		int status = userDao.delete(id);
 		if (status<0) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete teachers with active subjects.");
 		} else if (status==0) {

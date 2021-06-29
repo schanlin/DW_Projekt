@@ -18,11 +18,13 @@ public class UserDao {
     private final JdbcTemplate template;
     private final SubjectDao subjectDao;
     private final PasswordEncoder encoder;
+    private final StudentDao studentDao;
 
-    public UserDao(JdbcTemplate template, SubjectDao subjectDao, PasswordEncoder encoder) {
+    public UserDao(JdbcTemplate template, SubjectDao subjectDao, PasswordEncoder encoder, StudentDao studentDao) {
         this.template = template;
         this.subjectDao = subjectDao;
         this.encoder = encoder;
+        this.studentDao = studentDao;
     }
 
     public static void createTable() throws SQLException {
@@ -30,6 +32,7 @@ public class UserDao {
                 + "userID int AUTO_INCREMENT NOT NULL,"
                 + "username varchar(50) NOT NULL,"
                 + "passwort varchar(256) NOT NULL,"
+                + "email varchar(256) NOT NULL,"
                 + "vorname varchar(256) NOT NULL,"
                 + "nachname varchar(256) NOT NULL,"
                 + "rolle varchar(10) NOT NULL,"
@@ -44,44 +47,45 @@ public class UserDao {
 
    public User insert(User user) {
         PreparedStatementCreator creator = (connection) -> {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort, vorname, nachname, rolle)" +
-                                                                "VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort, email, vorname, nachname, rolle)" +
+                                                                "VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, user.getUsername());
             stmt.setString(2, encoder.encode(user.getPassword()));
-            stmt.setString(3, user.getFirstname());
-            stmt.setString(4, user.getLastname());
-            stmt.setString(5, user.getRolle());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getFirstname());
+            stmt.setString(5, user.getLastname());
+            stmt.setString(6, user.getRolle());
             return stmt;
         };
 
         KeyHolder holder = new GeneratedKeyHolder();
         template.update(creator, holder);
-        return new User(holder.getKey().intValue(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getRolle());
+        return new User(holder.getKey().intValue(), user.getUsername(), user.getEmail(), user.getFirstname(), user.getLastname(), user.getRolle());
     }
 
     public List<User> findAll() {
-        return template.query("SELECT userID, username, vorname, nachname, rolle FROM user", (rs, rowNum) ->
-                new User(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("rolle")));
+        return template.query("SELECT userID, username, email, vorname, nachname, rolle FROM user", (rs, rowNum) ->
+                new User(rs.getInt("userID"), rs.getString("username"), rs.getString("email"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("rolle")));
     }
 
     public User findById(int id) {
-        return template.queryForObject("SELECT userID, username, vorname, nachname, rolle FROM user" +
+        return template.queryForObject("SELECT userID, username, email, vorname, nachname, rolle FROM user" +
                 " WHERE userID=" + id, (rs, rowNum) ->
-                new User(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("rolle")));
+                new User(rs.getInt("userID"), rs.getString("username"), rs.getString("email"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("rolle")));
     }
 
     public User findByUsername(String username) {
         PreparedStatementCreator creator = (connection) -> {
-            PreparedStatement stmt = connection.prepareStatement("SELECT userID, username, vorname, nachname, rolle" +
+            PreparedStatement stmt = connection.prepareStatement("SELECT userID, username, email, vorname, nachname, rolle" +
                     " FROM user WHERE username=?");
             stmt.setString(1, username);
             return stmt;
         };
         return template.query(creator, (rs, rowNum) ->
-                new User(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("rolle"))).get(0);
+                new User(rs.getInt("userID"), rs.getString("username"), rs.getString("email"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("rolle"))).get(0);
     }
 
     public List<String> findAllUsernames() {
@@ -101,28 +105,30 @@ public class UserDao {
 
     public int update(User user, int id) {
         PreparedStatementCreator creator = (connection) -> {
-            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET username = ?, vorname = ?, " +
+            PreparedStatement stmt = connection.prepareStatement("UPDATE user SET username = ?, email = ?, vorname = ?, " +
                     " nachname = ? WHERE userID = ?");
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getFirstname());
-            stmt.setString(3, user.getLastname());
-            stmt.setInt(4, id);
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getFirstname());
+            stmt.setString(4, user.getLastname());
+            stmt.setInt(5, id);
             return stmt;
         };
         return template.update(creator);
     }
 
-    public int delete(User user) {
+    public int delete(int userId) {
+        User user = findById(userId);
         if (user.getRolle().equals("Lernende")) {
-            return delete(new Student(user.getUserID(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getRolle()));
+            return studentDao.delete(userId);
         }
         if (user.getRolle().equals("Lehrende")) {
-            List<Subject> subjects = subjectDao.findByTeacher(user.getUserID());
+            List<Subject> subjects = subjectDao.findByTeacher(userId);
             if (!subjects.isEmpty()) {
                 return -1;
             }
         }
-        return template.update("DELETE FROM user WHERE userID=" + user.getUserID());
+        return template.update("DELETE FROM user WHERE userID=" + userId);
     }
 
 }

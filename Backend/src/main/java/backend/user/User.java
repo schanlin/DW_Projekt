@@ -7,42 +7,47 @@ public class User {
 	private int userID;
 	private String username;
 	private String password;
+	private String email;
 	private String firstname;
 	private String lastname;
 	private String rolle;
 
-	public User(int userID, String username, String firstname, String lastname, String rolle) {
+	public User(int userID, String username, String email, String firstname, String lastname, String rolle) {
 		this.userID = userID;
 		this.username = username;
 		this.password = null;
+		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.rolle = rolle;
 	}
 	
-	public User(int userID, String username, String password, String firstname, String lastname, String rolle) {
+	public User(int userID, String username, String password, String email, String firstname, String lastname, String rolle) {
 		this.userID = userID;
 		this.username = username;
 		this.password = password;
+		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.rolle = rolle;
 	}
 
-	public User(int userID, String username, String firstname, String lastname) {
+	public User(int userID, String username, String email, String firstname, String lastname) {
 		this.userID = userID;
 		this.username = username;
 		this.password = null;
+		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.rolle = null;
 	}
 
 	@JsonCreator
-	public User(String username, String password, String firstname, String lastname, String rolle) {
+	public User(String username, String password, String email, String firstname, String lastname, String rolle) {
 		this.userID = 0;
 		this.username = username;
 		this.password = password;
+		this.email = email;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.rolle = rolle;
@@ -56,6 +61,11 @@ public class User {
 	@JsonGetter
 	public String getUsername() {
 		return username;
+	}
+
+	@JsonGetter
+	public String getEmail() {
+		return email;
 	}
 
 	@JsonGetter

@@ -27,34 +27,37 @@ public class StudentDao {
 
     public Student insert(Student student) {
        PreparedStatementCreator creator = (connection) -> {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort," +
-                    "vorname, nachname, rolle, klassenID) VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO user (username, passwort, email, " +
+                    "vorname, nachname, rolle, klassenID) VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, student.getUsername());
             stmt.setString(2, encoder.encode(student.getPassword()));
-            stmt.setString(3, student.getFirstname());
-            stmt.setString(4, student.getLastname());
-            stmt.setString(5, student.getRolle());
-            stmt.setInt(6, student.getKlasse());
+            stmt.setString(3, student.getEmail());
+            stmt.setString(4, student.getFirstname());
+            stmt.setString(5, student.getLastname());
+            stmt.setString(6, student.getRolle());
+            stmt.setInt(7, student.getKlasse());
             return stmt;
         };
 
         KeyHolder holder = new GeneratedKeyHolder();
         template.update(creator, holder);
         return new Student(holder.getKey().intValue(),
-                student.getUsername(), student.getFirstname(), student.getLastname(), student.getRolle(), student.getKlasse());
+                student.getUsername(), student.getEmail(), student.getFirstname(), student.getLastname(), student.getRolle(), student.getKlasse());
     }
 
     public List<Student> findAll() {
-        return template.query("SELECT userID, username, vorname, nachname, rolle, klassenID FROM user", (rs, rowNum) ->
-            new Student(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
-                    rs.getString("nachname"), rs.getString("rolle"), rs.getInt("klassenID")));
+        return template.query("SELECT userID, username, email, vorname, nachname, rolle, klassenID FROM user", (rs, rowNum) ->
+            new Student(rs.getInt("userID"), rs.getString("username"), rs.getString("email"),
+                    rs.getString("vorname"), rs.getString("nachname"), rs.getString("rolle"),
+                    rs.getInt("klassenID")));
     }
 
     public Student findById(int id) {
         return template.queryForObject("SELECT userID, username, vorname, nachname, rolle, klassenID FROM user" +
                 " WHERE userID=" + id, (rs, rowNum) ->
-            new Student(rs.getInt("userID"), rs.getString("username"), rs.getString("vorname"),
-                    rs.getString("nachname"), rs.getString("rolle"), rs.getInt("klassenID")));
+            new Student(rs.getInt("userID"), rs.getString("username"), rs.getString("email"),
+                    rs.getString("vorname"), rs.getString("nachname"), rs.getString("rolle"),
+                    rs.getInt("klassenID")));
     }
 
     public int deassign(int id) {
