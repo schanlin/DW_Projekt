@@ -61,6 +61,10 @@ public class StudentDao {
         return template.update("UPDATE user SET klassenID=null WHERE userID=" + id);
     }
 
+    public int assign(int klassenId, int studentId) {
+        return template.update("UPDATE user SET klassenID=" + klassenId + " WHERE userID=" +studentId);
+    }
+
     public int deassignAll(int klasse) {
         return template.update("UPDATE user SET klassenID=null WHERE klassenID=" + klasse);
     }

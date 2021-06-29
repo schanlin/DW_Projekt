@@ -30,6 +30,10 @@ public class UserController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public User postUser(@RequestBody User user) {
+		List<String> usernames = userDao.findAllUsernames();
+		if (usernames.contains(user.getUsername())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is already taken.");
+		}
 		return userDao.insert(user);
 	}
 
@@ -45,22 +49,13 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public User getUserById(@PathVariable int id, HttpServletRequest request) {
-		return userDao.findById(id);
+	public User getUserById(@PathVariable int id) {
+		User found = userDao.findById(id);
 
-/*		Principal principal = request.getUserPrincipal();
-		User user = userDao.findById(id);
-
-		if (user==null) {
+		if (found==null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
-
-		if (principal.getName().equals(user.getUsername()) || request.isUserInRole("Admin")) {
-			return user;
-		} else {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-		}*/
-
+		return found;
 	}
 
 	@PutMapping("/{id}")

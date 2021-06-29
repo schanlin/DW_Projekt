@@ -1,12 +1,10 @@
 package backend.klasse;
 
+import backend.user.StudentDao;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
-import javax.validation.Valid;
-import java.sql.SQLException;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -15,9 +13,11 @@ import java.util.List;
 public class KlassenController {
 
 	private final KlasseDao klasseDao;
+	private final StudentDao studentDao;
 
-	public KlassenController(KlasseDao klasseDao) {
+	public KlassenController(KlasseDao klasseDao, StudentDao studentDao) {
 		this.klasseDao = klasseDao;
+		this.studentDao = studentDao;
 	}
 
 	@PostMapping("/klasse")
@@ -44,6 +44,22 @@ public class KlassenController {
 		int status = klasseDao.update(klasse, id);
 		if (status==0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PutMapping("/klasse/{klassenId}/assign/{studentId}")
+	public void assignStudent(@PathVariable int klassenId, @PathVariable int userId) {
+		int status;
+		if(klassenId==0) {
+			status = studentDao.deassign(userId);
+			if (status==0) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			}
+		} else {
+			status = studentDao.assign(klassenId, userId);
+			if (status==0) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			}
 		}
 	}
 

@@ -84,6 +84,11 @@ public class UserDao {
                         rs.getString("nachname"), rs.getString("rolle"))).get(0);
     }
 
+    public List<String> findAllUsernames() {
+        return template.query("SELECER username FROM user", (rs, rowNum) ->
+                rs.getString("username"));
+    }
+
     public int updatePassword(String newPw, int id) {
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("UPDATE user SET passwort = ? WHERE userID = ?");
