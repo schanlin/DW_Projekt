@@ -5,11 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableConfigurationProperties(DatabaseConfig.class)
+@EnableScheduling
 public class SpringJdbcConfig {
     @Bean
     public DataSource mysqlDataSource(DatabaseConfig datenbank) {
