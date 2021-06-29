@@ -18,6 +18,7 @@ export class UserComponent implements OnInit {
   readonly faPen = faPen;
   readonly faTrash = faTrash;
   readonly faTimes = faTimes;
+  resultMessage:string = "";
 
 
 
@@ -26,7 +27,22 @@ export class UserComponent implements OnInit {
   }
 
 
-  onDeleteUser(){}
+  onDeleteUser(id:number){
+    this.userService.onDeleteUser(id).subscribe((deleted) => {
+      if(deleted) {
+        this.resultMessage = "Löschen war erfolgreich";
+      }
+      else{
+        this.resultMessage = "Löschen war nicht erfolgreich";
+      }
+      this.popup?.openDialog();
+    }
+      /*
+      Button für ok -> im HTML?
+      this.dialog.openDialog;
+       */
+      );
+  }
 
   ngOnInit(): void {
     const obs = this.userService.getAllUser();

@@ -4,13 +4,29 @@
     <th>ID</th>
     <th>Name</th>
     <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 <tr *ngFor="let Classes of classes">
   <td>{{Classes.klassenID}}</td>
   <td>{{Classes.klassenName}}</td>
   <td>
-    <fa-icon [icon]="faPen"></fa-icon> (click)="onEditUser(User)"
-    <fa-icon [icon]="faTrash" ></fa-icon> (click)="onDeleteUser()"
+    <fa-icon [icon]="faPen"></fa-icon> Klasse editieren
   </td>
+  <td>
+    <fa-icon [icon]="faUserPlus"></fa-icon> Schüler*in zuweisen
+  </td> <!--(click)="onEditUser(User)"-->
+  <td>
+  <fa-icon [icon]="faFolderPlus" ></fa-icon> Fach hinzufügen
+  </td>  <!--(click)="onDeleteUser()"-->
+  <td>
+    <fa-icon [icon] = "faTrash"></fa-icon> Klasse löschen
+  </td>
+  <td>
+    <fa-icon [icon] = "faAngleUp"></fa-icon> Mehr anzeigen
+  </td>
+
 </tr>
 </table>

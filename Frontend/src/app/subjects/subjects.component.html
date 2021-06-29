@@ -8,6 +8,9 @@
     <th>Lehrer</th>
     <th>Archiviert</th>
     <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
   <tr *ngFor="let Subjects of subjects">
     <td>{{Subjects.subjectID}}</td>
@@ -16,8 +19,16 @@
     <td>{{Subjects.teacher}}</td>
     <td>{{Subjects.archived}}</td>
     <td>
-      <fa-icon [icon]="faPen"></fa-icon> (click)="onEditUser(User)"
-      <fa-icon [icon]="faTrash" ></fa-icon> (click)="onDeleteUser()"
+      <fa-icon [icon]="faPen"></fa-icon> editieren
+    </td>
+    <td>
+      <fa-icon [icon]="faFolderPlus"></fa-icon> hinzufügen
+    </td>  <!--(click)="onEditUser(User)" -->
+    <td>
+      <fa-icon [icon]="faArchive" ></fa-icon> archivieren
+    </td>
+    <td>
+      <fa-icon [icon]="faTrash" ></fa-icon> löschen
     </td>
   </tr>
 </table>

@@ -3,5 +3,7 @@ export interface User {
   username: string
   firstname: string
   lastname: string
-  role: string
+  rolle: string
+  password: number
+  //email: string
 }

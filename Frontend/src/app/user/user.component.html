@@ -12,13 +12,12 @@
     <td>{{User.userID}}</td>
     <td>{{User.lastname}}</td>
     <td>{{User.firstname}}</td>
-    <td>{{User.role}}</td>
+    <td>{{User.rolle}}</td>
     <td>
       <fa-icon [icon]="faPen" (click)="onEditUser()" ></fa-icon>
       <fa-icon [icon]="faTrash" (click)="onDeleteUser()"></fa-icon>
     </td>
   </tr>
-
 </table>
 
 
@@ -27,3 +26,7 @@
 Formular
 </app-dialog>
 
+<app-dialog #dialogDel>
+  {{resultMessage}}
+  <button (click)="dialogDel.closeDialog()">Ok</button>
+</app-dialog>
