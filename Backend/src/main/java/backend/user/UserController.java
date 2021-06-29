@@ -80,7 +80,7 @@ public class UserController {
 		return found;
 	}
 
-	@Operation(summary = "Update user attributes")
+	@Operation(summary = "Update a user's attributes")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "User updated successfully"),
 			@ApiResponse(responseCode = "404", description = "User not found")
