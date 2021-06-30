@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().httpBasic()
                 .and().logout();
     }
-    
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
