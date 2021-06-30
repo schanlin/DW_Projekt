@@ -45,11 +45,9 @@ public class UserController {
 	}
 
 	@Operation(summary = "Get all users")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "All available users found",
-				content = { @Content(mediaType = "application/json",
-				array = @ArraySchema(schema = @Schema(implementation = User.class)))})
-	})
+	@ApiResponse(responseCode = "200", description = "All available users found",
+			content = { @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = User.class)))})
 	@GetMapping
 	public List<User> getAllUsers() {
 		List<User> users = userDao.findAll();
