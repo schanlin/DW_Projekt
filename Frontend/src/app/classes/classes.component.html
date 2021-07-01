@@ -1,4 +1,15 @@
-<h1>Liste der Klassen</h1>
+<h1>Liste der Klassen</h1> <button (click)="onAddButton()">Click me!</button>
+
+<app-dialog [headline] ="'Neuen Nutzenden anlegen'" #dialogNew>
+  <form [formGroup]="profileFormNewClass">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>Klassenname:</label>
+      <input fxFlex="initial" formControlName="klassenName" placeholder="1999a">
+    </div>
+  </form>
+  <button (click)="onAddNewClass()">Speichern</button>
+</app-dialog>
+
 <table>
   <tr>
     <th>ID</th>
@@ -9,24 +20,66 @@
     <th></th>
     <th></th>
   </tr>
-<tr *ngFor="let Classes of classes">
-  <td>{{Classes.klassenID}}</td>
-  <td>{{Classes.klassenName}}</td>
-  <td>
-    <fa-icon [icon]="faPen"></fa-icon> Klasse editieren
-  </td>
-  <td>
-    <fa-icon [icon]="faUserPlus"></fa-icon> Schüler*in zuweisen
-  </td> <!--(click)="onEditUser(User)"-->
-  <td>
-  <fa-icon [icon]="faFolderPlus" ></fa-icon> Fach hinzufügen
-  </td>  <!--(click)="onDeleteUser()"-->
-  <td>
-    <fa-icon [icon] = "faTrash"></fa-icon> Klasse löschen
-  </td>
-  <td>
-    <fa-icon [icon] = "faAngleUp"></fa-icon> Mehr anzeigen
-  </td>
-
-</tr>
+  <ng-container *ngFor="let Classes of classes; let i = index">
+    <tr>
+      <td>{{Classes.klassenID}}</td>
+      <td>{{Classes.klassenName}}</td>
+      <td  title="Klasse editieren" (click)="onEditButton(Classes)">
+        <fa-icon [icon]="faPen"></fa-icon>
+      </td>
+      <td  title="Schüler*in zuweisen">
+        <fa-icon [icon]="faUserPlus"></fa-icon>
+      </td> <!--(click)="onEditUser(User)"-->
+      <td  title="Fach hinzufügen">
+      <fa-icon [icon]="faFolderPlus"></fa-icon>
+      </td>  <!--(click)="onDeleteUser()"-->
+      <td  title="Klasse löschen" (click)="onDeleteButton(Classes)">
+        <fa-icon [icon] = "faTrash"></fa-icon>
+      </td>
+      <td (click)="onExpandingCard(i)">
+        <fa-icon [icon] = "cardsExpanded[i] ? faAngleUp : faAngleDown" ></fa-icon>
+        {{ cardsExpanded[i] ? 'Weniger anzeigen' : 'Mehr anzeigen' }}
+      </td>
+    </tr>
+    <tr *ngIf="cardsExpanded[i]">
+      <td colspan="7">
+        Schüler
+        <div *ngFor="let Classes of classes">
+          <span *ngFor ="let Students of Classes.students">
+          {{Students.firstname + " " +Students.lastname + " "}} <fa-icon [icon]="faUserMinus"></fa-icon>
+          </span>
+        </div>
+      </td>
+    </tr>
+  </ng-container>
 </table>
+
+<app-dialog [headline] ="'Klasse editieren'" #dialog>
+  <form [formGroup]="profileForm">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="klassenID">
+    </div>
+    <div>
+      <label fxFlex>Klassenname:</label>
+      <input fxFlex="initial" formControlName="klassenName">
+    </div>
+  </form>
+  <button (click)="onEditClass()">Speichern</button>
+</app-dialog>
+
+<app-dialog [headline]="'Klasse löschen'" #dialogDel>
+  <form [formGroup]="profileFormDel">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="delklassenID">
+    </div>
+    <div>
+      <label fxFlex>Klassenname:</label>
+      <input fxFlex="initial" formControlName="delklassenName">
+    </div>
+  </form>
+  <div>Wollen Sie diese Klasse wirklich löschen?</div>
+  <button (click)="onDeleteClass()">Löschen</button>
+  <button (click)="dialogDel?.closeDialog();">Abbrechen</button>
+</app-dialog>

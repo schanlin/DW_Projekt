@@ -16,4 +16,7 @@ export class SubjectService {
     return this.http.get<Subject[]>(this.baseURL+"/subject");
   }
 
+  getSubjectyID(id:number){
+    return this.http.get<Subject>(this.baseURL+"/subject/"+id);
+  }
 }

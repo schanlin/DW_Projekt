@@ -12,13 +12,12 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getID(){return 1;}
+  /*getID(){return 1;}
   getLastname() { return 'Meister';}
-
   getFirstname() {return 'Armin';}
   getRole() { return 'Administrator';}
   getEmailAdress(){return 'admin@emxample.com';}
-  getUsername(){return 'MeiArm';}
+  getUsername(){return 'MeiArm';}*/
 
   getAllUser(): Observable<User[]> {
     return this.http.get<User[]>(this.baseURL+"/user");
