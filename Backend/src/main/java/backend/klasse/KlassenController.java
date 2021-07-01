@@ -28,14 +28,24 @@ public class KlassenController {
 	}
 
 	@Operation(summary = "Create a new class")
-	@ApiResponse(responseCode = "201", description = "Class created successfully",
-			content = {@Content(mediaType = "application/json",
-			schema = @Schema(implementation = Klasse.class))})
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Class created successfully",
+					content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = Klasse.class))}),
+			@ApiResponse(responseCode = "400", description = "Classname already taken",
+			content = @Content)
+	})
 	@PostMapping("/klasse")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Klasse postKlasse(@RequestBody Klasse klasse) {
+		List<String> names = klasseDao.findAllClassnames();
+		if (names.contains(klasse.getKlassenName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Classname is already taken");
+		}
 		return klasseDao.insert(klasse);
 	}
+
+
 
 	@Operation(summary = "Get all classes")
 	@ApiResponse(responseCode = "200", description = "returned all classes",
@@ -45,6 +55,8 @@ public class KlassenController {
 	public List<Klasse> getAllKlassen() {
 		return klasseDao.findAll();
 	}
+
+
 
 	@Operation(summary = "Get a class be its id")
 	@ApiResponses(value = {
@@ -62,6 +74,8 @@ public class KlassenController {
 		return klasse;
 	}
 
+
+
 	@Operation(summary = "Update class attributes")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Class updated successfully"),
@@ -75,6 +89,8 @@ public class KlassenController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 	}
+
+
 
 	@Operation(summary = "Assign or deassign a student")
 	@ApiResponses(value = {
@@ -98,6 +114,8 @@ public class KlassenController {
 			}
 		}
 	}
+
+
 
 	@Operation(summary = "Delete a class")
 	@ApiResponses(value = {
