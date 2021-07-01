@@ -3,6 +3,13 @@ package backend.message;
 import backend.subject.SubjectDao;
 import backend.user.User;
 import backend.user.UserDao;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +29,15 @@ public class MessageController {
         this.subjectDao = subjectDao;
     }
 
+    @Operation(summary = "Create a new message")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Message created successfully",
+                content = {@Content(mediaType = "application/json",
+                schema = @Schema(implementation = Message.class))}),
+            @ApiResponse(responseCode = "403", description = "Not allowed to send messages to this user"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+
+    })
     @PostMapping("/message")
     @ResponseStatus(HttpStatus.CREATED)
     public Message postMessage(@RequestBody Message newMessage) {
@@ -33,7 +49,7 @@ public class MessageController {
         }
 
         if (newMessage.getRecipient()==newMessage.getSender()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot send messages to oneself.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot send messages to oneself.");
         }
 
         if (sender.getRolle().equals("Lernende")) {
@@ -41,7 +57,7 @@ public class MessageController {
             List<Integer> recipientSubjects = null;
 
             if (recipient.getRolle().equals("Admin")) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Students may only send messages to people from their active subjects.");
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Students may only send messages to people from their active subjects.");
             } else if (recipient.getRolle().equals("Lernende")) {
                 recipientSubjects = subjectDao.findIdByUserStudent(newMessage.getRecipient());
             } else if (recipient.getRolle().equals("Lehrende")) {
@@ -49,7 +65,7 @@ public class MessageController {
             }
 
             if (recipientSubjects==null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
 
             boolean commonSubjects = false;
@@ -64,7 +80,7 @@ public class MessageController {
             if (commonSubjects) {
                 return messageDao.insert(newMessage);
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Students may only send messages to people from their active subjects.");
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Students may only send messages to people from their active subjects.");
             }
         }
 
@@ -84,7 +100,7 @@ public class MessageController {
                 if (commonSubjects) {
                     return messageDao.insert(newMessage);
                 } else {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Teachers may not send messages to students from foreign subjects.");
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Teachers may not send messages to students from foreign subjects.");
                 }
 
             } else {
@@ -94,13 +110,24 @@ public class MessageController {
         return messageDao.insert(newMessage);
     }
 
+    @Operation(summary = "Get all messages sent to someone by the recipient's userId")
+    @ApiResponse(responseCode = "200", description = "Returned all messages found",
+        content = {@Content(mediaType = "application/json",
+        array = @ArraySchema(schema = @Schema(implementation = Message.class)))})
     @GetMapping("/message/{userId}")
-    public List<Message> getMessageByUser(@PathVariable int userId) {
+    public List<Message> getMessageByUser(@Parameter(description = "The userId of the recipient") @PathVariable int userId) {
         return messageDao.findByRecipient(userId);
     }
 
+    @Operation(summary = "Get a message by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Message found",
+                content = {@Content(mediaType = "application/json",
+                schema = @Schema(implementation = Message.class))}),
+            @ApiResponse(responseCode = "404", description = "Message not found")
+    })
     @GetMapping("/message/m/{messageId}")
-    public Message getMessage(@PathVariable int messageId) {
+    public Message getMessage(@Parameter(description = "The id of the message to be searched") @PathVariable int messageId) {
         Message m = messageDao.findById(messageId);
         if (m==null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -108,13 +135,20 @@ public class MessageController {
         return m;
     }
 
+    @Operation(summary = "Get the amount of unread messages by the recipient's userId")
+    @ApiResponse(responseCode = "200", description = "Returned amount of unread messages",
+        content = {@Content(mediaType = "application/json",
+        schema = @Schema(implementation = Integer.class))})
     @GetMapping("/message/{userId}/unread")
-    public int getAmountUnread(@PathVariable int userId) {
+    public int getAmountUnread(@Parameter(description = "The userId of the recipient") @PathVariable int userId) {
         return messageDao.countUnreadByUser(userId);
     }
 
+    @Operation(summary = "Mark a message as read")
+    @ApiResponse(responseCode = "204", description = "Changed message status to 'read'")
     @PutMapping("/message/m/{messageId}")
-    public void readMessage(@PathVariable int messageId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void readMessage(@Parameter(description = "The idea of the message to be updated") @PathVariable int messageId) {
         messageDao.updateRead(messageId);
     }
 }

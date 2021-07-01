@@ -96,26 +96,44 @@ public class SubjectDao {
 
     public int update(Subject toUpdate, int id) {
         Subject current = findById(id);
+        int status;
         if (current.isArchived()) {
             return -1;
         }
+
+        if (toUpdate.isArchived() && testDao.countBySubject(id)==0) {
+            return -2;
+        }
+
+
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("UPDATE fach SET name = ?, klassenID = ?," +
                     " lehrID = ?, archiviert = ? WHERE fachID = ?");
             stmt.setString(1, toUpdate.getSubjectName());
             stmt.setInt(2, toUpdate.getKlasse());
-            stmt.setInt(3, toUpdate.getTeacher());
+
+            if (toUpdate.isArchived()) {
+                stmt.setNull(3, Types.INTEGER);
+            } else {
+                stmt.setInt(3, toUpdate.getTeacher());
+            }
+
             stmt.setBoolean(4, toUpdate.isArchived());
             stmt.setInt(5, id);
             return stmt;
         };
+        status = template.update(creator);
 
-        return template.update(creator);
+        if (findById(toUpdate.getSubjectID()).isArchived()) {
+            status = -3;
+        }
+
+        return status;
     }
 
     public int delete(int id) {
         if (testDao.countBySubject(id)>0) {
-            return archive(id);
+            return -1;
         } else {
             return template.update("DELETE FROM fach WHERE fachID=" + id);
         }
