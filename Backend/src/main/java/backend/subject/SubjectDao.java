@@ -143,7 +143,7 @@ public class SubjectDao {
         if (testDao.countBySubject(id)==0) {
             return -1;
         }
-        return template.update("UPDATE fach SET lehrID = null, archiviert = TRUE WHERE fachID=" + id);
+        return template.update("UPDATE fach SET lehrID = null, klassenID = null, archiviert = TRUE WHERE fachID=" + id);
     }
 
 
