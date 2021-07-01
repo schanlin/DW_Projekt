@@ -30,6 +30,7 @@ export class ClassesComponent implements OnInit {
   @ViewChild('dialogNew') dialogNewClass?: DialogComponent;
   @ViewChild('dialog') dialog?: DialogComponent;
   @ViewChild('dialogDel') dialogDel?: DialogComponent;
+  @ViewChild('dialogAddStudent') dialogAddStudent?: DialogComponent;
 
   profileFormNewClass = new FormGroup({
     klassenName: new FormControl('',[Validators.required])
@@ -44,6 +45,16 @@ export class ClassesComponent implements OnInit {
     delklassenID: new FormControl({value:'', disabled:true}),
     delklassenName : new FormControl({value:'', disabled:true})
   });
+
+  profileFormAddStudent = new FormGroup({
+    userID : new FormControl('',[Validators.required]),
+    username: new FormControl({value:'', disabled:true}),
+    firstname: new FormControl({value:'', disabled:true}),
+    lastname: new FormControl({value:'', disabled:true}),
+    rolle: new FormControl({value:'', disabled:true}),
+    email: new FormControl({value:'', disabled:true})
+  });
+
 
   constructor(private classesService: ClassesService, private studenService: StudentService) { }
   classes: (Classes & {students: Student[]})[] = []; //classes hat Klassen + dazu alle dazugehörigen Schüler*innen
@@ -135,22 +146,28 @@ export class ClassesComponent implements OnInit {
     this.dialogDel?.openDialog();
   }
   onDeleteClass(){
-    /*
-    index des eintrages suchen
-    löschen
-     */
     let delID: number = this.profileFormDel.getRawValue().delklassenID;
     this.classesService.onDeleteClass(delID).subscribe(() => {
-      /*
-      const index: number = this.classes.findIndex((classes: Classes) => {return editClass.klassenID === classes.klassenID});
-      this.classes[index].klassenID = editClass.klassenID;
-      this.classes[index].klassenName = editClass.klassenName;
-    });
-       */
       const index: number = this.classes.findIndex((classes: Classes) => {return delID === classes.klassenID});
       this.classes.splice(index, 1);
       }
     );
     this.dialogDel?.closeDialog();
+  }
+
+  onAddStudentButton(){
+  this.profileFormAddStudent.setValue({
+    userID : '',
+    username: '',
+    firstname: '',
+    lastname: '',
+    rolle: '',
+    email: ''
+  });
+  this.dialogAddStudent?.openDialog();
+      //this.studenService.getAllStudents();
+  }
+  onAddStudent(){
+
   }
 }
