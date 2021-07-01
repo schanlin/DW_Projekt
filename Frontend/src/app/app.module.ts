@@ -10,9 +10,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { UserComponent } from './user/user.component';
 import { ClassesComponent } from './classes/classes.component';
 import { SubjectsComponent } from './subjects/subjects.component';
-import {HttpClientModule} from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { DialogComponent } from './dialog/dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { DialogComponent } from './dialog/dialog.component';
     FontAwesomeModule,
     AppRoutingModule,
     HttpClientModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

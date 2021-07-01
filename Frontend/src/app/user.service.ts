@@ -22,4 +22,36 @@ export class UserService {
   getAllUser(): Observable<User[]> {
     return this.http.get<User[]>(this.baseURL+"/user");
   }
+
+  onEditUser(editUser:User){
+    return this.http.put<User>(this.baseURL+"/user/"+editUser.userID, editUser);
+  }
+
+  onDeleteUser(id:number): Observable<boolean>{
+    return this.http.delete(this.baseURL+"/user/"+id).pipe(
+      map((result) => {return true}),
+      catchError((error) => {return of(false)})
+    );
+  }
+
+  getUserByID(id:number){
+    return this.http.get<User>(this.baseURL+"/user/"+id);
+  }
+  getCurrentUser(){
+    return this.http.get<User>(this.baseURL+"/user/current");
+  }
+
+  getUserFullNameByID(id:number){
+    const user: Observable<User> = this.getUserByID(id);
+    const userFullName: Observable<string> = user.pipe(
+      map((value) => {
+        return value.firstname + ' ' + value.lastname;
+      })
+    );
+   return userFullName;
+  }
+
+  addNewUser(newUser: Omit<User, 'userID'>){
+    return this.http.post<User>(this.baseURL+"/user", newUser);
+  }
 }

@@ -19,7 +19,7 @@
       <input formControlName="newPassword" type="password" placeholder="passwort">
     </div>
     <div><label>E-Mail:</label>
-      <input formControlName="newUserEmail">
+      <input placeholder="alex.mustermensch@sample.de" formControlName="newUserEmail">
     </div>
     <div><label>Rolle</label>
       <select formControlName="newRole">
@@ -47,17 +47,47 @@
     <td>{{User.lastname}}</td>
     <td>{{User.firstname}}</td>
     <td>{{User.rolle}}</td>
-    <td>
-      <fa-icon [icon]="faPen" (click)="onEditUser()" ></fa-icon>
-      <fa-icon [icon]="faTrash" (click)="onDeleteUser()"></fa-icon>
+    <td (click)="onEditButton(User)" title="Nutzende editieren">
+      <fa-icon [icon]="faPen"></fa-icon>
+    </td>
+    <td (click)="onDeleteUser(User.userID)" title="Nutzende löschen">
+      <fa-icon [icon]="faTrash"></fa-icon>
     </td>
   </tr>
 </table>
 
 
 
-<app-dialog>
-Formular
+<app-dialog [headline] ="'Nutzenden editieren'" #dialogVar>
+  <form [formGroup]="profileForm">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="id">
+    </div>
+    <div>
+      <label>Vorname:</label>
+      <input formControlName="firstname">
+    </div>
+    <div>
+      <label>Nachname:</label>
+      <input formControlName="lastname">
+    </div>
+    <div>
+      <label>Username:</label>
+      <input formControlName="username">
+    </div>
+    <div>
+      <label>Passwort:</label>
+      <input formControlName="password" type="password">
+    </div>
+    <div><label>E-Mail:</label>
+      <input formControlName="userEmail">
+    </div>
+    <div><label>Rolle:</label>
+      <input formControlName="role">
+    </div>
+  </form>
+  <button (click)="onEditUser()">Speichern</button>
 </app-dialog>
 
 <app-dialog #dialogDel>

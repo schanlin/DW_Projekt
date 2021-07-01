@@ -1,5 +1,8 @@
 <div *ngIf="isOpen" class="background" fxLayout="row" fxLayoutAlign="center center">
   <div fxFlex="nogrow" class="container">
+
+    <fa-icon class="close" [icon]="faTimes" (click)="closeDialog()"></fa-icon>
+    <h1>{{headline}}</h1>
     <ng-content></ng-content> <!-- hier können Inhalte reingeladen werden-->
   </div>
 </div>

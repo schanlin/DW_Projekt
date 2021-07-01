@@ -1,3 +1,41 @@
 <img alt="Profilepic of the User" width= "100" height="100" [src]="profilepic" />
-<span>{{name}} <fa-icon [icon]="faPen"></fa-icon></span>
-<span>{{role}}</span>
+<div>{{firstname + " " + lastname }}</div>
+<!--<div>{{firstname + " " + lastname }}</div> /*-->
+<div>{{role}}</div>
+
+<app-dialog [headline]="'Eigenes Profil editieren'" #dialog>
+  <!--
+    ID - nicht änderbar
+    Vorname - ä
+    Nachname - ä
+    Username - ä
+    Passwort - ä
+    Rolle - nä
+       -->
+  <form [formGroup]="profileForm">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="id">
+    </div>
+    <div>
+      <label>Vorname:</label>
+      <input formControlName="firstname">
+    </div>
+    <div>
+      <label>Nachname:</label>
+      <input formControlName="lastname">
+    </div>
+    <div>
+      <label>Username:</label>
+      <input formControlName="username">
+    </div>
+    <div>
+      <label>Passwort:</label>
+      <input formControlName="password" type="password">
+    </div>
+    <div><label>E-Mail:</label>
+      <input formControlName="userEmail">
+    </div>
+  </form>
+
+</app-dialog>
