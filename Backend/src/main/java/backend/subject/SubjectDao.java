@@ -110,11 +110,12 @@ public class SubjectDao {
             PreparedStatement stmt = connection.prepareStatement("UPDATE fach SET name = ?, klassenID = ?," +
                     " lehrID = ?, archiviert = ? WHERE fachID = ?");
             stmt.setString(1, toUpdate.getSubjectName());
-            stmt.setInt(2, toUpdate.getKlasse());
 
             if (toUpdate.isArchived()) {
+                stmt.setNull(2, Types.INTEGER);
                 stmt.setNull(3, Types.INTEGER);
             } else {
+                stmt.setInt(2, toUpdate.getKlasse());
                 stmt.setInt(3, toUpdate.getTeacher());
             }
 
