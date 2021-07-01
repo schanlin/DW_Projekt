@@ -83,7 +83,7 @@ public class SubjectController {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Subjects without dependent tests should be deleted instead of archived.");
 		}
 		if (status==-3) {
-			throw new ResponseStatusException(HttpStatus.RESET_CONTENT, "Subject was archived, teacher set to <null>.");
+			throw new ResponseStatusException(HttpStatus.RESET_CONTENT, "Subject was archived, teacher set to 'null'.");
 		}
 	}
 
