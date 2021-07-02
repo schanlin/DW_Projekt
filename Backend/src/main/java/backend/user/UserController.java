@@ -112,17 +112,19 @@ public class UserController {
 	@Operation(summary = "Delete a user")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Deleted user successfully"),
-			@ApiResponse(responseCode = "403", description = "Cannot delete teachers with active subjects"),
+			@ApiResponse(responseCode = "403", description = "Not allowed to delete this user"),
 			@ApiResponse(responseCode = "404", description = "User not found")
 	})
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUser(@Parameter(description = "Id of the user to be deleted") @PathVariable int id) {
 		int status = userDao.delete(id);
-		if (status<0) {
+		if (status==-1) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete teachers with active subjects.");
 		} else if (status==0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		} else if (status==-2) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete last remaining admin.");
 		}
 	}
 

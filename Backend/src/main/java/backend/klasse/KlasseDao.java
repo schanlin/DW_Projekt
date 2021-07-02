@@ -77,7 +77,7 @@ public class KlasseDao {
 
     public List<String> findAllClassnames() {
         return template.query("SELECT name FROM klasse", (rs, rowNum) ->
-                rs.getString("username"));
+                rs.getString("name"));
     }
 
     public int update(Klasse toUpdate, int id) {

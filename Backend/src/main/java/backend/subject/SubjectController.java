@@ -64,7 +64,7 @@ public class SubjectController {
 	@Operation(summary = "Update subject attributes")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Subject updated successfully"),
-			@ApiResponse(responseCode = "205", description = "Subject was archived, teacher set to <null>"),
+			@ApiResponse(responseCode = "205", description = "Subject was archived, teacher and class were set to <null>"),
 			@ApiResponse(responseCode = "403", description = "Subjects without dependencies should be deleted instead of archived"),
 			@ApiResponse(responseCode = "404", description = "Subject not found"),
 			@ApiResponse(responseCode = "409", description = "Cannot make changes to archived subjects"),
@@ -83,7 +83,7 @@ public class SubjectController {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Subjects without dependent tests should be deleted instead of archived.");
 		}
 		if (status==-3) {
-			throw new ResponseStatusException(HttpStatus.RESET_CONTENT, "Subject was archived, teacher set to 'null'.");
+			throw new ResponseStatusException(HttpStatus.RESET_CONTENT, "Subject was archived, teacher and class set to 'null'.");
 		}
 	}
 

@@ -30,7 +30,7 @@ public class SubjectDao {
                 + "name varchar(256) NOT NULL,"
                 + "klassenID int,"
                 + "lehrID int,"
-                + "archiviert bool,"
+                + "archiviert bool NOT NULL,"
                 + "PRIMARY KEY(fachID),"
                 + "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID),"
                 + "FOREIGN KEY(lehrID) REFERENCES user(userID))";
@@ -110,11 +110,12 @@ public class SubjectDao {
             PreparedStatement stmt = connection.prepareStatement("UPDATE fach SET name = ?, klassenID = ?," +
                     " lehrID = ?, archiviert = ? WHERE fachID = ?");
             stmt.setString(1, toUpdate.getSubjectName());
-            stmt.setInt(2, toUpdate.getKlasse());
 
             if (toUpdate.isArchived()) {
+                stmt.setNull(2, Types.INTEGER);
                 stmt.setNull(3, Types.INTEGER);
             } else {
+                stmt.setInt(2, toUpdate.getKlasse());
                 stmt.setInt(3, toUpdate.getTeacher());
             }
 
@@ -146,5 +147,9 @@ public class SubjectDao {
         return template.update("UPDATE fach SET lehrID = null, klassenID = null, archiviert = TRUE WHERE fachID=" + id);
     }
 
+    public int deleteEmpty() {
+        return template.update("DELETE FROM fach WHERE archiviert=TRUE AND" +
+                " (SELECT count(*) FROM test WHERE test.fachID = fach.fachID) = 0");
+    }
 
 }
