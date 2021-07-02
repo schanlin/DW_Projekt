@@ -1,5 +1,7 @@
 package backend.user;
 
+import backend.subject.SubjectDao;
+import backend.test.TestDao;
 import backend.test_result.TestResultDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -11,17 +13,19 @@ import org.springframework.stereotype.Service;
 import java.sql.*;
 import java.util.List;
 
-import backend.klasse.*;
-
 @Service
 public class StudentDao {
     private final JdbcTemplate template;
     private final TestResultDao testResultDao;
+    private final TestDao testDao;
+    private final SubjectDao subjectDao;
     private final PasswordEncoder encoder;
 
-    public StudentDao(JdbcTemplate template, TestResultDao testResultDao, PasswordEncoder encoder) {
+    public StudentDao(JdbcTemplate template, TestResultDao testResultDao, TestDao testDao, SubjectDao subjectDao, PasswordEncoder encoder) {
         this.template = template;
         this.testResultDao = testResultDao;
+        this.testDao = testDao;
+        this.subjectDao = subjectDao;
         this.encoder = encoder;
     }
 
@@ -73,7 +77,13 @@ public class StudentDao {
     }
 
     public int delete(int id) {
-        testResultDao.deleteByStudent(id);
+        int status = testResultDao.deleteByStudent(id);
+        if (status>0) {
+            status = testDao.deleteEmpty();
+        }
+        if (status>0) {
+            subjectDao.deleteEmpty();
+        }
         return template.update("DELETE FROM user WHERE userID=" + id);
     }
 }

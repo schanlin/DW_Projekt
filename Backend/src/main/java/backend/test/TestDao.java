@@ -97,4 +97,10 @@ public class TestDao {
         testResultDao.deleteByTest(id);
         return template.update("DELETE FROM test WHERE testID=" + id);
     }
+
+    public int deleteEmpty() {
+        return template.update("DELETE FROM test" +
+                " WHERE (SELECT archiviert FROM fach INNER JOIN test ON fach.fachID = test.fachID WHERE fach.fachID = test.fachID) = TRUE" +
+                " AND (SELECT count(*) FROM ergebnis WHERE test.testID = ergebnis.testID) = 0");
+    }
 }

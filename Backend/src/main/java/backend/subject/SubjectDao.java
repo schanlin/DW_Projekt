@@ -147,5 +147,9 @@ public class SubjectDao {
         return template.update("UPDATE fach SET lehrID = null, klassenID = null, archiviert = TRUE WHERE fachID=" + id);
     }
 
+    public int deleteEmpty() {
+        return template.update("DELETE FROM fach WHERE archiviert=TRUE AND" +
+                " (SELECT count(*) FROM test WHERE test.fachID = fach.fachID) = 0");
+    }
 
 }

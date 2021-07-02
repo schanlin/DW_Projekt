@@ -1,19 +1,19 @@
 package backend.test_result;
 
 import backend.Database;
+import backend.test.TestDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class TestResultDao {
     private final JdbcTemplate template;
 
-    public TestResultDao(JdbcTemplate template) {
+    public TestResultDao(JdbcTemplate template, TestDao testDao) {
         this.template = template;
     }
 
@@ -85,7 +85,7 @@ public class TestResultDao {
     }
 
     public int deleteByStudent(int studentId) {
-        return template.update("DELETE FROM ergebnis WHERE lernID=" + studentId);
+         return template.update("DELETE FROM ergebnis WHERE lernID=" + studentId);
     }
 
     public int deleteByTest(int testId) {
