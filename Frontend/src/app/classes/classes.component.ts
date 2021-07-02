@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Classes} from "../models/class.model";
 import {Student} from "../models/student.model";
 import {User} from "../models/user.model"
+import {Subject} from "../models/subject.model";
 //Font Awesome Symbole
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {faPen} from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +18,7 @@ import {DialogComponent} from "../dialog/dialog.component";
 import {UserService} from "../user.service";
 import {ClassesService} from "../classes.service";
 import {StudentService} from "../student.service";
+import {SubjectService} from "../subject.service";
 import {combineLatest} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 
@@ -57,8 +59,10 @@ export class ClassesComponent implements OnInit {
 
 
 
-  constructor(private classesService: ClassesService, private studenService: StudentService) { }
+  constructor(private classesService: ClassesService, private studenService: StudentService, private subjectService: SubjectService) { }
   classes: (Classes & {students: Student[]})[] = []; //classes hat Klassen + dazu alle dazugehörigen Schüler*innen
+  studentsList: Student[] = []; // TODO wird die iwann gefüllt?
+  subjectsList: Subject[] = [];
   cardsExpanded: boolean[] = [];
   readonly faTrash = faTrash;
   readonly faUserPlus = faUserPlus;
@@ -67,10 +71,18 @@ export class ClassesComponent implements OnInit {
   readonly faPen = faPen;
   readonly faAngleDown = faAngleDown;
   readonly faUserMinus = faUserMinus;
-  studentsList: Student[] = [];
   currentClassID: number = 0;
 
   ngOnInit(): void {
+    /*
+      const obs = this.userService.getAllUser();
+    obs.subscribe(e => this.users = e);
+  }
+     */
+    const obssubjects = this.subjectService.getAllSubjects();
+    obssubjects.subscribe((subjects: Subject[]) => {
+      this.subjectsList = subjects;
+    })
     const obsclass = this.classesService.getAllClasses();
     const obsstudent = this.studenService.getAllStudents();
     obsstudent.subscribe((students: Student[]) => {
@@ -96,13 +108,27 @@ export class ClassesComponent implements OnInit {
     });
     console.log(this.classes);
 
-    this.profileFormAddStudent.controls["userID"].valueChanges; // TODO
+    /* Eingabefeld bei der Auswahl des Lernenden, das username und email anzeigt
+    this.profileFormAddStudent.controls["userID"].valueChanges.subscribe((id: string) => {
+      if(id.length > 0) {
+        const newStudent: Student = this.studentsList.find((student) => {
+          return student.userID === Number.parseInt(id);
+        }) as Student;
+        console.log(newStudent, id);
+        this.profileFormAddStudent.setValue({
+
+          email: newStudent.email,
+          username: newStudent.username
+        });
+      }
+    })*/
 
   }
 
   onExpandingCard(index: number){
     this.cardsExpanded[index] = !this.cardsExpanded[index];
 }
+
   onAddButton(){
     this.profileFormNewClass.setValue({
       klassenName: ''
