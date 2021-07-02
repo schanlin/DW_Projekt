@@ -33,4 +33,8 @@ export class ClassesService {
     return this.http.delete(this.baseURL+"/klasse/"+id);
   }
 
+  onAssignStudent(studentId:number, classID:number){
+    return this.http.put(this.baseURL+"/klasse/"+classID+"/assign/"+studentId, null);
+  }
+
 }

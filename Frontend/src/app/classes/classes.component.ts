@@ -52,8 +52,9 @@ export class ClassesComponent implements OnInit {
     firstname: new FormControl({value:'', disabled:true}),
     lastname: new FormControl({value:'', disabled:true}),
     rolle: new FormControl({value:'', disabled:true}),
-    email: new FormControl({value:'', disabled:true})
+    email: new FormControl({value:'', disabled:true}),
   });
+
 
 
   constructor(private classesService: ClassesService, private studenService: StudentService) { }
@@ -148,26 +149,50 @@ export class ClassesComponent implements OnInit {
   onDeleteClass(){
     let delID: number = this.profileFormDel.getRawValue().delklassenID;
     this.classesService.onDeleteClass(delID).subscribe(() => {
-      const index: number = this.classes.findIndex((classes: Classes) => {return delID === classes.klassenID});
-      this.classes.splice(index, 1);
+      const index:number = this.findIndexofClass(delID);
+      this.classes.splice(index, 1) ;
       }
     );
     this.dialogDel?.closeDialog();
   }
 
-  onAddStudentButton(){
-  this.profileFormAddStudent.setValue({
-    userID : '',
-    username: '',
-    firstname: '',
-    lastname: '',
-    rolle: '',
-    email: ''
-  });
-  this.dialogAddStudent?.openDialog();
-      //this.studenService.getAllStudents();
+  findIndexofClass(searchedClassID: number){
+    //return this.classes.findIndex((classes: Classes) => {return searchedClassID === classes.klassenID});
+    return this.classes.findIndex((classes: Classes) => {
+      if (searchedClassID === classes.klassenID){
+        return true;
+      }
+      return false;
+    });
+  }
+
+  onAddStudentButton(klassenID: number){
+    this.profileFormAddStudent.setValue({
+      userID : '',
+      username: '',
+      firstname: '',
+      lastname: '',
+      rolle: '',
+      email: '',
+    });
+    this.currentClassID = klassenID;
+    this.dialogAddStudent?.openDialog();
   }
   onAddStudent(){
+    let studentID =this.profileFormAddStudent.getRawValue().userID;
+    this.classesService.onAssignStudent(studentID, this.currentClassID).subscribe(); //API erwarter ein subscribe, weil Oservable zurückkommt
 
+    for(let i = 0; i < this.classes.length; i++) {
+      let studentIndex: number = this.classes[i].students.findIndex((students: Student) => {return studentID === students.userID});
+      if(studentIndex !== -1) {
+        this.classes[i].students.splice(studentIndex, 1);
+        break;
+      }
+    }
+    const classIndex = this.findIndexofClass(this.currentClassID);
+    this.classes[classIndex].students.push(this.studentsList.find((students: Student) => {
+      return studentID === students.userID
+    }) as Student);
+  this.dialogAddStudent?.closeDialog();
   }
 }
