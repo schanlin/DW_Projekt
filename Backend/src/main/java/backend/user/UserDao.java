@@ -93,6 +93,10 @@ public class UserDao {
                 rs.getString("username"));
     }
 
+    public int countAdmins() {
+        return template.queryForObject("SELECT count(*) FROM user WHERE rolle='Admin'", Integer.class);
+    }
+
     public int updatePassword(String newPw, int id) {
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("UPDATE user SET passwort = ? WHERE userID = ?");
@@ -127,6 +131,9 @@ public class UserDao {
             if (!subjects.isEmpty()) {
                 return -1;
             }
+        }
+        if (user.getRolle().equals("Admin") && countAdmins()==1) {
+            return -2;
         }
         return template.update("DELETE FROM user WHERE userID=" + userId);
     }
