@@ -1,10 +1,7 @@
 package backend;
 
-import java.sql.Date;
-import java.sql.SQLException;
-
-import javax.annotation.PostConstruct;
-
+import backend.klasse.Klasse;
+import backend.klasse.KlasseDao;
 import backend.message.MessageDao;
 import backend.subject.Subject;
 import backend.subject.SubjectDao;
@@ -18,8 +15,9 @@ import backend.user.User;
 import backend.user.UserDao;
 import org.springframework.stereotype.Component;
 
-import backend.klasse.Klasse;
-import backend.klasse.KlasseDao;
+import javax.annotation.PostConstruct;
+import java.sql.Date;
+import java.sql.SQLException;
 
 @Component
 public class DemoDataInitializer {
