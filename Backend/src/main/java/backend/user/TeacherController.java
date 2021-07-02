@@ -107,13 +107,18 @@ public class TeacherController {
 	@Operation(summary = "Add or update a mark for a test")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "201", description = "New result was saved",
-			content = {@Content(mediaType = "application/json",
-			schema = @Schema(implementation = TestResult.class))}),
+				content = {@Content(mediaType = "application/json",
+				schema = @Schema(implementation = TestResult.class))}),
 			@ApiResponse(responseCode = "204", description = "Mark was updated",
-			content = @Content)
+				content = @Content),
+			@ApiResponse(responseCode = "403", description = "Cannot change archived tests",
+				content = @Content)
 	})
 	@PostMapping("/teacher/tests/results")
 	public ResponseEntity postNewMark(@RequestBody TestResult testResult) {
+		if (testDao.isArchived(testResult.getTestID())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot change archived tests");
+		}
 		int status = testResultDao.insertOrUpdate(testResult);
 		if (status==1) {
 			return new ResponseEntity<>(HttpStatus.CREATED);

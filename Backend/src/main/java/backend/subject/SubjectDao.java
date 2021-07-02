@@ -30,7 +30,7 @@ public class SubjectDao {
                 + "name varchar(256) NOT NULL,"
                 + "klassenID int,"
                 + "lehrID int,"
-                + "archiviert bool,"
+                + "archiviert bool NOT NULL,"
                 + "PRIMARY KEY(fachID),"
                 + "FOREIGN KEY(klassenID) REFERENCES klasse(klassenID),"
                 + "FOREIGN KEY(lehrID) REFERENCES user(userID))";

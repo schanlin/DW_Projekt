@@ -80,6 +80,11 @@ public class TestDao {
         return template.queryForObject("SELECT count(*) FROM test WHERE fachID=" + subjectId, Integer.class);
     }
 
+    public boolean isArchived(int id){
+        return template.queryForObject("SELECT archiviert FROM fach INNER JOIN test ON test.fachID = fach.fachID" +
+                " WHERE fach.fachID = test.fachID and testID =" + id, Boolean.class);
+    }
+
     public int update(Test toUpdate, int id) {
         PreparedStatementCreator creator = (connection) -> {
             PreparedStatement stmt = connection.prepareStatement("UPDATE test SET name = ?, datum = ?, fachID = ?" +

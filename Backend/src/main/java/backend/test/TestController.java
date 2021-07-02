@@ -64,10 +64,14 @@ public class TestController {
 	@Operation(summary = "Update a test's attributes")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Test updated successfully"),
+			@ApiResponse(responseCode = "403", description = "Not allowed to update archived tests"),
 			@ApiResponse(responseCode = "404", description = "Test not found")
 	})
 	@PutMapping("/test/{id}")
 	public void putTest(@RequestBody Test test,@Parameter(description = "The id of the test to be updated") @PathVariable int id) {
+		if (testDao.isArchived(id)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not allowed to update archived tests");
+		}
 		int status = testDao.update(test, id);
 		if (status==0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);

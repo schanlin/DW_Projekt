@@ -13,7 +13,7 @@ import java.util.List;
 public class TestResultDao {
     private final JdbcTemplate template;
 
-    public TestResultDao(JdbcTemplate template, TestDao testDao) {
+    public TestResultDao(JdbcTemplate template) {
         this.template = template;
     }
 
