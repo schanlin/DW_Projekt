@@ -27,7 +27,7 @@
       <td  title="Klasse editieren" (click)="onEditButton(Classes)">
         <fa-icon [icon]="faPen"></fa-icon>
       </td>
-      <td  title="Schüler*in zuweisen">
+      <td  title="Schüler*in zuweisen" (click)="onAddStudentButton(Classes.klassenID)">
         <fa-icon [icon]="faUserPlus"></fa-icon>
       </td> <!--(click)="onEditUser(User)"-->
       <td  title="Fach hinzufügen">
@@ -44,11 +44,9 @@
     <tr *ngIf="cardsExpanded[i]">
       <td colspan="7">
         Schüler
-        <div *ngFor="let Classes of classes">
-          <span *ngFor ="let Students of Classes.students">
-          {{Students.firstname + " " +Students.lastname + " "}} <fa-icon [icon]="faUserMinus"></fa-icon>
-          </span>
-        </div>
+        <span *ngFor="let Students of Classes.students">
+        {{Students.firstname + " " +Students.lastname + " "}} <fa-icon [icon]="faUserMinus"></fa-icon>
+        </span>
       </td>
     </tr>
   </ng-container>
@@ -82,4 +80,25 @@
   <div>Wollen Sie diese Klasse wirklich löschen?</div>
   <button (click)="onDeleteClass()">Löschen</button>
   <button (click)="dialogDel?.closeDialog();">Abbrechen</button>
+</app-dialog>
+
+<app-dialog [headline] ="'Schüler hinzufügen'" #dialogAddStudent>
+  <form [formGroup]="profileFormAddStudent">
+    <div>
+      <label>ID</label>
+      <select formControlName="userID">
+        <option *ngFor="let Student of studentsList" [value]="Student.userID">
+          {{ Student.userID }} ({{ Student.firstname }} {{ Student.lastname }})
+        </option>
+      </select>
+    </div>
+    <div>
+      <label>Username:</label>
+      <input formControlName="username" placeholder="musteralex">
+    </div>
+    <div><label>E-Mail:</label>
+      <input placeholder="alex.mustermensch@sample.de" formControlName="email">
+    </div>
+  </form>
+  <button [disabled]="!profileFormAddStudent.valid" (click)="onAddStudent()">Click me!</button>
 </app-dialog>
