@@ -44,11 +44,9 @@
     <tr *ngIf="cardsExpanded[i]">
       <td colspan="7">
         Schüler
-        <div *ngFor="let Classes of classes">
-          <span *ngFor ="let Students of Classes.students">
-          {{Students.firstname + " " +Students.lastname + " "}} <fa-icon [icon]="faUserMinus"></fa-icon>
-          </span>
-        </div>
+        <span *ngFor="let Students of Classes.students">
+        {{Students.firstname + " " +Students.lastname + " "}} <fa-icon [icon]="faUserMinus"></fa-icon>
+        </span>
       </td>
     </tr>
   </ng-container>

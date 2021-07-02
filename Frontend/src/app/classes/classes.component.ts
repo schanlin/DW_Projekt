@@ -67,16 +67,22 @@ export class ClassesComponent implements OnInit {
   readonly faPen = faPen;
   readonly faAngleDown = faAngleDown;
   readonly faUserMinus = faUserMinus;
+  studentsList: Student[] = [];
+  currentClassID: number = 0;
 
   ngOnInit(): void {
     const obsclass = this.classesService.getAllClasses();
     const obsstudent = this.studenService.getAllStudents();
+    obsstudent.subscribe((students: Student[]) => {
+      this.studentsList = students;
+    });
     combineLatest([obsclass, obsstudent]).subscribe(([classes, students]) => {
       if(!!classes && !!students){
         this.classes = classes.map((klasse) => {
           const filteredStudents = students.filter((student) => {
             return student.klasse === klasse.klassenID;
           });
+          console.log(students, klasse, filteredStudents);
           return {
             ...klasse,
             students: filteredStudents
@@ -89,6 +95,8 @@ export class ClassesComponent implements OnInit {
       }
     });
     console.log(this.classes);
+
+    this.profileFormAddStudent.controls["userID"].valueChanges; // TODO
 
   }
 
