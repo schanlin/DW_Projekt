@@ -1,13 +1,5 @@
 package backend.klasse;
 
-import java.sql.*;
-import java.util.LinkedList;
-import java.util.List;
-
-import backend.Database;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class Klasse {

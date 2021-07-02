@@ -1,13 +1,8 @@
 package backend.user;
 
-import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
-
 import backend.test_result.AverageBySubject;
 import backend.test_result.TestResult;
 import backend.test_result.TestResultDao;
-import backend.user.Student;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 public class StudentController {
@@ -84,7 +81,7 @@ public class StudentController {
 		content = {@Content(mediaType = "application/json",
 		array = @ArraySchema(schema = @Schema(implementation = AverageBySubject.class)))})
 	@GetMapping("/student/{studentId}/subjects")
-	public List<AverageBySubject> getAverageBySubjectAndStudent(@Parameter(description = "The userId of the student")
+	public List<AverageBySubject> getAverageBySubject(@Parameter(description = "The userId of the student")
 																	@PathVariable int studentId) {
 		return testResultDao.findAllAveragesBySubject(studentId);
 	}

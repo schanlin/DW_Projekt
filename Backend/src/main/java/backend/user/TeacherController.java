@@ -1,13 +1,10 @@
 package backend.user;
 
-import java.util.List;
-
 import backend.subject.Subject;
 import backend.subject.SubjectDao;
 import backend.test.Test;
 import backend.test.TestDao;
 import backend.test_result.AverageByStudent;
-import backend.test_result.AverageBySubject;
 import backend.test_result.TestResult;
 import backend.test_result.TestResultDao;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,9 +16,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 public class TeacherController {
@@ -89,7 +87,7 @@ public class TeacherController {
 		content = {@Content(mediaType = "application/json",
 		array = @ArraySchema(schema = @Schema(implementation = Test.class)))})
 	@GetMapping("/teacher/subjects/{subjectId}/tests")
-	public List<Test> getTestsByTeacherAndSubject(@Parameter(description = "The id of the subject you want the tests from")
+	public List<Test> getTestsBySubject(@Parameter(description = "The id of the subject you want the tests from")
 													  @PathVariable int subjectId) {
 		return testDao.findBySubject(subjectId);
 	}
