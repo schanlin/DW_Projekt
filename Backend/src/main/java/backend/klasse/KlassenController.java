@@ -8,9 +8,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -100,15 +100,15 @@ public class KlassenController {
 	@PutMapping("/klasse/{klassenId}/assign/{studentId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void assignStudent(@Parameter(description = "The id of the new class. Use 0 if you want to deassign") @PathVariable int klassenId,
-							  @Parameter(description = "The id of the student who is to be reassigned") @PathVariable int userId) {
+							  @Parameter(description = "The id of the student who is to be reassigned") @PathVariable int studentId) {
 		int status;
 		if(klassenId==0) {
-			status = studentDao.deassign(userId);
+			status = studentDao.deassign(studentId);
 			if (status==0) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 			}
 		} else {
-			status = studentDao.assign(klassenId, userId);
+			status = studentDao.assign(klassenId, studentId);
 			if (status==0) {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 			}

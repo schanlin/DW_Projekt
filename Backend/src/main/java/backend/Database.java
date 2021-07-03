@@ -1,7 +1,6 @@
 package backend;
 
 import java.io.FileInputStream;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public class Database {

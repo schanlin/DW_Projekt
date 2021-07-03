@@ -53,7 +53,6 @@ public class MessageController {
         }
 
         if (sender.getRolle().equals("Lernende")) {
-            List<Integer> senderSubjects = subjectDao.findIdByUserStudent(newMessage.getSender());
             List<Integer> recipientSubjects = null;
 
             if (recipient.getRolle().equals("Admin")) {
@@ -64,11 +63,8 @@ public class MessageController {
                 recipientSubjects = subjectDao.findIdByUserTeacher(newMessage.getRecipient());
             }
 
-            if (recipientSubjects==null) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
             boolean commonSubjects = false;
+            List<Integer> senderSubjects = subjectDao.findIdByUserStudent(newMessage.getSender());
 
             for (Integer val: senderSubjects) {
                 if (recipientSubjects.contains(val)) {
@@ -148,7 +144,7 @@ public class MessageController {
     @ApiResponse(responseCode = "204", description = "Changed message status to 'read'")
     @PutMapping("/message/m/{messageId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void readMessage(@Parameter(description = "The idea of the message to be updated") @PathVariable int messageId) {
+    public void markAsRead(@Parameter(description = "The idea of the message to be updated") @PathVariable int messageId) {
         messageDao.updateRead(messageId);
     }
 }

@@ -1,17 +1,15 @@
 package backend.klasse;
 
 import backend.Database;
-import backend.subject.*;
+import backend.subject.Subject;
 import backend.subject.SubjectDao;
 import backend.user.Student;
 import backend.user.StudentDao;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.*;
 import java.util.List;

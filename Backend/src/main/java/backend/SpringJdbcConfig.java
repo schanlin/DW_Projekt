@@ -10,11 +10,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableConfigurationProperties(DatabaseConfig.class)
+@EnableConfigurationProperties(DatabaseProperties.class)
 @EnableScheduling
 public class SpringJdbcConfig {
     @Bean
-    public DataSource mysqlDataSource(DatabaseConfig datenbank) {
+    public DataSource mysqlDataSource(DatabaseProperties datenbank) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.mariadb.jdbc.Driver");
         dataSource.setUrl(datenbank.url);

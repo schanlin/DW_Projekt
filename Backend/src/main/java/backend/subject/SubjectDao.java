@@ -2,16 +2,13 @@ package backend.subject;
 
 import backend.Database;
 import backend.test.TestDao;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.*;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service

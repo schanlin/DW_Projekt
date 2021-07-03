@@ -1,14 +1,5 @@
 package backend.subject;
 
-import java.sql.*;
-import java.util.List;
-
-import backend.Database;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.LinkedList;
-
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class Subject {

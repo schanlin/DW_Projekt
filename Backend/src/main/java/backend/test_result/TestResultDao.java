@@ -1,7 +1,6 @@
 package backend.test_result;
 
 import backend.Database;
-import backend.test.TestDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.stereotype.Service;

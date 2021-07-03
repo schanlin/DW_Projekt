@@ -80,7 +80,6 @@ public class MessageDao {
 
     @Scheduled(cron = "0 0 4 * * *")
     public void deleteMessages() {
-        int status = template.update("DELETE FROM nachricht WHERE DATEDIFF(CURDATE(),  gesendet)>7");
-        System.out.println("Deleted " + status + " Messages.");
+        template.update("DELETE FROM nachricht WHERE DATEDIFF(CURDATE(),  gesendet)>7");
     }
 }
