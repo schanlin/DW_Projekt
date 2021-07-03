@@ -1,5 +1,6 @@
 package backend.subject;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class Subject {
@@ -49,7 +50,8 @@ public class Subject {
 		this.teacher = teacher;
 		this.archived = archived;
 	}
-	
+
+	@JsonCreator
 	public Subject(String name, int klasse, int teacher, boolean archived) {
 		this.subjectName = name;
 		this.klasse = klasse;
