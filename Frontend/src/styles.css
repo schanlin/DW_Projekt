@@ -41,3 +41,23 @@ td:last-child, th:last-child {
 tr:nth-child(even){
   background:#CFD7DB;
 }
+
+button{
+  background-color: #0e384c;
+  color: white;
+  font-weight: bolder;
+  box-shadow: none;
+  border-color: transparent;
+  padding: 0.25em;
+  padding-left: 3em;
+  padding-right: 3em;
+  border-radius: 0.75em;
+}
+
+button[disabled]{
+
+}
+
+button:not([disabled]):hover{
+
+}

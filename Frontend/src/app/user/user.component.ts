@@ -9,6 +9,7 @@ import {User} from "../models/user.model";
 import {faPen} from '@fortawesome/free-solid-svg-icons';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 
 @Component({
   selector: 'app-user',
@@ -45,6 +46,7 @@ export class UserComponent implements OnInit {
   readonly faPen = faPen;
   readonly faTrash = faTrash;
   readonly faTimes = faTimes;
+  readonly faPlus = faPlus;
   resultMessage:string = "";
 
   onEditButton(user: User){

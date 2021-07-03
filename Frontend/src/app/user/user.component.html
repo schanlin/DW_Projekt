@@ -1,4 +1,7 @@
-<h1>Liste der Nutzenden</h1>  <button (click)="onAddButton()">Click me!</button>
+<div fxLayout=”row” fxLayoutAlign="start center">
+  <h1 fxFlex>Liste der Nutzenden</h1>
+  <button (click)="onAddButton()" fxFlex="initial"><fa-icon [icon]="faPlus"></fa-icon></button>
+</div>
 
 <app-dialog [headline] ="'Neuen Nutzenden anlegen'" #dialogNew>
   <form [formGroup]="profileFormNewUser">

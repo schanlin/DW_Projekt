@@ -13,6 +13,7 @@ import {faFolderPlus} from '@fortawesome/free-solid-svg-icons';
 import {faAngleUp} from '@fortawesome/free-solid-svg-icons';
 import {faAngleDown} from '@fortawesome/free-solid-svg-icons';
 import{faUserMinus} from '@fortawesome/free-solid-svg-icons';
+import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 //Komponenten und Services
 import {DialogComponent} from "../dialog/dialog.component";
 import {UserService} from "../user.service";
@@ -71,6 +72,7 @@ export class ClassesComponent implements OnInit {
   readonly faPen = faPen;
   readonly faAngleDown = faAngleDown;
   readonly faUserMinus = faUserMinus;
+  readonly faPlus = faPlus;
   currentClassID: number = 0;
 
 

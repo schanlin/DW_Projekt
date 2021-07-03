@@ -1,4 +1,8 @@
-<h1>Liste der Fächer</h1>
+<div fxLayout=”row” fxLayoutAlign="start center">
+  <h1 fxFlex>Liste der Fächer</h1>
+  <button fxFlex="initial" (click) ="onAddSubjectButton()"><fa-icon [icon]="faPlus"></fa-icon></button>
+</div>
+
 
 <table>
   <tr>
@@ -18,16 +22,16 @@
     <td>{{Subjects.className}}</td>
     <td>{{Subjects.teacherName}}</td>
     <td>{{Subjects.archived}}</td>
-    <td title="Fach editieren" (click)="onEditButton(Subjects)" #dialogEditSubject>
+    <td title="Fach editieren" (click)="onEditButton(Subjects)">
       <fa-icon [icon]="faPen"></fa-icon>
     </td>
-    <td title="Fach hinzufügen">
+    <td title="Fach hinzufügen" (click)="onAddSubjectButton()">
       <fa-icon [icon]="faFolderPlus"></fa-icon>
-    </td>  <!--(click)="onEditUser(User)" -->
-    <td titel="Fach archivieren">
+    </td>
+    <td titel="Fach archivieren" (click)="onArchiveButton(Subjects)">
       <fa-icon [icon]="faArchive" ></fa-icon>
     </td>
-    <td title="löschen">
+    <td title="löschen" (click)="onDeleteButton(Subjects)">
       <fa-icon [icon]="faTrash" ></fa-icon>
     </td>
   </tr>
@@ -45,4 +49,51 @@
     </div>
   </form>
   <button (click)="onEditSubject()">Speichern</button>
+</app-dialog>
+
+<app-dialog [headline]="'Fach löschen'" #dialogDeleteSubject>
+  <form [formGroup]="profileFormDeleteSubject">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="subjectID">
+    </div>
+    <div>
+      <label fxFlex>Name des Faches:</label>
+      <input fxFlex="initial" formControlName="subjectName">
+    </div>
+  </form>
+  <button (click)="onDeleteSubject()">Löschen</button>
+  <button (click)="dialogDeleteSubject.closeDialog()">Abbrechen</button>
+</app-dialog>
+
+<app-dialog [headline]="'Neues Fach anlegen'" #dialogNewSubject>
+  <form [formGroup]="profileFormNewSubject">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="subjectID">
+    </div>
+    <div>
+      <label fxFlex>Name des Faches:</label>
+      <input fxFlex="initial" formControlName="subjectName">
+    </div>
+  </form>
+  <button (click)="onAddSubject()">Anlegen</button>
+</app-dialog>
+
+<app-dialog [headline]="'Fach archivieren'" #dialogArchivedSubject>
+  <form [formGroup]="profileFormArchivedSubject">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="subjectID">
+    </div>
+    <div>
+      <label fxFlex>Name des Faches:</label>
+      <input fxFlex="initial" formControlName="subjectName">
+    </div>
+  </form>
+    <div>Wenn Sie ein Fach archivieren, kann dieses nicht mehr verändert werden. Außerdem wird es dem Lehrer nicht mehr angezeigt.
+      Dies kann nicht rückgängig gemacht werden.</div>
+
+    <button (click)="archiveSubject()">Archivieren</button>
+    <button (click)="dialogArchivedSubject.closeDialog()">Abbrechen</button>
 </app-dialog>
