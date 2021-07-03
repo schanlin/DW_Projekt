@@ -8,8 +8,6 @@ import {Classes} from "../models/class.model";
 import {ClassesService} from "../classes.service";
 import {faPen} from '@fortawesome/free-solid-svg-icons';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import {faFolderPlus} from '@fortawesome/free-solid-svg-icons';
 import {faArchive} from '@fortawesome/free-solid-svg-icons';
 import {faPlus} from '@fortawesome/free-solid-svg-icons';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -25,14 +23,13 @@ export class SubjectsComponent implements OnInit {
 
   constructor(private subjectService: SubjectService, private teacherService: TeacherService, private classesService: ClassesService) { }
   subjects: Subject[] = [];
-  teacher: Teacher[] = [];
+  teachers: Teacher[] = [];
   classes: Classes[] = [];
   readonly faPen = faPen;
   readonly faTrash = faTrash;
-  readonly faTimes = faTimes;
-  readonly faFolderPlus = faFolderPlus;
   readonly faArchive = faArchive;
   readonly faPlus = faPlus;
+
 
   @ViewChild('dialogEditSubject') dialogEditSubject?: DialogComponent;
   @ViewChild('dialogDeleteSubject') dialogDeleteSubject? :DialogComponent;
@@ -41,7 +38,9 @@ export class SubjectsComponent implements OnInit {
 
   profileFormEditSubject = new FormGroup({
     subjectID: new FormControl({value:'', disabled:true}),
-    subjectName: new FormControl('',[Validators.required])
+    subjectName: new FormControl('',[Validators.required]),
+    teacher: new FormControl(''),
+    klasse: new FormControl(''),
   });
 
   profileFormDeleteSubject = new FormGroup({
@@ -79,11 +78,11 @@ export class SubjectsComponent implements OnInit {
     ]);
     observable.subscribe(data =>{
       this.subjects = data[0];
-      this.teacher = data[1];
+      this.teachers = data[1];
       this.classes = data[2];
 
       console.log(this.dialogArchivedSubject, this.dialogEditSubject, this.dialogNewSubject);
-      console.log(this.teacher);
+      console.log(this.teachers);
       console.log(this.classes);
 
     for(let i:number = 0; i<this.subjects.length; i++){
@@ -94,9 +93,9 @@ export class SubjectsComponent implements OnInit {
       }
     }
     for(let i:number = 0; i<this.subjects.length; i++){
-      for(let j:number = 0; j<this.teacher.length; j++){
-        if(this.subjects[i].teacher === this.teacher[j].userID){
-          this.subjects[i].teacherName = this.teacher[j].username;
+      for(let j:number = 0; j<this.teachers.length; j++){
+        if(this.subjects[i].teacher === this.teachers[j].userID){
+          this.subjects[i].teacherName = this.teachers[j].username;
         }
       }
     }
@@ -112,10 +111,30 @@ export class SubjectsComponent implements OnInit {
     });
   }
 
+  findTeacherByID(teacherID: number) {
+    return this.teachers.find((searchedTeacher: Teacher) => {
+        return (searchedTeacher.userID === teacherID);
+      });
+  }
+
+  findClassByID(classID: number) {
+    return this.classes.find((searchedClass: Classes) => {
+      return( searchedClass.klassenID === classID);
+    });
+  }
+
+  findSubjectbyID(subjectID: number){
+    return this.subjects.find((searchedSubject: Subject) => {
+      return (searchedSubject.subjectID === subjectID);
+    });
+  }
+
   onEditButton(currentSubject:Subject){
     this.profileFormEditSubject.setValue({
       subjectID: currentSubject.subjectID,
-      subjectName : currentSubject.subjectName
+      subjectName : currentSubject.subjectName,
+      teacher: currentSubject.teacher,
+      klasse: currentSubject
     });
     console.log(this.dialogEditSubject);
     this.dialogEditSubject?.openDialog();
@@ -123,7 +142,24 @@ export class SubjectsComponent implements OnInit {
 
 
   onEditSubject(){
+    const formValues: Subject = this.profileFormEditSubject.getRawValue();
+    console.log(formValues)
+    formValues.teacher = Number.parseInt(formValues.teacher as any);
+    formValues.klasse = Number.parseInt(formValues.klasse as any);
+    let teacher: Teacher = this.findTeacherByID(formValues.teacher) as Teacher;
+    let klasse: Classes = this.findClassByID(formValues.klasse) as Classes;
+    let currentSubject: Subject = {...this.findSubjectbyID(formValues.subjectID)} as Subject;
 
+    currentSubject.subjectName = formValues.subjectName;
+    currentSubject.klasse = formValues.klasse;
+    currentSubject.teacher = formValues.teacher;
+    currentSubject.teacherName = teacher.username;
+    currentSubject.className = klasse.klassenName;
+    this.subjectService.editSubject(currentSubject).subscribe(() => {
+      const subjectIndex: number = this.findIndexofSubject(currentSubject.subjectID);
+      this.subjects[subjectIndex] = currentSubject;
+      });
+    this.dialogEditSubject?.closeDialog();
   }
 
   onAddSubjectButton(){
@@ -134,29 +170,13 @@ export class SubjectsComponent implements OnInit {
     this.dialogNewSubject?.openDialog();
   }
 
-  onAddSubject(){ //TODO
-    /*
-    let formData = this.profileFormNewUser.getRawValue(); //was zurückkommt sieht so aus, wie der Usertyp, den ich zuweise, weil der aus der FormGroup kommt
-    let newUser: Omit<User, 'userID'> = {
-      username: formData.newUsername,
-      firstname: formData.newFirstname,
-      lastname: formData.newLastname,
-      email: formData.newUserEmail,
-      password: formData.newPassword,
-      rolle: formData.newRole
-    };
-    this.userService.addNewUser(newUser).subscribe((createdUser: User) => {
-      this.users.push(createdUser);
-    });
-    this.dialogNewUser?.closeDialog();
-  }
-     */
+  onAddSubject(){
     let formData = this.profileFormNewSubject.getRawValue();
-    let newSubject: Omit<Subject, 'subjectID' | 'teacher' | 'klasse'> = {
+    let newSubject: Omit<Subject, 'subjectID' | 'teacherName' | 'className'> = {
       subjectName: formData.subjectName,
       archived: false,
-      teacherName: "",
-      className: ""
+      teacher: 0,
+      klasse: 0
     };
   this.subjectService.addNewSubject(newSubject).subscribe((createdSubject: Subject) => {
     this.subjects.push(createdSubject);
@@ -182,7 +202,10 @@ export class SubjectsComponent implements OnInit {
     this.dialogDeleteSubject?.closeDialog();
   }
 
-  onArchiveButton(currentSubject:Subject){
+  onArchiveButton(currentSubject:Subject){ //TODO wenn archiviert, dann ausgrauen nicht able
+    if(currentSubject.archived){
+      return;
+    }
     this.profileFormArchivedSubject.setValue({
       subjectID: currentSubject.subjectID,
       subjectName: currentSubject.subjectName,
@@ -191,10 +214,6 @@ export class SubjectsComponent implements OnInit {
       archived: true,
       });
     this.dialogArchivedSubject?.openDialog();
-      /*Fenster öffnen-> wenn sie das archivieren werden Alle Fächer und Tests losgelöst
-       ja/ nein
-       currentSubject füllen, archived auf true setzen
-    */
   }
   archiveSubject(){
     const archivedSubject : Omit<Subject, 'teacherName' | 'className'> = {
@@ -207,6 +226,5 @@ export class SubjectsComponent implements OnInit {
     this.subjectService.archiveSubject(archivedSubject).subscribe();
     const index: number = this.findIndexofSubject(archivedSubject.subjectID);
     this.subjects[index].archived= true;
-
   }
 }

@@ -14,7 +14,6 @@
     <th></th>
     <th></th>
     <th></th>
-    <th></th>
   </tr>
   <tr *ngFor="let Subjects of subjects">
     <td>{{Subjects.subjectID}}</td>
@@ -25,10 +24,8 @@
     <td title="Fach editieren" (click)="onEditButton(Subjects)">
       <fa-icon [icon]="faPen"></fa-icon>
     </td>
-    <td title="Fach hinzufügen" (click)="onAddSubjectButton()">
-      <fa-icon [icon]="faFolderPlus"></fa-icon>
-    </td>
-    <td titel="Fach archivieren" (click)="onArchiveButton(Subjects)">
+    <td titel="Fach archivieren" (click)="onArchiveButton(Subjects)" [ngClass]=" Subjects.archived ? 'deactivated' : '' ">
+      <!--if archived -> class deactivated, sonst nichts-->
       <fa-icon [icon]="faArchive" ></fa-icon>
     </td>
     <td title="löschen" (click)="onDeleteButton(Subjects)">
@@ -46,6 +43,22 @@
     <div>
       <label fxFlex>Name des Faches:</label>
       <input fxFlex="initial" formControlName="subjectName">
+    </div>
+    <div>
+      <label>Klasse</label>
+      <select formControlName="klasse">
+        <option *ngFor="let klasse of classes" [value]="klasse.klassenID">
+          {{ klasse.klassenID}} ({{ klasse.klassenName }})
+        </option>
+      </select>
+    </div>
+    <div>
+      <label>Lehrende</label>
+      <select formControlName="teacher">
+        <option *ngFor="let teacher of teachers" [value]="teacher.userID">
+          {{ teacher.userID }} ({{ teacher.firstname }} {{ teacher.lastname }})
+        </option>
+      </select>
     </div>
   </form>
   <button (click)="onEditSubject()">Speichern</button>

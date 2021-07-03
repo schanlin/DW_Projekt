@@ -61,3 +61,7 @@ button[disabled]{
 button:not([disabled]):hover{
 
 }
+
+.deactivated{
+  color:#0e384c80;
+}

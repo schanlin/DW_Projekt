@@ -26,11 +26,15 @@ export class SubjectService {
     return this.http.delete(this.baseURL+"/subject/"+id);
   }
 
-  addNewSubject(newSubject: Omit<Subject, 'subjectID'| 'teacher' | 'klasse'>){
+  addNewSubject(newSubject: Omit<Subject, 'subjectID'| 'teacherName' | 'className'>){
     return this.http.post<Subject>(this.baseURL+"/subject", newSubject);
   }
 
   archiveSubject(subject: Omit<Subject, 'teacherName' | 'className'>){
     return this.http.put(this.baseURL+"/subject", subject);
+  }
+
+  editSubject(editSubject: Subject){
+    return this.http.put(this.baseURL+"/subject/" + editSubject.subjectID, editSubject);
   }
 }

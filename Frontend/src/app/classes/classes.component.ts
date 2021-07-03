@@ -58,8 +58,6 @@ export class ClassesComponent implements OnInit {
     email: new FormControl({value:'', disabled:true}),
   });
 
-
-
   constructor(private classesService: ClassesService, private studenService: StudentService, private subjectService: SubjectService) { }
   classes: (Classes & {students: Student[]})[] = []; //classes hat Klassen + dazu alle dazugehörigen Schüler*innen
   studentsList: Student[] = []; // TODO wird die iwann gefüllt?
