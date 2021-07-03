@@ -44,8 +44,16 @@ public class SubjectDao {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO fach (name, klassenID, lehrID, archiviert) " +
                     "VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, subject.getSubjectName());
-            stmt.setInt(2, subject.getKlasse());
-            stmt.setInt(3, subject.getTeacher());
+            if (subject.getKlasse()==0){
+                stmt.setNull(2, Types.INTEGER);
+            } else {
+                stmt.setInt(2, subject.getKlasse());
+            }
+            if (subject.getTeacher()==0) {
+                stmt.setNull(3, Types.INTEGER);
+            } else {
+                stmt.setInt(3, subject.getTeacher());
+            }
             stmt.setBoolean(4, subject.isArchived());
             return stmt;
         };
