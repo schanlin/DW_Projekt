@@ -5,4 +5,6 @@ export interface Subject{
   klasse: number;
   teacher: number;
   archived: boolean;
+  teacherName: string;
+  className: string;
 }

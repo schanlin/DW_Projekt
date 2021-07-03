@@ -15,10 +15,10 @@
   <tr *ngFor="let Subjects of subjects">
     <td>{{Subjects.subjectID}}</td>
     <td>{{Subjects.subjectName}}</td>
-    <td>{{Subjects.klasse}}</td>
-    <td>{{Subjects.teacher}}</td>
+    <td>{{Subjects.className}}</td>
+    <td>{{Subjects.teacherName}}</td>
     <td>{{Subjects.archived}}</td>
-    <td title="Fach editieren">
+    <td title="Fach editieren" (click)="onEditButton(Subjects)" #dialogEditSubject>
       <fa-icon [icon]="faPen"></fa-icon>
     </td>
     <td title="Fach hinzufügen">
@@ -32,3 +32,17 @@
     </td>
   </tr>
 </table>
+
+<app-dialog [headline]="'Fach editieren'" #dialogEditSubject>
+  <form [formGroup]="profileFormEditSubject">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="subjectID">
+    </div>
+    <div>
+      <label fxFlex>Name des Faches:</label>
+      <input fxFlex="initial" formControlName="subjectName">
+    </div>
+  </form>
+  <button (click)="onEditSubject()">Speichern</button>
+</app-dialog>

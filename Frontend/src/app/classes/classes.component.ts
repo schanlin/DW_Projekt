@@ -73,12 +73,9 @@ export class ClassesComponent implements OnInit {
   readonly faUserMinus = faUserMinus;
   currentClassID: number = 0;
 
+
+
   ngOnInit(): void {
-    /*
-      const obs = this.userService.getAllUser();
-    obs.subscribe(e => this.users = e);
-  }
-     */
     const obssubjects = this.subjectService.getAllSubjects();
     obssubjects.subscribe((subjects: Subject[]) => {
       this.subjectsList = subjects;
@@ -94,7 +91,7 @@ export class ClassesComponent implements OnInit {
           const filteredStudents = students.filter((student) => {
             return student.klasse === klasse.klassenID;
           });
-          console.log(students, klasse, filteredStudents);
+          //console.log(students, klasse, filteredStudents);
           return {
             ...klasse,
             students: filteredStudents
@@ -106,7 +103,7 @@ export class ClassesComponent implements OnInit {
         });
       }
     });
-    console.log(this.classes);
+    //console.log(this.classes);
 
     /* Eingabefeld bei der Auswahl des Lernenden, das username und email anzeigt
     this.profileFormAddStudent.controls["userID"].valueChanges.subscribe((id: string) => {
@@ -163,8 +160,8 @@ export class ClassesComponent implements OnInit {
     let editClass: Classes = {
       klassenID: formData.klassenID,
       klassenName : formData.klassenName
-
     };
+
     this.classesService.onEditClass(editClass).subscribe(() => {
       const index: number = this.classes.findIndex((classes: Classes) => {return editClass.klassenID === classes.klassenID});
       this.classes[index].klassenID = editClass.klassenID;
