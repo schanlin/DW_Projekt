@@ -3,7 +3,7 @@ package backend;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "dw.database")
-public class DatabaseConfig {
+public class DatabaseProperties {
 	public String getUrl() {
 		return url;
 	}
