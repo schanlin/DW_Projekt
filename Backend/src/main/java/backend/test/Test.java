@@ -1,5 +1,6 @@
 package backend.test;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 import java.sql.Date;
@@ -17,6 +18,7 @@ public class Test {
 		this.subject = subject;
 	}
 
+	@JsonCreator
 	public Test(String testName, Date testDatum, int subject) {
 		this.testID = testID;
 		this.testName = testName;
