@@ -6,4 +6,4 @@ Zuerst müssen die Abhängigkeiten der Anwendung installiert werden. Hierfür wi
 `npm install`
 
 Danach werden die Dateien, welche danach in die Spring-Anwendung eingebunden werden, mit folgendem Befehl generiert:\
-`ng build`
+`npm run ng build`
