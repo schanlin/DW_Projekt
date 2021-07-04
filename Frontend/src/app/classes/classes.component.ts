@@ -13,7 +13,7 @@ import {faFolderPlus} from '@fortawesome/free-solid-svg-icons';
 import {faAngleUp} from '@fortawesome/free-solid-svg-icons';
 import {faAngleDown} from '@fortawesome/free-solid-svg-icons';
 import{faUserMinus} from '@fortawesome/free-solid-svg-icons';
-import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
 //Komponenten und Services
 import {DialogComponent} from "../dialog/dialog.component";
 import {UserService} from "../user.service";

@@ -65,7 +65,7 @@ export class SubjectsComponent implements OnInit {
     const obssubjects = this.subjectService.getAllSubjects();
     //obssubjects.subscribe(e => this.subjects = e);
 
-    const obsteacher = this.teacherService.getallTeacher();
+    const obsteacher = this.teacherService.getAllTeacher();
     //obsteacher.subscribe(teacher => this.teacher = teacher);
 
     const obsclasses = this.classesService.getAllClasses();
@@ -80,10 +80,6 @@ export class SubjectsComponent implements OnInit {
       this.subjects = data[0];
       this.teachers = data[1];
       this.classes = data[2];
-
-      console.log(this.dialogArchivedSubject, this.dialogEditSubject, this.dialogNewSubject);
-      console.log(this.teachers);
-      console.log(this.classes);
 
     for(let i:number = 0; i<this.subjects.length; i++){
       for(let j:number = 0; j<this.classes.length; j++){

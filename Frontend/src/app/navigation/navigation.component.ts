@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {faPowerOff} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-navigation',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
-
+  readonly faPowerOff = faPowerOff;
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  logout(){
+    window.location.assign('/api/logout');
+  }
 }

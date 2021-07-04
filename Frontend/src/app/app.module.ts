@@ -14,6 +14,7 @@ import { HttpClientModule } from "@angular/common/http";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { DialogComponent } from './dialog/dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SubjectTeacherComponent } from './subject-teacher/subject-teacher.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     UserComponent,
     ClassesComponent,
     SubjectsComponent,
-    DialogComponent
+    DialogComponent,
+    SubjectTeacherComponent
   ],
   imports: [
     BrowserModule,

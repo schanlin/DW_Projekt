@@ -1,0 +1,107 @@
+<h1>Fächer</h1>
+
+<table>
+  <tr>
+    <th>
+      Fach
+    </th>
+    <th>
+    </th>
+  </tr>
+  <ng-container *ngFor="let Subject of subjects; let i = index">
+    <tr>
+      <td>{{Subject.subjectName}}</td>
+      <td (click)="newTestButton(Subject)"><fa-icon [icon]="faPlus"></fa-icon> Test anlegen</td>
+      <td (click)="changeExpandSubject(i)"><fa-icon [icon]="faAngleDown"></fa-icon> Tests anzeigen</td>
+    </tr>
+    <tr *ngIf="isExpanded[i].subject">
+      <td colspan="3">
+        <table>
+          <tr>
+            <th>Test</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+          <ng-container *ngFor="let Test of Subject.tests; let j = index">
+            <tr>
+              <td>{{Test.testName}}</td>
+              <td (click)="addResultToTest(Test)"><fa-icon [icon]="faPlus"></fa-icon> Ergebnis hinzufügen</td>
+              <td (click)="removeTest(Test)"><fa-icon [icon]="faMinus"></fa-icon> Test entfernen</td>
+              <td (click)="changeExpandTest(i, j)"><fa-icon [icon]="faAngleDown"></fa-icon> Ergebnisse anzeigen</td>
+            </tr>
+            <tr *ngIf="isExpanded[i].tests[j]">
+              <td colspan="3">
+                <table>
+                  <tr>
+                    <th>Name</th>
+                    <th>Durchschnitt Fach</th>
+                    <th>Note</th>
+                  </tr>
+                  <tr *ngFor="let Student of Test.students">
+                    <td>{{Student.firstname}} {{Student.lastname}}</td>
+                    <td *ngIf="!!Subject.averages[Student.userID]">
+                      {{calculateAverage(Subject.averages[Student.userID])}}
+                    </td>
+                    <td>{{Student.mark}}</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </ng-container>
+        </table>
+      </td>
+    </tr>
+  </ng-container>
+</table>
+
+<app-dialog [headline] ="'Test anlegen'" #dialogNewTest>
+  <form [formGroup]="profileFormNewTest">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>Fachname</label>
+      <input fxFlex="initial" formControlName="subject">
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>Name</label>
+      <input fxFlex="initial" formControlName="testName">
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>Datum</label>
+      <input fxFlex="initial" formControlName="testDate" type = "date">
+    </div>
+  </form>
+  <button [disabled]="!profileFormNewTest.valid" (click)="onAddTest()">Click me!</button>
+</app-dialog>
+
+<app-dialog [headline] ="'Ergebnis hinzufügen'" #dialogNewResult>
+  <form [formGroup]="profileFormNewResult">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>Test-ID</label>
+      <input fxFlex="initial" formControlName="testID">
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>Student-ID</label>
+      <select fxFlex="initial" formControlName="studentID">
+        <option *ngFor="let Student of students" [value]="Student.userID">
+          {{Student.userID}} ({{Student.firstname}} {{Student.lastname}})
+        </option>
+      </select>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>Note</label>
+      <input fxFlex="initial" type="number" formControlName="mark">
+    </div>
+  </form>
+  <button [disabled]="!profileFormNewResult.valid" (click)="onAddResultToTest()">Click me!</button>
+</app-dialog>
+
+<app-dialog [headline]="'Test löschen'" #dialogDeleteTest>
+  <form [formGroup]="profileFormDeleteTest">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="testID">
+    </div>
+  </form>
+  <button (click)="onDeleteTest()">Löschen</button>
+  <button (click)="dialogDeleteTest.closeDialog()">Abbrechen</button>
+</app-dialog>
