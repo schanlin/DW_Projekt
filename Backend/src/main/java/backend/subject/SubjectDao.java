@@ -96,7 +96,12 @@ public class SubjectDao {
 
     public List<Integer> findIdByUserTeacher(int userId) {
         return template.query("SELECT fachID FROM fach WHERE lehrID=" + userId, (rs, rowNum) ->
-                new Integer(rs.getInt(1)));
+                rs.getInt(1));
+    }
+
+    public List<String> findAllSubjectnamesByClass(int klassenId) {
+        return template.query("SELECT name FROM fach WHERE klassenID =" + klassenId, (rs, rowNum) ->
+                rs.getString(1));
     }
 
     public int update(Subject toUpdate, int id) {
@@ -119,8 +124,16 @@ public class SubjectDao {
             if (toUpdate.isArchived()) {
                 stmt.setNull(2, Types.INTEGER);
                 stmt.setNull(3, Types.INTEGER);
+            }
+
+            if (toUpdate.getKlasse()==0){
+                stmt.setNull(2, Types.INTEGER);
             } else {
                 stmt.setInt(2, toUpdate.getKlasse());
+            }
+            if (toUpdate.getTeacher()==0) {
+                stmt.setNull(3, Types.INTEGER);
+            } else {
                 stmt.setInt(3, toUpdate.getTeacher());
             }
 
