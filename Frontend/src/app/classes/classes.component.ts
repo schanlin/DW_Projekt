@@ -170,6 +170,7 @@ export class ClassesComponent implements OnInit {
         subjects: []
       });
     });
+    this.dialogNewClass?.closeDialog();
   }
 
   onEditButton(currentClass:Classes){
@@ -283,7 +284,7 @@ export class ClassesComponent implements OnInit {
       this.classes[classIndex].subjects.push(editedSubject);
       this.subjectsList[subjectIndex].klasse = this.currentClassID;
       });
-    this.dialogAddStudent?.closeDialog();
+    this.dialogAddSubject?.closeDialog();
   }
 
   onRemoveStudentButton(current: Student){
