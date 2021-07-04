@@ -58,7 +58,7 @@ public class UserController {
 		schema = @Schema(implementation = User.class))})
 	@GetMapping("/current")
 	public User getActiveUser(Principal principal) {
-		return userDao.findByUsername("admin"); //FÜR TESTZWECKE GEHARDCODED; ÄNDERN NICHT VERGESSEN!!!
+		return userDao.findByUsername(principal.getName());
 	}
 
 	@Operation(summary = "Get a user by their id")
