@@ -53,19 +53,19 @@ public class DemoDataInitializer {
 
 		 UserDao.createTable();
 		 userDao.insert(new User("admin", "regenbogen", "admin@beispiel.de","Admini", "Strator", "Admin"));
-		 userDao.insert(new User("storm", "PASSWORT", "storm@beispiel.de","Zoya", "Nazyalenski", "Lehrende"));
-		 userDao.insert(new User("hunter", "PASSWORT", "hunter@beispiel.de","Jarl", "Brum", "Lehrende"));
-		 userDao.insert(new User("tailor", "PASSWORT", "tailor@beispiel.de","Genya", "Safin", "Lehrende"));
+		 userDao.insert(new User("storm", "seitenwechsel", "storm@beispiel.de","Zoya", "Nazyalenski", "Lehrende"));
+		 userDao.insert(new User("hunter", "nordlicht", "hunter@beispiel.de","Jarl", "Brum", "Lehrende"));
+		 userDao.insert(new User("tailor", "augenblick", "tailor@beispiel.de","Genya", "Safin", "Lehrende"));
 
-		 studentDao.insert(new Student("demjin", "PASSWORT", "demjin@beispiel.de","Kaz", "Brekker", "Lernende", 1));
-		 studentDao.insert(new Student("phantom", "PASSWORT", "phantom@beispiel.de", "Inej", "Ghaza", "Lernende", 1));
-		 studentDao.insert(new Student("sharpshooter", "PASSWORT", "sharp@beispiel.de","Jesper Llewellyn", "Fahey", "Lernende", 1));
-		 studentDao.insert(new Student("merchling", "PASSWORT", "merchling@beispiel.de","Wylan", "Van Eck", "Lernende", 1));
-		 studentDao.insert(new Student("redbird", "PASSWORT", "redbird@beispiel.de","Nina", "Zenik", "Lernende", 2));
-		 studentDao.insert(new Student("trassel", "PASSWORT", "trassel@beispiel.de","Matthias Benedik", "Helvar", "Lernende", 2));
-		 studentDao.insert(new Student("sunny", "PASSWORT", "sunny@beispiel.de","Alina", "Starkov", "Lernende", 2));
-		 studentDao.insert(new Student("brief", "PASSWORT", "brief@beispiel.de","Malyen", "Oretsev", "Lernende", 2));
-		 userDao.insert(new Student("phoenix", "PASSWORT", "phoenix@beispiel.de","Kuwei", "Yul-Bo", "Lernende"));
+		 studentDao.insert(new Student("demjin", "kruge", "demjin@beispiel.de","Kaz", "Brekker", "Lernende", 1));
+		 studentDao.insert(new Student("phantom", "messer", "phantom@beispiel.de", "Inej", "Ghaza", "Lernende", 1));
+		 studentDao.insert(new Student("sharpshooter", "revolver", "sharp@beispiel.de","Jesper Llewellyn", "Fahey", "Lernende", 1));
+		 studentDao.insert(new Student("merchling", "explosiv", "merchling@beispiel.de","Wylan", "Van Eck", "Lernende", 1));
+		 studentDao.insert(new Student("redbird", "bezaubernd", "redbird@beispiel.de","Nina", "Zenik", "Lernende", 2));
+		 studentDao.insert(new Student("trassel", "woelfchen", "trassel@beispiel.de","Matthias Benedik", "Helvar", "Lernende", 2));
+		 studentDao.insert(new Student("sunny", "vielzuhell", "sunny@beispiel.de","Alina", "Starkov", "Lernende", 2));
+		 studentDao.insert(new Student("brief", "wortort", "brief@beispiel.de","Malyen", "Oretsev", "Lernende", 2));
+		 userDao.insert(new Student("phoenix", "parem", "phoenix@beispiel.de","Kuwei", "Yul-Bo", "Lernende"));
 
 		 SubjectDao.createTable();
 		 subjectDao.insert(new Subject("Deutsch", 1, 2, false));

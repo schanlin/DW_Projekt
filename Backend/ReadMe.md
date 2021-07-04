@@ -19,11 +19,13 @@ werden mit dem ersten Start automatisch angelegt.
 
 Demo-Zugangsdaten: 
 
-| Username | Passwort   | Rolle |
-|----------|------------|-------|
-| admin    | regenbogen | admin |
-| | |
-| | |
+| Username | Passwort      | Rolle    |
+|----------|---------------|----------|
+| admin    | regenbogen    | Admin    |
+| storm    | seitenwechsel | Lehrende |
+| demjin   | kruge         | Lernende |
+
+Eine Liste mit allen zu Demo-Zwecken vorhandenen Zugangsdaten kann in Anhang 1 der Hausarbeit gefunden werden.
 
 ## Authentifizierung
 
