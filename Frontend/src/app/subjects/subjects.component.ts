@@ -155,7 +155,7 @@ export class SubjectsComponent implements OnInit {
     currentSubject.teacher = formValues.teacher;
     currentSubject.teacherName = teacher.username;
     currentSubject.className = klasse.klassenName;
-    this.subjectService.editSubject(currentSubject).subscribe(() => {
+    this.subjectService.updateSubject(currentSubject).subscribe(() => {
       const subjectIndex: number = this.findIndexofSubject(currentSubject.subjectID);
       this.subjects[subjectIndex] = currentSubject;
       });
@@ -202,7 +202,7 @@ export class SubjectsComponent implements OnInit {
     this.dialogDeleteSubject?.closeDialog();
   }
 
-  onArchiveButton(currentSubject:Subject){ //TODO wenn archiviert, dann ausgrauen nicht able
+  onArchiveButton(currentSubject:Subject){
     if(currentSubject.archived){
       return;
     }

@@ -22,7 +22,6 @@ export class SubjectService {
   }
 
   deleteSubject(id:number){
-    //TODO Request wird nicht gesendet
     return this.http.delete(this.baseURL+"/subject/"+id);
   }
 
@@ -34,7 +33,7 @@ export class SubjectService {
     return this.http.put(this.baseURL+"/subject", subject);
   }
 
-  editSubject(editSubject: Subject){
+  updateSubject(editSubject: Subject){
     return this.http.put(this.baseURL+"/subject/" + editSubject.subjectID, editSubject);
   }
 }

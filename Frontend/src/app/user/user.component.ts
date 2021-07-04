@@ -50,7 +50,7 @@ export class UserComponent implements OnInit {
   resultMessage:string = "";
 
   onEditButton(user: User){
-    this.profileForm.setValue({ // TODO
+    this.profileForm.setValue({
       id: user.userID,
       firstname: user.firstname,
       lastname: user.lastname,

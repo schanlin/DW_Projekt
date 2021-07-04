@@ -34,7 +34,7 @@
         <fa-icon [icon]="faUserPlus"></fa-icon>
       </td> <!--(click)="onEditUser(User)"-->
       <td  title="Fach hinzufügen">
-      <fa-icon [icon]="faFolderPlus"></fa-icon>
+      <fa-icon [icon]="faFolderPlus" (click)="onAddSubjectButton(Classes.klassenID)"></fa-icon>
       </td>  <!--(click)="onDeleteUser()"-->
       <td  title="Klasse löschen" (click)="onDeleteButton(Classes)">
         <fa-icon [icon] = "faTrash"></fa-icon>
@@ -47,9 +47,19 @@
     <tr *ngIf="cardsExpanded[i]">
       <td colspan="7">
         Schüler
-        <span *ngFor="let Students of Classes.students">
-        {{Students.firstname + " " +Students.lastname + " "}} <fa-icon [icon]="faUserMinus"></fa-icon>
-        </span>
+        <div fxLayout="row wrap" fxLayoutGap="0.25em">
+          <div *ngFor="let Student of Classes.students" fxFlex="initial" class="chips">
+          {{Student.firstname + " " +Student.lastname + " "}}
+            <fa-icon [icon]="faUserMinus" (click) ="onRemoveStudentButton(Student)"></fa-icon>
+          </div>
+        </div>
+        Fächer
+        <div fxLayout="row wrap" fxLayoutGap="0.25em">
+          <div *ngFor="let Subject of Classes.subjects" fxFlex="initial" class="chips">
+            {{Subject.subjectName }}
+            <fa-icon [icon]="faUserMinus" (click) ="onRemoveSubjectButton(Subject)"></fa-icon>
+          </div>
+        </div>
       </td>
     </tr>
   </ng-container>
@@ -95,13 +105,60 @@
         </option>
       </select>
     </div>
-    <!--<div>
-      <label>Username:</label>
-      <input formControlName="username" placeholder="musteralex">
-    </div>
-    <div><label>E-Mail:</label>
-      <input placeholder="alex.mustermensch@sample.de" formControlName="email">
-    </div>-->
   </form>
   <button [disabled]="!profileFormAddStudent.valid" (click)="onAddStudent()">Click me!</button>
+</app-dialog>
+
+<app-dialog [headline]="'Achtung'" #dialogRemoveStudent>
+  <div>
+    Wollen sie diesen Lehrenden von der Klasse entfernen?
+  </div>
+  <form [formGroup]="profileFormRemoveStudent">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="userID">
+    </div>
+    <div>
+      <label fxFlex>Nachname:</label>
+      <input fxFlex="initial" formControlName="lastname">
+    </div>
+    <div>
+      <label fxFlex>Vorname:</label>
+      <input fxFlex="initial" formControlName="firstname">
+    </div>
+  </form>
+  <button (click)="onRemoveStudent()">Löschen</button>
+  <button (click)="dialogRemoveStudent?.closeDialog();">Abbrechen</button>
+</app-dialog>
+
+<app-dialog [headline]="'Achtung'" #dialogRemoveSubject>
+  <div>
+    Wollen sie dieses Fach von der Klasse entfernen?
+  </div>
+  <form [formGroup]="profileFormRemoveSubject">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <label fxFlex>ID:</label>
+      <input fxFlex="initial" formControlName="subjectID">
+    </div>
+    <div>
+      <label fxFlex>Name:</label>
+      <input fxFlex="initial" formControlName="subjectName">
+    </div>
+  </form>
+  <button (click)="onRemoveSubject()">Löschen</button>
+  <button (click)="dialogRemoveSubject?.closeDialog();">Abbrechen</button>
+</app-dialog>
+
+<app-dialog [headline] ="'Fach hinzufügen'" #dialogAddSubject>
+  <form [formGroup]="profileFormAddSubject">
+    <div>
+      <label>ID</label>
+      <select formControlName="subjectID">
+        <option *ngFor="let Subject of subjectsList" [value]="Subject.subjectID">
+          {{ Subject.subjectID }} ({{ Subject.subjectName}})
+        </option>
+      </select>
+    </div>
+  </form>
+  <button [disabled]="!profileFormAddSubject.valid" (click)="onAddSubject()">Click me!</button>
 </app-dialog>
