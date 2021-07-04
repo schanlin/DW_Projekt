@@ -21,9 +21,6 @@ public class Klasse {
 		return klassenName;
 	}
 
-//	public List<Student> getStudents() {
-//		
-//	}
 
 	@JsonGetter
 	public int getKlassenID() {
