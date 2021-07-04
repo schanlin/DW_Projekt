@@ -96,7 +96,12 @@ public class SubjectDao {
 
     public List<Integer> findIdByUserTeacher(int userId) {
         return template.query("SELECT fachID FROM fach WHERE lehrID=" + userId, (rs, rowNum) ->
-                new Integer(rs.getInt(1)));
+                rs.getInt(1));
+    }
+
+    public List<String> findAllSubjectnamesByClass(int klassenId) {
+        return template.query("SELECT name FROM fach WHERE klassenID =" + klassenId, (rs, rowNum) ->
+                rs.getString(1));
     }
 
     public int update(Subject toUpdate, int id) {

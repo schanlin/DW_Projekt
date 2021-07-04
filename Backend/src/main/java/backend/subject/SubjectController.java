@@ -22,12 +22,21 @@ public class SubjectController {
 	}
 
 	@Operation(summary = "Create a new subject")
-	@ApiResponse(responseCode = "201", description = "Subject was created successfully",
-		content = {@Content(mediaType = "application/json",
-		schema = @Schema(implementation = Subject.class))})
+	@ApiResponses( value = {
+			@ApiResponse(responseCode = "201", description = "Subject was created successfully",
+					content = {@Content(mediaType = "application/json",
+					schema = @Schema(implementation = Subject.class))}),
+			@ApiResponse(responseCode = "400", description = "Name already taken for this class",
+			content = @Content)
+	})
+
 	@PostMapping("/subject")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Subject postSubject(@RequestBody Subject subject) {
+		List<String> subjectNames = subjectDao.findAllSubjectnamesByClass(subject.getKlasse());
+		if (subjectNames.contains(subject.getSubjectName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Subject with that name already exists for this class.");
+		}
 		return subjectDao.insert(subject);
 	}
 
@@ -68,7 +77,7 @@ public class SubjectController {
 	})
 	@PutMapping("/subject/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updateSubject(@RequestBody Subject subject, @Parameter(description = "Id of the subject to be updated") @PathVariable int id) {
+	public void putSubject(@RequestBody Subject subject, @Parameter(description = "Id of the subject to be updated") @PathVariable int id) {
 		int status = subjectDao.update(subject, id);
 		if (status==0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
