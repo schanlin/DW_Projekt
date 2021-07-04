@@ -34,6 +34,9 @@ export class ClassesComponent implements OnInit {
   @ViewChild('dialog') dialog?: DialogComponent;
   @ViewChild('dialogDel') dialogDel?: DialogComponent;
   @ViewChild('dialogAddStudent') dialogAddStudent?: DialogComponent;
+  @ViewChild('dialogRemoveStudent') dialogRemoveStudent?:DialogComponent;
+  @ViewChild('dialogRemoveSubject') dialogRemoveSubject?:DialogComponent;
+  @ViewChild('dialogAddSubject') dialogAddSubject?:DialogComponent;
 
   profileFormNewClass = new FormGroup({
     klassenName: new FormControl('',[Validators.required])
@@ -58,9 +61,26 @@ export class ClassesComponent implements OnInit {
     email: new FormControl({value:'', disabled:true}),
   });
 
+  profileFormRemoveStudent = new FormGroup({
+    userID: new FormControl({value: '', disabled: true}),
+    firstname: new FormControl({value:'', disabled:true}),
+    lastname: new FormControl({value:'', disabled:true}),
+    klasse: new FormControl({value:'', disabeld: true})
+  })
+
+  profileFormRemoveSubject = new FormGroup({
+    subjectID: new FormControl({value: '', disabled: true}),
+    subjectName: new FormControl({value:'', disabled:true}),
+    klasse: new FormControl({value:'', disabled:true})
+  })
+
+  profileFormAddSubject = new FormGroup({
+    subjectID : new FormControl('',[Validators.required])
+  });
+
   constructor(private classesService: ClassesService, private studenService: StudentService, private subjectService: SubjectService) { }
-  classes: (Classes & {students: Student[]})[] = []; //classes hat Klassen + dazu alle dazugehörigen Schüler*innen
-  studentsList: Student[] = []; // TODO wird die iwann gefüllt?
+  classes: (Classes & {students: Student[], subjects: Subject[] })[] = []; //classes hat Klassen + dazu alle dazugehörigen Schüler*innen
+  studentsList: Student[] = [];
   subjectsList: Subject[] = [];
   cardsExpanded: boolean[] = [];
   readonly faTrash = faTrash;
@@ -85,16 +105,21 @@ export class ClassesComponent implements OnInit {
     obsstudent.subscribe((students: Student[]) => {
       this.studentsList = students;
     });
-    combineLatest([obsclass, obsstudent]).subscribe(([classes, students]) => {
-      if(!!classes && !!students){
+    combineLatest([obsclass, obsstudent, obssubjects]).subscribe(([classes, students, subjects]) => {
+      if(!!classes && !!students && !! subjects){
         this.classes = classes.map((klasse) => {
           const filteredStudents = students.filter((student) => {
             return student.klasse === klasse.klassenID;
           });
-          //console.log(students, klasse, filteredStudents);
+
+          const filteredSubjects = subjects.filter((subject:Subject)=> {
+            return subject.klasse === klasse.klassenID;
+          });
+          console.log(students, klasse, filteredStudents);
           return {
             ...klasse,
-            students: filteredStudents
+            students: filteredStudents,
+            subjects: filteredSubjects
           }
         });
 
@@ -133,18 +158,18 @@ export class ClassesComponent implements OnInit {
     this.dialogNewClass?.openDialog();
   }
 
-  onAddNewClass(){
+  onAddNewClass() {
     let formData = this.profileFormNewClass.getRawValue();
     let newClass: Omit<Classes, 'klassenID'> = {
       klassenName: formData.klassenName
     };
     this.classesService.addNewClass(newClass).subscribe((createdClass: Classes) => {
       this.classes.push({
-          ...createdClass,
-          students:[]
-        });
+        ...createdClass,
+        students: [],
+        subjects: []
+      });
     });
-    this.dialogNewClass?.closeDialog();
   }
 
   onEditButton(currentClass:Classes){
@@ -188,9 +213,17 @@ export class ClassesComponent implements OnInit {
   }
 
   findIndexofClass(searchedClassID: number){
-    //return this.classes.findIndex((classes: Classes) => {return searchedClassID === classes.klassenID});
     return this.classes.findIndex((classes: Classes) => {
       if (searchedClassID === classes.klassenID){
+        return true;
+      }
+      return false;
+    });
+  }
+
+  findIndexofSubject(searchedsubjectID: number){
+    return this.subjectsList.findIndex((subject: Subject) => {
+      if (searchedsubjectID === subject.subjectID){
         return true;
       }
       return false;
@@ -210,7 +243,7 @@ export class ClassesComponent implements OnInit {
     this.dialogAddStudent?.openDialog();
   }
   onAddStudent(){
-    let studentID =this.profileFormAddStudent.getRawValue().userID;
+    let studentID = Number.parseInt(this.profileFormAddStudent.getRawValue().userID);
     this.classesService.onAssignStudent(studentID, this.currentClassID).subscribe(); //API erwarter ein subscribe, weil Oservable zurückkommt
 
     for(let i = 0; i < this.classes.length; i++) {
@@ -224,6 +257,89 @@ export class ClassesComponent implements OnInit {
     this.classes[classIndex].students.push(this.studentsList.find((students: Student) => {
       return studentID === students.userID
     }) as Student);
+    console.log(this.studentsList, studentID, this.studentsList.find((students: Student) => {
+      return studentID === students.userID
+    }));
   this.dialogAddStudent?.closeDialog();
   }
+
+  onAddSubjectButton(classID: number){ //TODO: PlusIcon html
+    this.profileFormAddSubject.setValue({
+      subjectID : ''
+    });
+    this.currentClassID = classID;
+    this.dialogAddSubject?.openDialog();
+  }
+
+  onAddSubject(){
+    let subjectID = Number.parseInt(this.profileFormAddSubject.getRawValue().subjectID);
+    let classIndex = this.findIndexofClass(this.currentClassID);
+    let subjectIndex = this.findIndexofSubject(subjectID);
+    let editedSubject = this.subjectsList.find((subject: Subject)=>{
+      return(subjectID === subject.subjectID);
+    }) as Subject;
+    editedSubject.klasse = this.currentClassID;
+    this.subjectService.updateSubject(editedSubject).subscribe(() =>{
+      this.classes[classIndex].subjects.push(editedSubject);
+      this.subjectsList[subjectIndex].klasse = this.currentClassID;
+      });
+    this.dialogAddStudent?.closeDialog();
+  }
+
+  onRemoveStudentButton(current: Student){
+    this.profileFormRemoveStudent.setValue({
+      userID: current.userID,
+      lastname: current.lastname,
+      firstname: current.firstname,
+      klasse: current.klasse
+      });
+    this.dialogRemoveStudent?.openDialog();
+  }
+  onRemoveStudent(){
+    const detachedStudentID: number = this.profileFormRemoveStudent.getRawValue().userID;
+    this.classesService.onAssignStudent(detachedStudentID, 0).subscribe();
+    const currentClassID: number = this.profileFormRemoveStudent.getRawValue().klasse;
+    const currentClassIndex: number = this.findIndexofClass(currentClassID);
+    let currentStudentIndex:number = this.classes[currentClassIndex].students.findIndex((student: Student) =>{
+      return (student.userID=== detachedStudentID);
+    });
+    this.classes[currentClassIndex].students.splice(currentStudentIndex, 1);
+    currentStudentIndex= this.studentsList.findIndex((student: Student) =>{
+      return(student.userID === detachedStudentID);
+    });
+    this.studentsList[currentStudentIndex].klasse = 0;
+    this.dialogRemoveStudent?.closeDialog();
+  }
+
+  onRemoveSubjectButton(current: Subject){
+    this.profileFormRemoveSubject.setValue({
+      subjectID: current.subjectID,
+      subjectName: current.subjectName,
+      klasse: current.klasse
+    });
+    this.dialogRemoveSubject?.openDialog();
+  }
+  onRemoveSubject(){
+    const detachedSubjectID: number = this.profileFormRemoveSubject.getRawValue().subjectID;
+    //this.classesService.onAssignSubject(detachedSubjectID, 0).subscribe();
+    const currentClassID: number = this.profileFormRemoveSubject.getRawValue().klasse;
+    const currentClassIndex: number = this.findIndexofClass(currentClassID);
+    let currentSubjectIndexClass:number = this.classes[currentClassIndex].subjects.findIndex((subject: Subject) =>{
+      return (subject.subjectID=== detachedSubjectID);
+    });
+    let currentSubjectIndexSubjects= this.subjectsList.findIndex((subject: Subject) =>{
+      return(subject.subjectID === detachedSubjectID);
+    });
+    const subject = {...this.subjectsList[currentSubjectIndexSubjects]};
+    subject.klasse = 0;
+    this.subjectService.updateSubject(subject).subscribe(() => {
+      this.classes[currentSubjectIndexClass].students.splice(currentSubjectIndexClass, 1);
+      this.subjectsList[currentSubjectIndexSubjects] = subject;
+    });
+    /*const subject: Subject = {
+      subjectID: this.subjectsList[currentSubjectIndexSubjects].subjectID,
+    }*/
+    this.dialogRemoveSubject?.closeDialog();
+  }
+
 }
