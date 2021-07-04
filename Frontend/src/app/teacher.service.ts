@@ -8,7 +8,7 @@ import {Teacher} from "./models/teacher.model"
   providedIn: 'root'
 })
 export class TeacherService {
-  private baseURL = 'http://localhost:4200/api';
+  private baseURL = '';
   constructor(private http: HttpClient) {  }
 
   getallTeacher(){
