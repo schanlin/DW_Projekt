@@ -2,9 +2,7 @@
 
 ## Übersicht
 
-Bei dem Backend handelt es sich um ein Spring-Boot-Projekt. Als Build-Tool wurde maven gewählt, der maven-wrapper
-unterstützt dabei, dass möglichst wenig Abhängigkeiten notwendig sind für den Bau. Es wird mindestens Java 11 
-benötigt.
+Bei dem Backend handelt es sich um ein Spring-Boot-Projekt. Als Build-Tool wurde maven gewählt, der maven-wrapper unterstützt dabei, dass möglichst wenig Abhängigkeiten notwendig sind für den Bau. Es wird mindestens Java 11 benötigt.
 
 ## Abhängigkeiten und Konfigurationen
 
@@ -13,8 +11,7 @@ Benötigt wird:
 * Java 11
 * Eine lokal laufende MariaDB Datenbank
 
-Es muss eine leere Datenbank erzeugt werden. Die application.properties.sample wird nach application.properties kopiert,
-und die Login-Daten für diese Datenbank werden dann in die application.properties eingetragen. Die Tabellen und Beispieldaten
+Es muss eine leere Datenbank erzeugt werden. Die application.properties.sample wird nach application.properties kopiert und die Login-Daten für diese Datenbank werden dann in die application.properties eingetragen. Die Tabellen und Beispieldaten
 werden mit dem ersten Start automatisch angelegt.
 
 Demo-Zugangsdaten: 
@@ -29,13 +26,12 @@ Eine Liste mit allen zu Demo-Zwecken vorhandenen Zugangsdaten kann in Anhang 1 d
 
 ## Authentifizierung
 
-Es kann sich entweder via http basic auth gegen die API authentifiziert werden, oder via `/login` eine form-login Website
-abgerufen werden die bei erfolgreichem login ein session-cookie setzt.
+Es kann sich entweder via http basic auth gegen die API authentifiziert werden, oder via `/login` eine form-login Website abgerufen werden, die bei erfolgreichem Login ein Session-Cookie setzt.
 
 ## Ausliefern statischer Dateien
 
 Im Ausführungspfad muss neben der Anwendung der Ordner `static` existieren,
-Diese Dateien aus diesem Ordner werden statisch ausgeliefert, so dass das gebaute
+Die Dateien aus diesem Ordner werden statisch ausgeliefert, sodass das gebaute
 Frontend dort liegen sollte (die index.html also unter `static/index.html`)
 
 ## Anwendung Starten ("quickstart")
