@@ -32,6 +32,12 @@ Eine Liste mit allen zu Demo-Zwecken vorhandenen Zugangsdaten kann in Anhang 1 d
 Es kann sich entweder via http basic auth gegen die API authentifiziert werden, oder via `/login` eine form-login Website
 abgerufen werden die bei erfolgreichem login ein session-cookie setzt.
 
+## Ausliefern statischer Dateien
+
+Im Ausführungspfad muss neben der Anwendung der Ordner `static` existieren,
+Diese Dateien aus diesem Ordner werden statisch ausgeliefert, so dass das gebaute
+Frontend dort liegen sollte (die index.html also unter `static/index.html`)
+
 ## Anwendung Starten ("quickstart")
 
 *Linux oder OS X*
@@ -45,6 +51,12 @@ abgerufen werden die bei erfolgreichem login ein session-cookie setzt.
 ```
 
 Der Backend-Server läuft danach auf localhost port 8080
+
+## Portable Anwendung bauen
+
+```
+./mvnw package
+```
 
 ## API Dokumentation
 Eine Online-Api-Dokumentation kann unter `https://localhost:8080/swagger-ui.html` abgerufen werden.

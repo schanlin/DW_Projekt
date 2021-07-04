@@ -66,11 +66,6 @@ public class TestResultDao {
                 new TestResult(rs.getInt("testID"), rs.getInt("lernID"), rs.getInt("note")));
     }
 
-    public List<TestResult> findByStudent(int studentId) {
-        return template.query("SELECT testID, lernID, note FROM ergebnis WHERE lernID=" + studentId, (rs, rowNum) ->
-                new TestResult(rs.getInt("testID"), rs.getInt("lernID"), rs.getInt("note")));
-    }
-
     public List<TestResult> findByTest(int testId) {
         return template.query("SELECT testID, lernID, note FROM ergebnis WHERE testID=" + testId, (rs, rowNum) ->
                 new TestResult(rs.getInt("testID"), rs.getInt("lernID"), rs.getInt("note")));

@@ -20,7 +20,6 @@ public class Test {
 
 	@JsonCreator
 	public Test(String testName, Date testDatum, int subject) {
-		this.testID = testID;
 		this.testName = testName;
 		this.testDatum = testDatum;
 		this.subject = subject;

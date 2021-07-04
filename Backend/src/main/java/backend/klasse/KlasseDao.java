@@ -58,12 +58,6 @@ public class KlasseDao {
                         new Klasse(rs.getInt("klassenID"), rs.getString("name")));
     }
 
-    public Klasse findByStudent(Student student) {
-        return template.queryForObject("SELECT klassenID, name FROM klasse JOIN user ON user.klassenID = klasse.klassenID " +
-                           "WHERE userID = " + student.getUserID(), (rs, rowNum) ->
-                 new Klasse(rs.getInt("klassenID"), rs.getString("name")));
-    }
-
     public Klasse findById(int id) {
     	return template.queryForObject("SELECT klassenID, name FROM klasse WHERE klassenID=" + id, (rs, rowNum) ->
     							new Klasse(rs.getInt("klassenID"), rs.getString("name")));

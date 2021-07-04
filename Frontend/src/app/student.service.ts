@@ -8,7 +8,7 @@ import {Classes} from "./models/class.model";
   providedIn: 'root'
 })
 export class StudentService {
-  private baseURL = 'http://localhost:4200/api';
+  private baseURL = '';
   constructor(private http: HttpClient) { }
 
   getAllStudents(): Observable<Student[]> {

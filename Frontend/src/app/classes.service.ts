@@ -10,7 +10,7 @@ import {map} from "rxjs/operators";
   providedIn: 'root'
 })
 export class ClassesService {
-  private baseURL = 'http://localhost:4200/api';
+  private baseURL = '';
   constructor(private http: HttpClient) { }
 
   getAllClasses(): Observable<Classes[]>{

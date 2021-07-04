@@ -9,7 +9,7 @@ import {User} from "./models/user.model";
   providedIn: 'root'
 })
 export class SubjectService {
-  private baseURL = 'http://localhost:4200/api';
+  private baseURL = '';
 
   constructor(private http: HttpClient) { }
 
